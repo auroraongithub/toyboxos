@@ -13,12 +13,14 @@ import { FONTS } from "../shell/theme.js";
 import { layout, setLayout, AT, PHONE } from "./layout.js";
 import { PX } from "../ui/appicons.js";
 import { UX } from "../ui/uiicons.js";
+import { appIcon } from "../shell/titlebar.js";
 
 /* [slot, label, where it shows, longest side when uploaded] */
 export const SLOTS = [
   ["banner", "Banner", "Header background (the theme editor's Colours > Pictures banner wins)", 1400],
   ["bannerFace", "Banner face", "Clickable face on the banner", 300],
   ["logo", "Logo", "Start button, phone menu button", 160],
+  ["appIcon", "App icon", "Taskbar, window and tray icon (desktop app), browser tab", 256],
   ["wordmark", "Wordmark", "Start menu header (default name only)", 500],
   ["avatar", "Start menu avatar", "Top of the Start menu", 240],
   ["startArt", "Start menu corner", "Bottom of the Start menu's side column", 400],
@@ -81,6 +83,9 @@ export async function applyLook() {
     else art[s] = u;
   }
   art.panelFill = pf.filter(Boolean).length ? pf.filter(Boolean) : null;
+  /* the app icon defaults to the build's own (dist/icon-192.png); only a picked one goes to the shell */
+  const ownIcon = (a.appIcon && art.appIcon) || null;
+  if (!art.appIcon) art.appIcon = BASE.art.appIcon || "icon-192.png";
   const cur = s => (s.startsWith("panelFill.") ? pf[+s.split(".")[1]] || null : art[s] || null);
   /* designed badges (v2) carry pictures in the background and in layers */
   const v2 = async b => ({
@@ -124,6 +129,7 @@ export async function applyLook() {
   for (const k of Object.keys(AI)) delete AI[k];
   Object.assign(AI, BASE.ai, cleanAI(d.ai));
   reg.names.buddy = AI.name;
+  appIcon(ownIcon);
   emit();
 }
 queueMicrotask(() => {

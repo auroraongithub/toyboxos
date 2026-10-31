@@ -28,6 +28,20 @@ fn open_url(url: String) -> Result<(), String> {
   r.map(|_| ()).map_err(|e| e.to_string())
 }
 
+/* the user's App icon (Theme > Art) on the window/taskbar and the tray; None = the installer's own */
+#[cfg(desktop)]
+#[tauri::command]
+fn set_icon(app: tauri::AppHandle, png: Option<Vec<u8>>) -> Result<(), String> {
+  use tauri::Manager;
+  let icon = match png {
+    Some(b) => tauri::image::Image::from_bytes(&b).map_err(|e| e.to_string())?,
+    None => app.default_window_icon().ok_or("no default icon")?.clone().to_owned(),
+  };
+  if let Some(w) = app.get_webview_window("main") { w.set_icon(icon.clone()).map_err(|e| e.to_string())?; }
+  if let Some(t) = app.tray_by_id("main") { t.set_icon(Some(icon)).map_err(|e| e.to_string())?; }
+  Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   let builder = tauri::Builder::default();
@@ -36,7 +50,7 @@ pub fn run() {
   let builder = builder
     .plugin(tauri_plugin_notification::init())
     .manage(host::Host(std::sync::Mutex::new(None)))
-    .invoke_handler(tauri::generate_handler![host::host_status, host::host_set, open_url])
+    .invoke_handler(tauri::generate_handler![host::host_status, host::host_set, open_url, set_icon])
     .setup(|app| {
       host::resume(app.handle());
       use tauri::menu::{Menu, MenuItem};
@@ -44,7 +58,7 @@ pub fn run() {
       let show = MenuItem::with_id(app, "show", "Open toybox.os", true, None::<&str>)?;
       let quit = MenuItem::with_id(app, "quit", "Quit (reminders and hosted sync stop)", true, None::<&str>)?;
       let menu = Menu::with_items(app, &[&show, &quit])?;
-      TrayIconBuilder::new()
+      TrayIconBuilder::with_id("main")
         .icon(app.default_window_icon().unwrap().clone())
         .tooltip("toybox.os")
         .menu(&menu)

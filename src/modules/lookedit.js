@@ -96,7 +96,7 @@ function Slot({ s }) {
       setSlot(k, r);
       undoLook(old, l + " changed");
     }}/>
-      ${src ? html`<${Btn} onClick=${hide}>Hide<//>` : null}
+      ${src && k !== "appIcon" ? html`<${Btn} onClick=${hide}>Hide<//>` : null}
       ${ed ? html`<${Btn} icon="reset" title="Back to the pack's picture" onClick=${reset}>${src ? "Reset" : "Show"}<//>` : null}</div>
   </div>`;
 }

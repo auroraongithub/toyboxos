@@ -16,6 +16,34 @@ export const frameless = () => {
     .catch(() => false);
 };
 
+/* Theme > Art > App icon: a 256px PNG for the browser tab and, in the desktop shell, the window/taskbar and tray
+   (set_icon; older installers lack it and keep theirs). null = the build's own. Android launcher icons can't change. */
+let lastIcon = null;
+export async function appIcon(u) {
+  if (u === lastIcon) return;
+  lastIcon = u;
+  let png = null;
+  if (u)
+    try {
+      const im = new Image();
+      im.src = u;
+      await im.decode();
+      const c = document.createElement("canvas"),
+        k = Math.min(256 / im.naturalWidth, 256 / im.naturalHeight),
+        w = im.naturalWidth * k,
+        h = im.naturalHeight * k;
+      c.width = c.height = 256;
+      c.getContext("2d").drawImage(im, (256 - w) / 2, (256 - h) / 2, w, h);
+      png = c.toDataURL("image/png");
+    } catch (e) {}
+  if (u !== lastIcon) return; // changed again while this one decoded
+  for (const l of document.querySelectorAll('link[rel="icon"]')) l.href = png || "icon-192.png";
+  if (T() && T().invoke && !/Android/i.test(navigator.userAgent))
+    T()
+      .invoke("set_icon", { png: png ? [...atob(png.split(",")[1])].map(c => c.charCodeAt(0)) : null })
+      .catch(() => {});
+}
+
 export function OsBar() {
   const [name] = useBrand(),
     [max, setMax] = useState(false);

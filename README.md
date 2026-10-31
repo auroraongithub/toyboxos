@@ -57,7 +57,7 @@ support them.
 ### Look and feel
 
 The whole look comes from a **pack**: art, colours, fonts, wallpaper, mascot and badges. The Theme editor changes any
-of it from inside the app. Only the neutral `default` pack ships in this repository (see [Art packs](#art-packs)).
+of it from inside the app, including the app icon on the taskbar, tray and browser tab (Art > App icon). Only the neutral `default` pack ships in this repository (see [Art packs](#art-packs)).
 
 ## How it works
 
@@ -68,7 +68,8 @@ of it from inside the app. Only the neutral `default` pack ships in this reposit
   database.
 - AI keys stay on the server and are never sent back to the app. Long assistant chats run on the server, so they
   finish even after you close the app.
-- New versions are published as releases, and installed apps update themselves.
+- New versions are published as [releases](https://github.com/auroraongithub/toyboxos/releases). Servers update
+  themselves from the latest one, and installed apps update from their server.
 
 [`docs/toybox-map.html`](docs/toybox-map.html) has diagrams of every window and server piece and where each one
 lives in the code.
