@@ -6,6 +6,7 @@
    build's own look. A shared pack never switches modules on or off. */
 import { ls } from "./pref.js";
 import { syncConfig } from "./sync.js";
+import { sha256 } from "./sha256.js";
 
 export const HOME = "https://raw.githubusercontent.com/auroraongithub/toyboxos/main/store/";
 const MAXINDEX = 1 << 20,
@@ -154,7 +155,6 @@ export function picUrl(src, path) {
 
 /* ---- the pack file: fetched once, checked against the index's hash ---- */
 const files = new Map();
-const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
 export function packFile(e) {
   const k = e.src + e.file + "#" + e.sha256;
   if (!files.has(k))
@@ -162,8 +162,7 @@ export function packFile(e) {
       k,
       (async () => {
         const b = await bytes(e.src + e.file, MAXPACK);
-        if (!crypto.subtle) throw new Error("This device can't check the pack's fingerprint here");
-        if (hex(await crypto.subtle.digest("SHA-256", b)) !== e.sha256)
+        if ((await sha256(b)) !== e.sha256)
           throw new Error("The pack file doesn't match the store's fingerprint");
         const o = JSON.parse(text(b));
         if (!o || o.toybox_pack !== 1) throw new Error("That isn't a toybox pack file");

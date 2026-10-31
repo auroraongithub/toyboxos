@@ -4,7 +4,7 @@
   "description": "A personal OS in the browser: notes, calendar, tasks, money and more, local-first with self-hosted sync.",
   "scripts": {
     "build": "node build.mjs",
-    "test:planning": "node --test tests/planning.test.mjs",
+    "test:planning": "node --test tests/planning.test.mjs tests/sha256.test.mjs",
     "test:workspace": "node --import ./tests/alias.mjs --test tests/workspace.test.mjs",
     "test:ai": "node --test tests/ai-calls.test.mjs tests/moodle.test.mjs tests/prompt.test.mjs",
     "deploy": "bash deploy.sh",
