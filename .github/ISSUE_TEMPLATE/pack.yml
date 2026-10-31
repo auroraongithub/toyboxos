@@ -1,0 +1,44 @@
+name: Share a pack
+description: Submit a pack for the Pack store (see store/README.md)
+title: "pack: "
+labels: ["pack"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Pack name
+    validations:
+      required: true
+  - type: textarea
+    id: desc
+    attributes:
+      label: What it looks like
+      description: One or two sentences.
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: License
+      description: e.g. CC0-1.0, CC-BY-4.0, or "all rights reserved, shared with permission"
+    validations:
+      required: true
+  - type: input
+    id: credits
+    attributes:
+      label: Whose art is it
+      description: Required when the pack has pictures.
+  - type: textarea
+    id: files
+    attributes:
+      label: Files
+      description: Attach the exported pack .json (rename it to .txt if GitHub refuses it) and a desktop + phone screenshot.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Rights
+      options:
+        - label: The pack is non-commercial and credits whoever made its art.
+          required: true

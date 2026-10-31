@@ -274,7 +274,15 @@ function deskMenu(e, t) {
       t.closest(".banner")
         ? [
             ["rename", "Rename…", rename],
-            ["image", "Banner art…", themeTab("art")],
+            [
+              "image",
+              "Banner art…",
+              () => {
+                const own = (ls.get("os-theme", null) || {}).banner;
+                if (own) ls.set("os-theme-focus", "pics");
+                themeTab(own ? "colours" : "art")();
+              },
+            ],
           ]
         : [],
       t.closest(".badges") ? [["theme", "Edit badges…", themeTab("badges")]] : [],

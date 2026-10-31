@@ -1,0 +1,277 @@
+/* Pack store (modules/store.js): card grid, one pack with screenshots + what it changes. Tokens only. */
+.sto-w {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.sto .tools .field[type="search"] {
+  flex: 1 1 160px;
+  min-width: 0;
+  max-width: 320px;
+}
+.sto-sp {
+  flex: 1;
+}
+.sto-g {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+.sto-c {
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr;
+  gap: 3px;
+  min-width: 0;
+  padding: 6px 6px 8px;
+  border: 1px solid var(--frame);
+  box-shadow: inset 0 0 0 1px var(--hi);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.sto-c:hover {
+  background: var(--hover);
+}
+.sto-c.on {
+  outline: 2px solid var(--sel);
+  outline-offset: -2px;
+}
+.sto-c b {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sto-c small,
+.sto-by {
+  font-size: 11px;
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sto-ds {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sto-t,
+.sto-big {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--edge-2);
+  background: repeating-conic-gradient(var(--hover) 0 25%, transparent 0 50%) 0 0/12px 12px;
+}
+.sto-t img,
+.sto-big img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  image-rendering: auto;
+}
+.sto-ph {
+  color: var(--ink-3);
+}
+.sto-st {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--dark);
+  color: var(--on-dark);
+}
+.sto-c .pkc {
+  margin-top: 2px;
+  height: 6px;
+}
+/* one pack */
+.sto-back {
+  display: flex;
+}
+.sto-d {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(240px, 1fr);
+  gap: 12px;
+  padding: 10px;
+  align-items: start;
+}
+.sto-w[data-w="xs"] .sto-d,
+.sto-w[data-w="s"] .sto-d {
+  grid-template-columns: minmax(0, 1fr);
+}
+.sto-strip {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.sto-strip button {
+  width: 72px;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--edge-2);
+  background: var(--paper);
+  cursor: pointer;
+}
+.sto-strip button[aria-pressed="true"] {
+  outline: 2px solid var(--sel);
+  outline-offset: -2px;
+}
+.sto-strip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
+.sto-info h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.sto-info p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.sto-acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 4px;
+}
+.sto-acts small {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.sto-on {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  font-weight: 700;
+  font-size: 12px;
+}
+.sto-err {
+  margin: 6px 10px;
+  padding: 4px 6px;
+  font-size: 12px;
+  border: 1px solid var(--danger);
+  color: var(--ink);
+  background: var(--paper);
+}
+.sto-info .sto-err {
+  margin: 6px 0;
+}
+.sto-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0;
+  margin: 8px 0 0;
+  font-size: 12px;
+  border-top: 1px solid var(--line);
+}
+.sto-facts dt,
+.sto-facts dd {
+  margin: 0;
+  padding: 5px 6px;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+.sto-facts dt {
+  color: var(--ink-2);
+  padding-left: 0;
+}
+.sto-facts dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+.sto-facts .pkc {
+  width: 72px;
+  height: 12px;
+  margin: 0;
+  border: 1px solid var(--edge-2);
+}
+.sto-art {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.sto-art img {
+  height: 40px;
+  max-width: 80px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: repeating-conic-gradient(var(--hover) 0 25%, transparent 0 50%) 0 0/8px 8px;
+}
+.sto-say {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sto-say q {
+  font-style: italic;
+}
+.sto-say small {
+  color: var(--ink-3);
+}
+.btn.sto-mini {
+  min-height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+}
+.sto-voice {
+  max-height: 50vh;
+  margin: 0;
+  padding: 8px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font: 12px/1.45 var(--mono, Consolas, monospace);
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--edge-2);
+  max-width: 520px;
+}
+.sto-share {
+  max-width: 420px;
+  padding: 4px 8px 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.sto-share ol {
+  margin: 0;
+  padding-left: 18px;
+}
+.sto-share code {
+  background: var(--code);
+  padding: 0 3px;
+}
+@media (max-width: 860px) {
+  .sto-g {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 8px;
+  }
+  .sto-d {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 8px;
+  }
+  .sto .tools .field[type="search"] {
+    max-width: none;
+  }
+}

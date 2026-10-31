@@ -14,9 +14,10 @@ import { layout, setLayout, resetLayout } from "../core/layout.js";
 import { FEATURES, wanted } from "../core/features.js";
 import { SKINS, applySkin } from "../shell/skins.js";
 import { setTheme, applyTheme, blank } from "../shell/theme.js";
-import { Btn, Group, Icon } from "../ui/index.js";
+import { Btn, Group, Icon, AppIcon } from "../ui/index.js";
 import { actionSheet, askText } from "../ui/sheet.js";
 import { applyPack } from "./theme.js";
+import { openMod } from "../shell/os.js";
 
 const hash = s => {
   let h = 0;
@@ -56,11 +57,14 @@ const coloursOf = o => {
 };
 
 /* keep a pack (the parsed file) in the library; the same file twice is kept once. Returns its id */
-export async function keepPack(o, name) {
+export async function keepPack(o, name, extra) {
   const s = JSON.stringify(o),
     sig = hash(s),
     have = (D.packs || []).find(p => p.sig === sig);
-  if (have) return have._id;
+  if (have) {
+    if (extra) await W.upd("packs", have._id, extra);
+    return have._id;
+  }
   const file = await saveFile(new Blob([s], { type: "application/json" }), (name || "pack") + ".json");
   const id = "pk" + Math.random().toString(36).slice(2, 10);
   await W.set("packs", id, {
@@ -70,14 +74,15 @@ export async function keepPack(o, name) {
     colours: coloursOf(o),
     sig,
     at: new Date().toISOString(),
+    ...(extra || {}),
   });
   return id;
 }
 export const inUse = () => look().pack || "";
-const mark = id => setLook({ pack: id });
+export const mark = id => setLook({ pack: id });
 
 /* undo for any switch: the look, the theme and the layout as they were */
-const snapshot = () => {
+export const snapshot = () => {
   const L = JSON.parse(JSON.stringify(look())),
     T = ls.get("os-theme", null),
     Y = JSON.parse(JSON.stringify(layout()));
@@ -104,13 +109,15 @@ async function use(p) {
     toast(e.message || "Couldn't open that pack");
   }
 }
-function useBuiltIn() {
+/* the build's own look again; quiet = no toast (the caller has its own) */
+export function useBuiltIn(quiet) {
   const undo = snapshot();
   resetLook();
   setTheme(x => ({ ...x, on: false }));
   applyTheme();
   resetLayout();
-  toast("Back to the built-in look", { label: "Undo", run: undo });
+  if (!quiet) toast("Back to the built-in look", { label: "Undo", run: undo });
+  return undo;
 }
 async function saveCurrent() {
   const name = await askText({
@@ -227,6 +234,7 @@ export function PacksTab() {
           <b>Built-in</b><small>${builtOn ? "In use" : "Use"}</small></button>
       </div>
       ${list.map(p => html`<${Tile} key=${p._id} p=${p} on=${cur === p._id}/>`)}
+      <button type="button" class="pkadd" onClick=${() => openMod("store", true)}><${AppIcon} id="store" n="store"/>Pack store</button>
       <button type="button" class="pkadd" onClick=${fi}><${Icon} n="import"/>Add a pack file…</button>
       <button type="button" class="pkadd" onClick=${saveCurrent}><${Icon} n="plus"/>Save current look</button>
     </div></div>`;

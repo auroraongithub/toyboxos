@@ -188,6 +188,7 @@ export function StartMenu({ open, close, openList, minList, view, mobile, onCmd 
       "theme",
       [
         ["theme", "Theme editor", () => openMod("theme", true)],
+        ["store", "Pack store", () => openMod("store", true)],
         mobile
           ? ["layout", "Phone layout", openPhoneList]
           : ["layout", "Edit layout", () => setEditing(true)],

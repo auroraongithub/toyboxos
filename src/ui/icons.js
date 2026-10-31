@@ -66,6 +66,7 @@ export const IC = {
   send: '<path d="M2 8l12-5.5L10 14l-2-5zM8 9l6-6.5"/>',
   attach: '<path d="M10.5 4.5l-5 5a1.4 1.4 0 002 2l5.5-5.5a2.8 2.8 0 00-4-4L3.5 7.5a4.2 4.2 0 006 6l4-4"/>',
   search: '<circle cx="7" cy="7" r="4.5"/><path d="M10.3 10.3L14 14"/>',
+  store: '<path d="M3 5.5h10l-.8 8.5H3.8zM6 5.5V4a2 2 0 014 0v1.5"/>',
   globe: '<circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c2 2 2 10 0 12M8 2c-2 2-2 10 0 12"/>',
   inbox: '<path d="M2 9l2-6h8l2 6v4H2zM2 9h4l1 2h2l1-2h4"/>',
   bell: '<path d="M8 1.8a3.6 3.6 0 013.6 3.6v2.3l1.2 2.2H3.2l1.2-2.2V5.4A3.6 3.6 0 018 1.8zM6.5 12.2a1.5 1.5 0 003 0"/>',

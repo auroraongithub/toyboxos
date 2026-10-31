@@ -22,6 +22,7 @@ import "./styles/graph.css";
 import "./styles/whiteboard.css";
 import "./styles/buddy.css";
 import "./styles/theme.css";
+import "./styles/store.css";
 import "./styles/editor.css";
 import "./styles/reader.css";
 import "./styles/mobile.css";

@@ -1,6 +1,6 @@
 /* Theme editor (extra window, Start > Theme editor / command "theme"): colours, fonts, wallpaper, banner art,
    export/import as JSON. Edits apply live through shell/theme.js. */
-import { useState, useRef } from "preact/hooks";
+import { useState, useRef, useEffect } from "preact/hooks";
 import { html } from "../core/lib.js";
 import { usePref, ls } from "../core/pref.js";
 import { toast } from "../core/bus.js";
@@ -181,7 +181,20 @@ function fixPair([fg, bg, min], val) {
 function Theme() {
   const [t0] = usePref("os-theme", null);
   const t = t0 || blank();
+  const BPOS = { x: 50, y: 30, z: 1 },
+    bpos = { ...BPOS, ...t.bpos };
   const fi = useRef();
+  const [foc, setFoc] = usePref("os-theme-focus", "");
+  useEffect(() => {
+    if (foc !== "pics") return;
+    setFoc("");
+    for (const ms of [120, 400]) {
+      setTimeout(() => {
+        const p = document.querySelector(".thpics");
+        if (p) p.scrollIntoView({ block: "center" });
+      }, ms);
+    }
+  }, [foc]);
   const [m0, setMode] = usePref("os-theme-mode", "simple");
   const mode = m0 === "advanced" ? "advanced" : "simple";
   const [base, setBase] = useState(t.base);
@@ -390,14 +403,26 @@ function Theme() {
     <div class="thpics">
       <${Img} label="Wallpaper" src=${t.wall && t.wall.img} onPick=${async f => {
         const img = await shrink(f, 1920);
-        up(x => ({ wall: { img, fit: (x.wall && x.wall.fit) || "cover" } }));
+        up(x => ({ wall: { ...x.wall, img, fit: (x.wall && x.wall.fit) || "cover" } }));
       }} onClear=${() => up(() => ({ wall: null }))}>
-        ${t.wall ? html`<${Select} opts=${FITS} value=${t.wall.fit} onChange=${fit => up(x => ({ wall: { ...x.wall, fit } }))}/>` : null}
+        ${t.wall ? html`<${Select} opts=${FITS} value=${t.wall.fit} onChange=${fit => up(x => ({ wall: { ...x.wall, fit } }))}/>
+          <div class="thbp">${[
+            ["x", "Left / right"],
+            ["y", "Up / down"],
+          ].map(([k, l]) => html`<label key=${k}><span>${l}</span><input type="range" min="0" max="100" step="1" value=${t.wall[k] == null ? 50 : t.wall[k]} aria-label=${"Wallpaper " + l} onInput=${e => up(x => ({ wall: { ...x.wall, [k]: +e.target.value } }))}/></label>`)}
+            <${Btn} onClick=${() => up(x => ({ wall: { ...x.wall, x: 50, y: 50 } }))}>Centre<//></div>` : null}
       <//>
       <${Img} label="Banner" src=${t.banner} onPick=${async f => {
         const banner = await shrink(f, 1400);
         up(() => ({ banner }));
-      }} onClear=${() => up(() => ({ banner: "" }))}/>
+      }} onClear=${() => up(() => ({ banner: "", bpos: undefined }))}>
+        ${t.banner ? html`<div class="thbp">${[
+          ["z", "Zoom", 1, 4, 0.1],
+          ["x", "Left / right", 0, 100, 1],
+          ["y", "Up / down", 0, 100, 1],
+        ].map(([k, l, lo, hi, st]) => html`<label key=${k}><span>${l}</span><input type="range" min=${lo} max=${hi} step=${st} value=${bpos[k]} aria-label=${"Banner " + l} onInput=${e => up(x => ({ bpos: { ...BPOS, ...x.bpos, [k]: +e.target.value } }))}/></label>`)}
+          <${Btn} onClick=${() => up(() => ({ bpos: undefined }))}>Reset framing<//></div>` : null}
+      <//>
     </div></div>`;
   const warnBar = bad.length
     ? html`<div class="thbad"><span>${bad.length === 1 ? "Some text is" : bad.length + " text colours are"} hard to read</span><${Btn} onClick=${fixAll}>Fix<//></div>`

@@ -1166,3 +1166,23 @@ i.thz {
 .bd-fx.fh {
   text-shadow: 1px 1px 0 var(--edge-2);
 }
+
+/* banner framing: zoom and position sliders under the banner picture */
+.thbp {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  margin-top: 4px;
+}
+.thbp label {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.thbp input[type="range"] {
+  width: 100%;
+  min-width: 0;
+}

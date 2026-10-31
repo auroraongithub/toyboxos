@@ -82,7 +82,16 @@ export function clean(t) {
   for (const k of ["font", "title", "bfont"]) if (okFont(t[k] || "")) o[k] = t[k] || "";
   if (t.wall && IMG.test(t.wall.img || ""))
     o.wall = { img: t.wall.img, fit: FITS.some(f => f[0] === t.wall.fit) ? t.wall.fit : "cover" };
+  if (o.wall) {
+    const n = (v, d) => (isFinite(+v) && v !== "" && v != null ? Math.max(0, Math.min(100, Math.round(+v * 10) / 10)) : d);
+    o.wall.x = n(t.wall.x, 50);
+    o.wall.y = n(t.wall.y, 50);
+  }
   if (IMG.test(t.banner || "")) o.banner = t.banner;
+  if (t.bpos && typeof t.bpos === "object") {
+    const n = (v, lo, hi, d) => (isFinite(+v) ? Math.max(lo, Math.min(hi, Math.round(+v * 10) / 10)) : d);
+    o.bpos = { x: n(t.bpos.x, 0, 100, 50), y: n(t.bpos.y, 0, 100, 30), z: n(t.bpos.z, 1, 4, 1) };
+  }
   if (t.seed && HEX.test(t.seed.c || ""))
     o.seed = {
       c: t.seed.c.toLowerCase(),
@@ -150,9 +159,10 @@ export function css(t) {
   let s = `html:root[data-custom]{${v.join(";")}}`;
   if (t.wall) {
     const w = t.wall,
-      tile = w.fit === "tile";
+      tile = w.fit === "tile",
+      at = (w.x == null ? 50 : w.x) + "% " + (w.y == null ? 50 : w.y) + "%";
     // !important: skins set their own body background with more specific selectors (themes.css)
-    s += `html[data-custom] body{background:var(--desk) url("${w.img}") ${tile ? "top left/auto repeat" : "center/" + (w.fit === "center" ? "auto" : w.fit) + " no-repeat"} fixed!important}`;
+    s += `html[data-custom] body{background:var(--desk) url("${w.img}") ${tile ? "top left/auto repeat" : at + "/" + (w.fit === "center" ? "auto" : w.fit) + " no-repeat"} fixed!important}`;
   }
   return s;
 }

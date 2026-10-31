@@ -29,6 +29,7 @@ import buddy from "./buddy.js";
 import gcalc from "./gcalc.js";
 import nijika from "./nijika.js";
 import moodle from "./moodle.js";
+import store from "./store.js";
 
 import { AI } from "../core/pack.js";
 /* part = [id, label, Comp, icon, opts]; opts.hide = no tab of its own (opened from the hub's first part, with a
@@ -117,6 +118,7 @@ export const EXTRA = [
   { ...sync, tab: false },
   { ...nijika, tab: false },
   { ...theme, tab: false },
+  { ...store, tab: false },
   { ...profile, tab: false },
   { ...moodle, tab: false },
   { ...models, tab: false },
@@ -141,6 +143,7 @@ export const ALL_MODULES = [
   gcalc,
   nijika,
   theme,
+  store,
   moodle,
   profile,
   models,

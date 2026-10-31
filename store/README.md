@@ -38,4 +38,4 @@ Bumping `v` and updating `pack.json` shows an Update button to people who have t
 
 ## Art rules
 
-Packs are for fun and non-commercial. Fan packs are welcome: put the character's creator and the artist in `credits`, and say it's a fan pack in `license`. Never sell a pack or its art. If an artist or rights holder asks for their art to come down, the pack is removed.
+Fan art packs are welcome. Credit the artists in `credits`, keep it non-commercial, and say in `license` that the rights stay with the artists. A pack comes down if the artist or rights holder asks.

@@ -70,7 +70,12 @@ function useTicker() {
 /* ---- banner: name (double-click to rename), ticker, clickable face ---- */
 export function Banner({ onMenu }) {
   const [th] = usePref("os-theme", null);
-  const art = (th && th.on && th.banner) || ART.banner;
+  const own = th && th.on && th.banner,
+    art = own || ART.banner,
+    bp = own && th.bpos,
+    artStyle = bp
+      ? `object-position:${bp.x}% ${bp.y}%;transform-origin:${bp.x}% ${bp.y}%;transform:scale(${bp.z})`
+      : "";
   const [name, setName] = useBrand();
   const [ed, setEd] = useState(false),
     [v, setV] = useState(name);
@@ -115,7 +120,7 @@ export function Banner({ onMenu }) {
       flush();
     }
   };
-  return html`<header class=${"banner" + (art ? "" : " noart")}>${art ? html`<img src=${art} alt=""/>` : null}
+  return html`<header class=${"banner" + (art ? "" : " noart")}>${art ? html`<img src=${art} alt="" style=${artStyle}/>` : null}
     <div class="bn">${
       ed
         ? html`<input class="bnin" value=${v} maxlength="24" aria-label="Name" ref=${r => r && r.focus()} onInput=${e => setV(e.target.value)} onBlur=${save} onKeyDown=${e => {

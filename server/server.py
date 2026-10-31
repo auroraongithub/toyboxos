@@ -94,6 +94,8 @@ MAXBODY = 8 * 1024 * 1024
 FILES = os.environ.get("SOS_FILES", os.path.join(HOME, "data", "files"))
 DEPLOY = os.environ.get("SOS_DEPLOY_STATUS", os.path.join(HOME, "data", "deploy.json"))  # written by autodeploy.sh
 MAXFILE = 15 * 1024 * 1024
+STORE = os.environ.get("SOS_STORE", os.path.join(HOME, "store"))  # a pack store of your own: index.json + packs/<id>/*
+STORE_PATH = re.compile(r"^/store/(index\.json|packs/[a-z0-9][a-z0-9-]{1,31}/[a-z0-9_.-]{1,40}\.(?:json|webp|png|jpe?g|gif))$")
 FILE_ID = re.compile(r"^[A-Za-z0-9_-]{16,64}$")
 FILE_TYPES = {
     "application/json",
@@ -489,6 +491,19 @@ class H(BaseHTTPRequestHandler):
             )
         if p.startswith("/api/"):
             return self._send(404, {"error": "not found"})
+        st = STORE_PATH.match(p)
+        if st:
+            f = os.path.join(STORE, *st[1].split("/"))
+            if not os.path.isfile(f):
+                return self._send(404, {"error": "not found"}, extra={"Access-Control-Allow-Origin": "*"})
+            with open(f, "rb") as fh:
+                data = fh.read()
+            return self._send(
+                200,
+                data,
+                mimetypes.guess_type(f)[0] or "application/octet-stream",
+                {"Access-Control-Allow-Origin": "*", "Cache-Control": "no-cache", "X-Content-Type-Options": "nosniff"},
+            )
         rel = re.fullmatch(r"/releases/(latest\.json|toybox-[0-9a-z]{4,16}\.zip)", p)
         if rel:
             f = os.path.join(RELEASES, rel[1])
