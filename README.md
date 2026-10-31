@@ -80,26 +80,64 @@ lives in the code.
 
 ## Getting started
 
-### Download
+### Install the app
 
-The [latest release](https://github.com/auroraongithub/toyboxos/releases/latest) has:
+Everything is in the [latest release](https://github.com/auroraongithub/toyboxos/releases/latest). On one device you
+can stop after installing: the app works fully offline. To keep several devices in step, run a sync server (step 1
+below).
 
-- `toybox.os_<version>_x64-setup.exe`: the Windows app. It installs for your user only and can also host the sync
-  server for your other devices (Start > Sync > Host sync on this computer). Windows may warn that the publisher is
-  unknown, because the installer isn't code-signed: choose More info > Run anyway.
-- the Linux app, for x64 (`amd64`, `x86_64`) or arm64 (`aarch64`): `.AppImage` runs on any distro (`chmod +x` it,
-  then open it), `.deb` for Debian/Ubuntu (`sudo apt install ./toybox.os_*.deb`), `.rpm` for Fedora/openSUSE
-  (`sudo dnf install ./toybox.os-*.rpm`). It needs glibc 2.35 or newer and, for the tray icon on GNOME, the
-  AppIndicator extension.
-- `toybox-os-android-arm64.apk`: the Android app. Allow installs from your browser or file manager when asked.
-- `toybox-server-windows.exe`, `toybox-server-linux-x64`, `toybox-server-linux-arm64`: the sync server on its own,
-  for a computer that stays on (a Raspberry Pi or other ARM board takes `arm64`).
+**Windows.** Download `toybox.os_<version>_x64-setup.exe` and run it. It installs for your user only, no admin
+needed. Windows may warn that the publisher is unknown, because the installer isn't code-signed: choose More info >
+Run anyway.
 
-On one device you can stop here: the app works fully offline. To keep several devices in step, run a sync server.
+**Linux.** Pick the file for your distro and processor: `amd64`/`x86_64` for most PCs, `arm64`/`aarch64` for a
+Raspberry Pi or other ARM machines. It needs glibc 2.35 or newer (Ubuntu 22.04, Debian 12, Fedora 36 or later).
+
+- Debian, Ubuntu, Mint, Pop!_OS:
+
+  ```sh
+  sudo apt install ./toybox.os_*_amd64.deb
+  ```
+
+- Fedora, openSUSE, RHEL:
+
+  ```sh
+  sudo dnf install ./toybox.os-*.x86_64.rpm
+  ```
+
+- Any other distro (Arch, NixOS, Steam Deck...): the AppImage runs without installing.
+
+  ```sh
+  chmod +x toybox.os_*_amd64.AppImage
+  ./toybox.os_*_amd64.AppImage
+  ```
+
+  If it says FUSE is missing, install `libfuse2` (Ubuntu 24.04: `libfuse2t64`). The AppImage adds no menu entry on
+  its own; [Gear Lever](https://flathub.org/apps/it.mijorus.gearlever) or AppImageLauncher can add one.
+
+The `.deb` and `.rpm` add toybox.os to your app menu. Closing the window keeps it in the tray so reminders still ring;
+on GNOME the tray needs the "AppIndicator and KStatusNotifierItem Support" extension (Ubuntu has it on already).
+Tray > Quit really quits. To have reminders from the moment you log in, add toybox.os to your desktop's startup apps.
+
+**Android.** Download `toybox-os-android-arm64.apk` and open it. Allow installs from your browser or file manager
+when asked.
+
+**iPhone, iPad, macOS and anything else.** There's no download: once a sync server is running, open it in the
+browser and install it from there (Safari: Share > Add to Home Screen / Add to Dock; Chrome and Edge: Install app in
+the address bar). Phones need the server on HTTPS for this (see step 2).
+
+The release also has `toybox-server-windows.exe`, `toybox-server-linux-x64` and `toybox-server-linux-arm64`: the sync
+server on its own, for a computer that stays on.
 
 ### 1. Run the sync server
 
-On Windows or Linux, the desktop app or a server program above is enough. On macOS or a NAS, Docker is the quickest:
+The simplest: in the Windows or Linux app, Start > Sync > tick **Host sync on this computer**. It runs while the app
+is open or in the tray, and **Pair a device** shows a code and QR for your other devices. On Linux with a firewall
+on, let the other devices in with `sudo ufw allow 8787/tcp` (Fedora: `sudo firewall-cmd --add-port=8787/tcp
+--permanent && sudo firewall-cmd --reload`).
+
+For a computer that stays on, run a server program from the release instead (Linux: `chmod +x
+toybox-server-linux-*` once, then run it). On macOS or a NAS, Docker is the quickest:
 
 ```sh
 docker compose up -d
@@ -113,7 +151,7 @@ Other options:
 
 - a Linux or macOS service via `bash server/install.sh`
 - a standalone program for Windows or Linux (in the release)
-- hosting from inside the Windows desktop app
+- hosting from inside the Windows or Linux desktop app
 
 All of these are covered in [`server/README.md`](server/README.md), along with HTTPS, using the server away from home,
 and backups.
@@ -123,10 +161,11 @@ for your own Tailscale network; see [Home server window](server/README.md#home-s
 
 ### 2. Connect your devices
 
-Open `http://<server>:8787` and enter the pairing code when Setup asks for it. To add more devices, get a new code
-from Start > Sync > Pair another device.
+In the Windows, Linux or Android app: Start > Sync, enter the server address (`http://<server>:8787`) and the
+pairing code. In a browser, open `http://<server>:8787` and enter the code when Setup asks for it. To add more
+devices, get a new code from Start > Sync > Pair another device.
 
-On Android, the APK connects the same way. Without the APK (iPhone, other phones), the browser can install the app
+Without a download (iPhone, iPad, macOS), the browser can install the app
 only when the server is reached over HTTPS: [Tailscale Funnel](https://tailscale.com/kb/1223/funnel) or a reverse
 proxy such as Caddy gives you that, and it also lets your devices sync away from home.
 
