@@ -1,0 +1,34 @@
+{
+  "name": "toybox-os",
+  "version": "1.0.0",
+  "description": "A personal OS in the browser: notes, calendar, tasks, money and more, local-first with self-hosted sync.",
+  "scripts": {
+    "build": "node build.mjs",
+    "test:planning": "node --test tests/planning.test.mjs",
+    "test:workspace": "node --import ./tests/alias.mjs --test tests/workspace.test.mjs",
+    "test:ai": "node --test tests/ai-calls.test.mjs tests/moodle.test.mjs tests/prompt.test.mjs",
+    "deploy": "bash deploy.sh",
+    "deploy:server": "bash deploy.sh server",
+    "test": "npm run test:planning && npm run test:workspace && npm run test:ai && npm run test:nlp",
+    "format": "prettier --write . && python -m ruff format server package_changes.py",
+    "lint": "prettier --check . && python -m ruff check server package_changes.py && python -m ruff format --check server package_changes.py",
+    "test:ui": "python -m unittest discover -s tests/ui -p \"test_*.py\"",
+    "test:nlp": "node --import ./tests/alias.mjs --test tests/nlp.test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.24.2",
+    "htm": "^3.1.1",
+    "marked": "^15.0.12",
+    "preact": "^10.29.8"
+  },
+  "private": true,
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "prettier": "3.3.3"
+  }
+}

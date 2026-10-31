@@ -1,0 +1,362 @@
+.achange {
+  width: min(620px, calc(100vw - 36px));
+  max-height: 78vh;
+  overflow: auto;
+  padding: 12px;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: 13px;
+}
+.pop2:has(.achange) {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 70px);
+  overflow: hidden;
+}
+.pop2 .achange {
+  box-sizing: border-box;
+  max-height: calc(100dvh - 115px);
+}
+.acsteps {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+.acsteps li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  background: var(--btn);
+  color: var(--ink-2);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.acsteps i {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-style: normal;
+  font-size: 10px;
+  font-weight: bold;
+}
+.acsteps li.done {
+  color: var(--ink);
+}
+.acsteps li.on {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  font-weight: bold;
+}
+.acmodel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.acmodel select {
+  flex: 0 1 260px;
+  min-width: 0;
+  color: var(--ink);
+  background-color: var(--paper);
+}
+.aclabel {
+  display: block;
+  margin: 12px 0 5px;
+  font-weight: bold;
+}
+.achange .acrequest {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-height: 76px !important;
+  height: auto !important;
+  resize: vertical;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 8px;
+  color: var(--ink);
+  background: var(--paper);
+}
+.acactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.acactions small,
+.acstats,
+.acnote,
+.actop small,
+.acask small {
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.acreview .acactions {
+  justify-content: flex-start;
+}
+.acreview .acactions:empty {
+  display: none;
+}
+.acreview .acactions .btn {
+  min-height: 30px;
+  padding: 0 14px;
+}
+.actop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.acbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.acbar .acnote {
+  flex: 1;
+  min-width: 0;
+}
+.achead {
+  margin: 2px 0 4px;
+  font-size: 16px;
+}
+.achead.busy::after {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 8px;
+  border: 2px solid var(--ink);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: acspin 0.8s linear infinite;
+  vertical-align: -1px;
+}
+@keyframes acspin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.acnext {
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+.acask {
+  margin: 8px 0;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  background: var(--code);
+}
+.acask small {
+  display: block;
+  margin-bottom: 2px;
+}
+.acask p {
+  margin: 0;
+  line-height: 1.45;
+}
+.acsum {
+  margin: 8px 0;
+  line-height: 1.45;
+}
+.acrequesttext {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.acwait,
+.aclist {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+}
+.acwait {
+  margin-top: 12px;
+}
+.acrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 9px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.acrow:first-child {
+  border-top: 0;
+}
+.acrow:hover {
+  background: var(--hover);
+}
+.acrow b {
+  flex: none;
+  width: 96px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+}
+.acrow span {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.acrow em {
+  flex: none;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.acrow.on {
+  background: var(--btn);
+}
+.acrow.on b,
+.acrow.on em {
+  color: var(--ink);
+  font-weight: bold;
+}
+.acfiles {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+.acfiles code {
+  padding: 3px 5px;
+  background: var(--code);
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.acdiff {
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.acdiff summary {
+  cursor: pointer;
+  padding: 8px 0 4px;
+  color: var(--ink-2);
+}
+.acdiff .acstats {
+  margin: 4px 0;
+}
+.acdiff pre {
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 8px;
+  background: var(--code);
+  font-size: 11px;
+}
+.acerror {
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--code);
+  overflow-wrap: anywhere;
+}
+.acpreview {
+  display: block;
+  width: 100%;
+  height: 440px;
+  margin: 10px 0 0;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.acpreviewmode {
+  height: min(690px, 70dvh);
+  display: flex;
+  flex-direction: column;
+}
+.acpreviewmode .acpreview {
+  flex: 1;
+  min-height: 200px;
+  height: auto;
+  box-sizing: border-box;
+}
+@media (max-width: 860px) {
+  .achange {
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 75dvh;
+  }
+  .acpreview {
+    height: 380px;
+  }
+  .acactions .btn,
+  .actop .btn,
+  .acbar .btn {
+    min-height: 36px;
+  }
+  .acactions small {
+    flex-basis: 100%;
+  }
+  .acmodel {
+    flex-basis: 100%;
+  }
+  .acmodel select {
+    flex: 1;
+    min-height: 36px;
+  }
+  .acsteps li {
+    justify-content: center;
+    padding: 6px 3px;
+  }
+  .acsteps li:not(.on) {
+    font-size: 0;
+    gap: 0;
+  }
+  .acsteps li:not(.on) i {
+    font-size: 10px;
+  }
+  .acrow {
+    min-height: 42px;
+  }
+  .acrow b {
+    width: auto;
+    min-width: 64px;
+  }
+  .acrow em {
+    display: none;
+  }
+  .acwait .acrow em {
+    display: inline;
+  }
+  .acbar {
+    flex-wrap: wrap;
+  }
+  .acbar .acnote {
+    order: 3;
+    flex-basis: 100%;
+  }
+}

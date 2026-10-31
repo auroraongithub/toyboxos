@@ -1,0 +1,358 @@
+/* ===== themes (skins). Keys match SKINS in shell/skins.js ===== */
+:root {
+  --tbg: linear-gradient(180deg, #a5a5a5 0%, #616161 9%, #474747 42%, #2c2c2c 88%, #555 100%);
+}
+.tb {
+  background: var(--tbg);
+}
+[data-skin]:not([data-skin="gray"]):not([data-skin="mono"]) body {
+  background-image: var(--tile),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.04) 0 1px, transparent 1px 3px);
+}
+
+[data-skin="teal"] {
+  --desk: #0e8686;
+  --face: #d9d7d0;
+  --face-2: #f0efeb;
+  --sel: #0a2a7a;
+  --edge-2: #9a988f;
+  --tbg: linear-gradient(180deg, #6b9cf0 0%, #2a5bd0 12%, #0a2f9a 62%, #1b46a8 100%);
+}
+[data-skin="bubble"] {
+  --desk: #efa6c3;
+  --face: #fbebf2;
+  --face-2: #fff7fb;
+  --sel: #8a2552;
+  --edge-2: #dcb0c2;
+  --alt: #fdf0f6;
+  --tbg: linear-gradient(180deg, #f07fac 0%, #d24a82 14%, #ad2e64 62%, #bf3b73 100%);
+}
+[data-skin="bubble"] body {
+  background-image: var(--tile), radial-gradient(rgba(255, 255, 255, 0.55) 2px, transparent 2.5px),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.03) 0 1px, transparent 1px 3px);
+  background-size:
+    48px 48px,
+    22px 22px,
+    auto;
+}
+[data-skin="sage"] {
+  --desk: #8ba587;
+  --face: #eceee4;
+  --face-2: #f7f8f1;
+  --sel: #2d4a2b;
+  --edge-2: #adb3a0;
+  --tbg: linear-gradient(180deg, #9fc79a 0%, #5f9a58 12%, #3a6e35 62%, #4b8244 100%);
+}
+[data-skin="lilac"] {
+  --desk: #9f95cb;
+  --face: #edeaf5;
+  --face-2: #f8f6fc;
+  --sel: #35295f;
+  --edge-2: #b3adc9;
+  --alt: #f4f1fa;
+  --tbg: linear-gradient(180deg, #c4b8f2 0%, #8a78d6 12%, #5d49ad 62%, #7260c0 100%);
+}
+
+/* XP Luna blue, the real one: beige faces, Bliss-sky desktop */
+[data-skin="luna"] {
+  --desk: #3a6ea5;
+  --face: #ece9d8;
+  --face-2: #f7f5ea;
+  --sel: #316ac5;
+  --edge-2: #aca899;
+  --alt: #f4f2e6;
+  --tbg: linear-gradient(180deg, #3b8cf5 0%, #0a5ee0 8%, #0453e0 40%, #0046d5 88%, #2a6be8 100%);
+}
+[data-skin="luna"] body {
+  background-image: var(--tile), linear-gradient(180deg, #5a9ae0 0%, #3a6ea5 60%, #4f8a3c 60.2%, #3f7a2e 100%);
+  background-size:
+    48px 48px,
+    auto;
+  background-attachment: fixed;
+}
+/* XP Olive green */
+[data-skin="olive"] {
+  --desk: #8b9a5b;
+  --face: #ece9d8;
+  --face-2: #f7f5ea;
+  --sel: #5b6e2c;
+  --edge-2: #aca899;
+  --alt: #f3f2e4;
+  --tbg: linear-gradient(180deg, #a3b67a 0%, #7a8f4c 10%, #5f7336 50%, #4c5e29 90%, #64773e 100%);
+}
+[data-skin="cherry"] {
+  --desk: #a8243a;
+  --face: #f3e9e9;
+  --face-2: #fbf5f5;
+  --sel: #6e0f1e;
+  --edge-2: #c9aeb2;
+  --alt: #faf0f1;
+  --tbg: linear-gradient(180deg, #f08a98 0%, #c7344b 12%, #981b2f 62%, #b02a40 100%);
+}
+[data-skin="cherry"] body {
+  background-image: var(--tile), radial-gradient(rgba(255, 255, 255, 0.18) 1.5px, transparent 2px),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 3px);
+  background-size:
+    48px 48px,
+    18px 18px,
+    auto;
+}
+[data-skin="sepia"] {
+  --desk: #9a7b55;
+  --face: #efe6d4;
+  --face-2: #f8f2e6;
+  --sel: #4d3418;
+  --edge-2: #bfae8f;
+  --alt: #f5eee0;
+  --ink-2: #55432c;
+  --tbg: linear-gradient(180deg, #c9a77a 0%, #8f6b3f 12%, #6b4d28 62%, #7d5c33 100%);
+}
+[data-skin="sepia"] .banner > img:first-child,
+[data-skin="sepia"] .me,
+[data-skin="sepia"] .stand {
+  filter: sepia(0.55);
+}
+
+/* Paper: white desk, flat black title bars, ink only */
+[data-skin="mono"] {
+  --btn: #fff;
+  --dark: #000;
+  --btn-on: #000;
+  --btn-down: #eee;
+  --desk: #f4f4f2;
+  --face: #fff;
+  --face-2: #fff;
+  --sel: #000;
+  --edge: #000;
+  --edge-2: #000;
+  --alt: #f6f6f6;
+  --tbg: #000;
+}
+[data-skin="mono"] body {
+  background-image: radial-gradient(#cfcfcf 1px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+[data-skin="mono"] .win,
+[data-skin="mono"] .banner {
+  box-shadow: 4px 4px 0 #000;
+}
+[data-skin="mono"] .btn {
+  background: #fff;
+  box-shadow: none;
+}
+[data-skin="mono"] .btn[aria-pressed="true"],
+[data-skin="mono"] .btn.go {
+  background: #000;
+  color: #fff;
+}
+
+/* Night: dark everything. Most controls were drawn with literal #fff/#111, so they're re-pointed here */
+[data-skin="night"] {
+  color-scheme: dark;
+  --desk: #16161a;
+  --face: #2a2a30;
+  --face-2: #222227;
+  --ink: #e9e9ec;
+  --ink-2: #b4b4bb;
+  --ink-3: #85858d;
+  --edge: #0c0c0e;
+  --edge-2: #3c3c44;
+  --sel: #6c5ce0;
+  --alt: #26262c;
+  --paper: #1c1c21;
+  --line: #303037;
+  --btn: linear-gradient(180deg, #45454d, #2f2f36);
+  --hover: #2c2c33;
+  --code: #2a2a30;
+  --tbg: linear-gradient(180deg, #5b5b66 0%, #34343c 9%, #25252b 42%, #18181c 88%, #2e2e35 100%);
+  --dark: #0f0f12;
+  --frame: #000;
+  --hi: rgba(255, 255, 255, 0.14);
+  --line-2: #3a3a42;
+  --danger: #ff7676;
+  --btn-down: linear-gradient(180deg, #2c2c33, #38383f);
+  --btn-on: linear-gradient(180deg, #7c6ef0, #5546c8);
+  /* pixel icons: light outline, dark fill, so they read on dark menus and bars */
+  --px-k: #ececf0;
+  --px-d: #b9b9c2;
+  --px-m: #7c7c86;
+  --px-l: #4a4a53;
+  --px-w: #2f2f36;
+}
+[data-skin="night"] body {
+  background-image: var(--tile);
+}
+[data-skin="night"] .win {
+  border-color: #000;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    5px 6px 0 rgba(0, 0, 0, 0.45);
+}
+[data-skin="night"] .panel,
+[data-skin="night"] .ll,
+[data-skin="night"] .list,
+[data-skin="night"] .mc,
+[data-skin="night"] .mg,
+[data-skin="night"] .dd {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: none;
+}
+[data-skin="night"] .lr,
+[data-skin="night"] .ts .tl,
+[data-skin="night"] .row,
+[data-skin="night"] .cr,
+[data-skin="night"] .nt {
+  border-bottom-color: var(--line);
+  color: var(--ink);
+}
+[data-skin="night"] .field,
+[data-skin="night"] input.field,
+[data-skin="night"] textarea.field,
+[data-skin="night"] .selb,
+[data-skin="night"] .cmdin {
+  background-color: #121216;
+  color: var(--ink);
+  -webkit-text-fill-color: var(--ink);
+  border-color: #4a4a54;
+  box-shadow: none;
+}
+[data-skin="night"] .field::placeholder {
+  color: #76767f;
+  -webkit-text-fill-color: #76767f;
+}
+[data-skin="night"] .field:focus {
+  border-color: #9b9ba6;
+}
+[data-skin="night"] .btn {
+  background: var(--btn);
+  border-color: var(--edge);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+[data-skin="night"] .btn[aria-pressed="true"] {
+  background: var(--btn-on);
+  color: #fff;
+}
+[data-skin="night"] .gh,
+[data-skin="night"] .cols,
+[data-skin="night"] .mgh,
+[data-skin="night"] .tph {
+  background: linear-gradient(180deg, #34343b, #29292f);
+  color: var(--ink);
+  border-bottom-color: #0c0c0e;
+}
+[data-skin="night"] .tab {
+  background: linear-gradient(180deg, #3a3a42, #2c2c32);
+  color: var(--ink-2);
+}
+[data-skin="night"] .tab[aria-selected="true"],
+[data-skin="night"] .tab b {
+  color: var(--ink);
+}
+[data-skin="night"] .tag,
+[data-skin="night"] .cc {
+  background: #121216;
+  color: var(--ink);
+  border-color: #6a6a74;
+}
+[data-skin="night"] .tag.k,
+[data-skin="night"] .cc.k {
+  background: var(--ink);
+  color: #111;
+}
+[data-skin="night"] .mc {
+  border-color: var(--line);
+}
+[data-skin="night"] .mc:hover,
+[data-skin="night"] .mc.oth {
+  background: #202026;
+}
+[data-skin="night"] .mc.td .dn {
+  background: var(--ink);
+  color: #111;
+}
+[data-skin="night"] .mc.sel {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+[data-skin="night"] .ck {
+  background: #121216;
+  border-color: #8a8a94;
+  box-shadow: none;
+}
+[data-skin="night"] .ck[aria-checked="true"]::after {
+  border-color: var(--ink);
+}
+[data-skin="night"] .x1:hover {
+  background: #34343b;
+  color: var(--ink);
+}
+[data-skin="night"] .statusbar span {
+  box-shadow: none;
+}
+[data-skin="night"] .detail {
+  background: #202026;
+}
+[data-skin="night"] .plate.good {
+  background: var(--ink);
+  color: #111;
+}
+[data-skin="night"] .row:hover {
+  background: var(--hover) !important;
+}
+[data-skin="night"] .say {
+  background: #121216;
+  color: var(--ink);
+  border-color: #000;
+}
+[data-skin="night"] .sum > div {
+  background: var(--face-2);
+}
+[data-skin="night"] .hb i {
+  background: #121216;
+}
+[data-skin="night"] .hb i.on {
+  background: var(--ink);
+}
+[data-skin="night"] .me {
+  background: repeating-linear-gradient(45deg, #2a2a30 0 6px, #232328 6px 12px);
+  border-color: #000;
+}
+[data-skin="night"] .logo {
+  background: #121216;
+  color: var(--ink);
+  border-color: #6a6a74;
+}
+[data-skin="night"] .startmenu .apps {
+  background: var(--paper);
+}
+[data-skin="night"] ::-webkit-scrollbar-track {
+  background: #1c1c21;
+  border-color: #0c0c0e;
+}
+[data-skin="night"] ::-webkit-scrollbar-thumb {
+  background-color: #45454d;
+  border-color: #0c0c0e;
+  box-shadow: inset 1px 1px 0 #5a5a64;
+}
+[data-skin="night"] ::-webkit-scrollbar-button:single-button {
+  background-color: #2a2a30;
+  border-color: #0c0c0e;
+  box-shadow: inset 1px 1px 0 #44444c;
+  filter: invert(0.85);
+}
+[data-skin="night"] .mi,
+[data-skin="night"] .cr {
+  color: var(--ink);
+}
+/* Night: light webring badges keep dark text; window caps share one face, close included */
+[data-skin="night"] .b88.a,
+[data-skin="night"] .b88.d,
+[data-skin="night"] .b88.e,
+[data-skin="night"] .b88.g {
+  color: #111;
+}
+[data-skin="night"] .cap.x,
+[data-skin="night"] .osbar .cap.x {
+  background: var(--cap);
+}

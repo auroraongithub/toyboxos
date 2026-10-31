@@ -1,0 +1,1011 @@
+/* ===== desktop window manager: the page is the viewport, windows float on the desk ===== */
+@media (min-width: 861px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+  #app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .banner {
+    flex: none;
+    width: min(1040px, calc(100% - 24px));
+    margin: 14px auto 0;
+  }
+  .desk {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    display: block;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  /* the window layer is the whole viewport above the taskbar: windows can sit over the header, maximise fills it all */
+  .mcol {
+    position: fixed;
+    inset: 0 0 38px 0;
+    z-index: 3;
+    pointer-events: none;
+    display: block;
+  }
+  /* no z-index: a moved piece inside must stack against the windows layer itself (shell/piece.js) */
+  .side {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    bottom: 46px;
+    width: 210px;
+    overflow: hidden;
+    padding-top: 0;
+  }
+  .win.fl {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+    pointer-events: auto;
+    min-width: 0;
+    translate: none !important;
+  }
+  .win.fl > .tb {
+    flex: none;
+  }
+  .win.fl > .mbody {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .win.fl > .mbody > * {
+    flex: none;
+  }
+  .win.fl > .mbody > .panel:last-of-type,
+  .win.fl > .mbody > .bpanel,
+  .win.fl > .mbody > .pg,
+  .win.fl > .mbody > .gbox,
+  .win.fl > .mbody > div:has(> .gbox) {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .win.fl .pg,
+  .win.fl .pg.two {
+    height: auto;
+    min-height: 0;
+  }
+  .win.fl > .mbody > .pg {
+    display: grid;
+  }
+  .win.fl .gbox {
+    height: auto;
+    min-height: 220px;
+  }
+  .win.fl > .mbody > .statusbar {
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    background: var(--face);
+  }
+  .win.fl.min {
+    display: none;
+  }
+  .win.fl.max {
+    border-radius: 0;
+  }
+  .win.fl.max > .tb {
+    border-radius: 0;
+  }
+  .win.fl.max .rz {
+    display: none;
+  }
+  /* resize: edges + a size grip in the corner */
+  .rz {
+    position: absolute;
+    z-index: 6;
+    display: block;
+  }
+  .rz.re {
+    right: -4px;
+    top: 8px;
+    bottom: 10px;
+    width: 8px;
+    cursor: ew-resize;
+  }
+  .rz.rw {
+    left: -4px;
+    top: 8px;
+    bottom: 10px;
+    width: 8px;
+    cursor: ew-resize;
+  }
+  .rz.rs {
+    bottom: -4px;
+    left: 10px;
+    right: 10px;
+    height: 8px;
+    cursor: ns-resize;
+  }
+  .rz.rse {
+    right: -3px;
+    bottom: -3px;
+    width: 18px;
+    height: 18px;
+    cursor: nwse-resize;
+  }
+  .rz.rse::after {
+    content: "";
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    background: radial-gradient(circle, var(--ink-3) 1px, transparent 1.4px) 0 0/3.4px 3.4px;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .rz.rn {
+    top: -4px;
+    left: 10px;
+    right: 10px;
+    height: 8px;
+    cursor: ns-resize;
+  }
+  .rz.rnw {
+    left: -4px;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nwse-resize;
+  }
+  .rz.rne {
+    right: -4px;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nesw-resize;
+  }
+  .rz.rsw {
+    left: -4px;
+    bottom: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nesw-resize;
+  }
+  body.wm-move,
+  body.wm-size {
+    user-select: none;
+  }
+  body.wm-move iframe,
+  body.wm-size iframe,
+  body.wm-move canvas,
+  body.wm-size canvas {
+    pointer-events: none;
+  }
+  body.wm-move {
+    cursor: grabbing;
+  }
+  .cap.mx i {
+    width: 9px;
+    height: 8px;
+    border: 1px solid var(--on-dark);
+    border-top-width: 2px;
+  }
+  .cap.mx.on i {
+    width: 7px;
+    height: 6px;
+    box-shadow: 2px -2px 0 -1px var(--on-dark);
+  }
+  .tb {
+    cursor: default;
+  }
+}
+@media (min-width: 861px) {
+  .win.fl > .pop {
+    position: absolute;
+    z-index: 7;
+    pointer-events: none;
+  }
+}
+
+/* native shell title bar (decorations off): the app draws its own frame */
+.osbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px 0 6px;
+  user-select: none;
+  -webkit-user-select: none;
+  color: var(--on-dark);
+  font: 700 13px/1 var(--title);
+  text-shadow: 1px 1px 0 var(--frame);
+  border-bottom: 1px solid var(--frame);
+  background: var(--tbg);
+}
+.osb-ic {
+  width: 18px;
+  height: 18px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border: 1px solid var(--hi);
+  border-radius: 2px;
+  filter: grayscale(1);
+}
+.osb-t {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 3px;
+}
+.osbar .cap {
+  all: unset;
+  box-sizing: border-box;
+  width: 22px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px solid var(--hi);
+  background: var(--cap);
+  display: grid;
+  place-items: center;
+  cursor: default;
+}
+.osbar .cap:hover {
+  filter: brightness(1.25);
+}
+.osbar .cap.x {
+  background: var(--cap-x);
+  margin-left: 2px;
+}
+.osbar .cap.mx i {
+  width: 9px;
+  height: 8px;
+  border: 1px solid var(--on-dark);
+  border-top-width: 2px;
+  box-sizing: border-box;
+}
+.osbar .cap.mx.on i {
+  width: 7px;
+  height: 6px;
+  box-shadow: 2px -2px 0 -1px var(--on-dark);
+}
+.ndesk body {
+  padding-top: 28px;
+}
+@media (min-width: 861px) {
+  .ndesk body {
+    padding-top: 0;
+  }
+  .ndesk #app {
+    height: calc(100% - 28px);
+    margin-top: 28px;
+  }
+  .ndesk .mcol {
+    top: 28px;
+  }
+}
+/* where a window will snap while you drag it to an edge */
+@media (min-width: 861px) {
+  .snapv {
+    position: absolute;
+    z-index: 9999;
+    pointer-events: none;
+    border: 2px solid var(--ink);
+    background: rgba(128, 128, 128, 0.22);
+    box-shadow: inset 0 0 0 1px var(--paper);
+  }
+  .snapv[hidden] {
+    display: none;
+  }
+}
+/* desktop: titles get two lines before they're cut (Today's lists, Jobs), the date/type columns give way first */
+@media (min-width: 861px) {
+  .ts .tl .tt {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.25;
+    padding: 3px 0;
+  }
+  .row > .ttl {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.25;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  .cols,
+  .row {
+    grid-template-columns: 42px minmax(0, 1fr) fit-content(150px) 76px 64px;
+  }
+  .nofitc .cols,
+  .nofitc .row {
+    grid-template-columns: minmax(0, 1fr) fit-content(150px) 76px 64px;
+  }
+  .row .rate {
+    padding-right: 10px;
+    min-width: 0;
+    overflow: hidden;
+  }
+}
+/* board: columns run the full window height and light up while a card is dragged over them */
+@media (min-width: 861px) {
+  .win.fl > .mbody > .panel:has(> .bd) {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .win.fl .bd {
+    flex: 1 1 auto;
+    align-items: stretch;
+  }
+  .bd > .ll {
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+  }
+  .bd > .ll > .lcap {
+    flex: 1 1 auto;
+  }
+  .bd .lr[draggable="true"] {
+    cursor: grab;
+  }
+  .bd .lr.drag {
+    opacity: 0.45;
+  }
+  .bd > .ll.dropon {
+    background: var(--hover);
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+}
+/* mouse: a row's small buttons (delete ×, move arrows, Inbox "Page") show on hover or keyboard focus, so lists read calm */
+@media (min-width: 861px) and (hover: hover) and (pointer: fine) {
+  .lr .x1,
+  .lr .jb {
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+  .lr:hover .x1,
+  .lr:hover .jb,
+  .lr:focus-within .x1,
+  .lr:focus-within .jb {
+    opacity: 1;
+  }
+}
+/* Notes > Tools: the launcher fills the window, tiles keep a sensible size */
+@media (min-width: 861px) {
+  .win.fl > .mbody > .tgrid {
+    flex: 1 1 auto;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 170px));
+    background: transparent;
+    padding: 14px;
+  }
+}
+/* Today in a narrow column: the title gets the whole line, date and tag drop under it */
+@media (min-width: 861px) {
+  .tcol {
+    container-type: inline-size;
+  }
+  @container (max-width:330px) {
+    .ts .tl .tlb {
+      flex-wrap: wrap;
+      row-gap: 1px;
+      padding: 3px 0;
+    }
+    .ts .tl .tlb .tt {
+      flex: 1 1 100%;
+      padding: 0;
+    }
+    .ts .tl .tlb:has(> .ld) .tt {
+      flex-basis: calc(100% - 34px);
+    }
+    .ts .tl .tlb:has(> .ld) .tt ~ *:nth-child(3) {
+      margin-left: 33px;
+    }
+    .ts .tl .tlb .d {
+      margin-left: 0;
+      font-size: 11px;
+    }
+    .ts .tl .tlb .tag {
+      font-size: 10px;
+    }
+  }
+}
+
+/* ---- windows at any size ----
+   A panel fills the window; whatever height its content leaves gets a faint drawing (Panel's .pfill), so a tall
+   window never ends in a blank sheet. Width buckets (data-w, set by Window) reshape the content. */
+.pfill {
+  display: none;
+}
+@media (min-width: 861px) {
+  .win.fl > .mbody > .panel:last-of-type,
+  .win.fl > .mbody > .panel:has(+ .statusbar) {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .win.fl .panel > :not(.pfill) {
+    flex: none;
+  }
+  /* Osage's thread scrolls itself: it takes the room (and shrinks), no art */
+  .win.fl > .mbody > .panel.bpanel {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .win.fl .panel.bpanel > .bthread {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .win.fl .panel.bpanel > .pfill {
+    display: none;
+  }
+  .win.fl .panel > .pfill {
+    order: 1;
+  }
+  .win.fl .panel > .foot {
+    order: 2;
+  }
+  .win.fl .pfill {
+    display: block;
+    flex: 1 1 0;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    pointer-events: none;
+  }
+  .pfill img {
+    position: absolute;
+    right: 16px;
+    bottom: 10px;
+    height: min(130px, 70cqh);
+    width: auto;
+    opacity: 0.16;
+    mix-blend-mode: multiply;
+    display: none;
+  }
+  .pfill .pa1 {
+    display: block;
+  }
+  .win[data-win="jobs"] .pfill .pa1,
+  .win[data-win="money"] .pfill .pa1,
+  .win[data-win="notes"] .pfill .pa1 {
+    display: none;
+  }
+  .win[data-win="jobs"] .pfill .pa2,
+  .win[data-win="money"] .pfill .pa2,
+  .win[data-win="notes"] .pfill .pa2 {
+    display: block;
+  }
+  @container (max-height:110px) {
+    .pfill img {
+      display: none !important;
+    }
+  }
+  [data-skin="night"] .pfill img {
+    filter: invert(1);
+    mix-blend-mode: screen;
+    opacity: 0.12;
+  }
+
+  /* narrow windows */
+  .win[data-w="xs"] .tg,
+  .win[data-w="s"] .tg {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .win[data-w="xs"] .tg > .tcol,
+  .win[data-w="s"] .tg > .tcol {
+    border-right: 0;
+  }
+  .win[data-w="xs"] .cols,
+  .win[data-w="xs"] .row,
+  .win[data-w="s"] .cols,
+  .win[data-w="s"] .row {
+    grid-template-columns: 38px minmax(0, 1fr) fit-content(120px);
+  }
+  .win[data-w="xs"] .nofitc .cols,
+  .win[data-w="xs"] .nofitc .row,
+  .win[data-w="s"] .nofitc .cols,
+  .win[data-w="s"] .nofitc .row {
+    grid-template-columns: minmax(0, 1fr) fit-content(120px);
+  }
+  .win[data-w="xs"] .nofitc .cols > :nth-child(3),
+  .win[data-w="s"] .nofitc .cols > :nth-child(3) {
+    display: none;
+  }
+  .win[data-w="xs"] .row .c-type,
+  .win[data-w="xs"] .row .c-age,
+  .win[data-w="xs"] .cols > :nth-child(n + 4),
+  .win[data-w="s"] .row .c-type,
+  .win[data-w="s"] .row .c-age,
+  .win[data-w="s"] .cols > :nth-child(n + 4) {
+    display: none;
+  }
+  .win[data-w="xs"] .bd,
+  .win[data-w="s"] .bd {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .win[data-w="xs"] .bd > .ll,
+  .win[data-w="s"] .bd > .ll {
+    border-right: 0;
+    border-bottom: 1px solid var(--edge-2);
+    min-height: 0;
+  }
+  .win[data-w="xs"] .tools,
+  .win[data-w="s"] .tools {
+    flex-wrap: wrap;
+  }
+  .win[data-w="xs"] .tools > .field.w,
+  .win[data-w="xs"] .tools > .w {
+    flex: 1 1 100%;
+  }
+  .win[data-w="xs"] .tabs .tab,
+  .win[data-w="xs"] .hubtabs .ht {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+  .win[data-w="xs"] .hubtabs .ht .ic {
+    display: none;
+  }
+}
+@media (min-width: 861px) {
+  .win[data-w="xs"] .pv .pbody {
+    padding-left: 30px;
+    padding-right: 10px;
+  }
+}
+
+/* ---- layout pieces (shell/piece.js) + Edit layout (shell/layedit.js) ---- */
+.piece.free > .win {
+  margin: 0 !important;
+}
+.piece.free > .stand {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  left: auto;
+  bottom: auto;
+}
+.piece.free > .banner {
+  margin: 0;
+}
+.win.lk > .tb {
+  cursor: default;
+}
+.cap.lkc svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: var(--on-dark);
+  stroke-width: 1.5;
+}
+body[data-ledit] #mcol {
+  pointer-events: none;
+}
+body[data-ledit] #mcol .win > :not(.piece) {
+  opacity: 0.3;
+  transition: opacity 0.15s;
+}
+/* frames go see-through too, so pieces under a window can still be seen and grabbed */
+body[data-ledit] #mcol .win {
+  background: color-mix(in srgb, var(--face) 25%, transparent);
+  box-shadow: none;
+  border-style: dashed;
+}
+body[data-ledit] .piece,
+body[data-ledit] .piece * {
+  pointer-events: none;
+}
+.led {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}
+.led-box {
+  position: fixed;
+  outline: 1px dashed var(--ink);
+  outline-offset: 1px;
+  cursor: move;
+  touch-action: none;
+  background: transparent;
+}
+.led-box:hover,
+.led-box.on {
+  outline: 2px solid var(--sel);
+  background: color-mix(in srgb, var(--sel) 8%, transparent);
+}
+.led-l {
+  position: absolute;
+  left: -1px;
+  top: -19px;
+  font:
+    700 10px/17px Verdana,
+    sans-serif;
+  padding: 0 5px;
+  background: var(--dark);
+  color: var(--on-dark);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+}
+.led-box:hover .led-l,
+.led-box.on .led-l {
+  opacity: 1;
+}
+.led-sz {
+  display: none;
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 11px;
+  height: 11px;
+  background: var(--paper);
+  border: 1px solid var(--frame);
+  cursor: nwse-resize;
+}
+.led-rot {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: -22px;
+  width: 11px;
+  height: 11px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--frame);
+  cursor: grab;
+}
+.led-rot::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 11px;
+  width: 1px;
+  height: 10px;
+  background: var(--frame);
+}
+.led-m {
+  position: absolute;
+  right: -1px;
+  top: -19px;
+  height: 17px;
+  padding: 0 4px;
+  border: 1px solid var(--frame);
+  background: var(--btn);
+  color: var(--ink);
+  display: none;
+  cursor: pointer;
+}
+.led-m .ic {
+  width: 12px;
+  height: 12px;
+}
+.led-box:hover .led-m,
+.led-box.on .led-m,
+.led-box:hover .led-sz,
+.led-box.on .led-sz,
+.led-box:hover .led-rot,
+.led-box.on .led-rot {
+  display: block;
+}
+/* only the selected box rises (and grows a margin to reach its handles): a hovered big one must not cover small ones */
+.led-box.on {
+  z-index: 2;
+}
+.led-box.on::before {
+  content: "";
+  position: absolute;
+  inset: -26px -10px -10px -10px;
+  z-index: -1;
+}
+.led-bar {
+  position: fixed;
+  z-index: 5;
+  display: flex;
+  cursor: move;
+  touch-action: none;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100vw - 24px);
+  padding: 6px 8px;
+  background: var(--face);
+  border: 1px solid var(--frame);
+  box-shadow:
+    inset 1px 1px 0 var(--hi),
+    3px 3px 0 rgba(0, 0, 0, 0.25);
+  font-size: 12px;
+}
+.led-bar > b {
+  margin-right: 4px;
+}
+.led-sp {
+  width: 8px;
+  flex: none;
+}
+.led-bar .btn,
+.led-bar label {
+  cursor: pointer;
+}
+.led-grip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.led-grip::before {
+  content: "";
+  width: 6px;
+  height: 14px;
+  background: radial-gradient(circle, var(--ink) 1px, transparent 1.3px) 0 0/3px 3px;
+  opacity: 0.6;
+}
+/* Hide windows (edit bar): only the windows layer goes; side widgets are pieces and stay */
+body[data-ledhide] #mcol > .win {
+  visibility: hidden;
+}
+.led-hid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.led-mine {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+body.led-drag,
+body.led-drag * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+/* ---- stickers + window looks ---- */
+.stk-i {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+.stk-wait {
+  aspect-ratio: 1;
+  background: var(--hover);
+}
+.stk-t {
+  white-space: pre;
+  line-height: 1.1;
+  pointer-events: none;
+  user-select: none;
+}
+.piece.inwin {
+  pointer-events: none;
+}
+.led-file {
+  position: fixed;
+  left: -999px;
+}
+.stk-ed {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  min-width: 280px;
+}
+.stk-ed textarea {
+  width: 100%;
+  resize: vertical;
+  font-family: inherit;
+}
+.stk-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.stk-sz {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+.stk-sz input {
+  width: 90px;
+}
+.stk-pv {
+  min-height: 40px;
+  padding: 6px;
+  border: 1px dashed var(--line);
+  background: var(--paper);
+  overflow: hidden;
+  white-space: pre;
+}
+.win[data-wbg] > .mbody {
+  background: var(--wbg) center/cover no-repeat;
+}
+.win[data-wcap] > .tb {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.18)),
+    var(--wcap) center/cover no-repeat;
+}
+.wl {
+  display: grid;
+  gap: 6px;
+  padding: 4px 10px 12px;
+  min-width: 300px;
+}
+.wl-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.wl-pv {
+  height: 70px;
+}
+.wl-c {
+  display: grid;
+  gap: 6px;
+}
+.wl-op {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.wl-op input {
+  width: 110px;
+}
+
+/* side widgets art peeks over its own window but never over the windows layer (.mcol z 3): .side has no z-index so moved pieces can go over */
+.side .pop {
+  z-index: 2;
+}
+/* phone layout list (shell/phonelist.js) */
+.phl {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+}
+.phl-s {
+  border: 1px solid var(--edge-2);
+  background: var(--paper);
+}
+.phl-r {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+}
+.phl-n {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+.phl-b {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 8px 8px;
+  border-top: 1px dotted var(--line);
+}
+.phl-bi {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.phl-bi.off .b88 {
+  opacity: 0.35;
+}
+.stk-shelf {
+  grid-column: 1/-1;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px 18px;
+  padding: 10px 8px;
+}
+.stk-ph {
+  flex: none;
+  max-width: 45vw;
+}
+.phl-st {
+  display: inline-block;
+  max-width: 90px;
+  max-height: 46px;
+  overflow: hidden;
+}
+.phl-st .stk-t {
+  white-space: nowrap;
+}
+.phl-bi.off .phl-st {
+  opacity: 0.35;
+}
+
+/* a form's Save row sits at the bottom of its window and stays in view while the form scrolls */
+.panel > .tools.foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  border-top: 1px solid var(--edge-2);
+}
+
+/* narrow windows: calendar toolbars go icon-only like phones, so the month name and add box keep the room */
+@media (min-width: 861px) {
+  .win[data-w="xs"] .seg .btn:has(.lbl),
+  .win[data-w="s"] .seg .btn:has(.lbl) {
+    min-width: 34px;
+    padding: 0 8px;
+  }
+  .win[data-w="xs"] .seg .btn:has(.lbl) .ic,
+  .win[data-w="s"] .seg .btn:has(.lbl) .ic {
+    margin: 0;
+  }
+  .win[data-w="xs"] .seg .btn:has(.lbl) .lbl,
+  .win[data-w="s"] .seg .btn:has(.lbl) .lbl,
+  .win[data-w="xs"] .calq .pastb .lbl,
+  .win[data-w="s"] .calq .pastb .lbl {
+    display: none;
+  }
+  .win[data-w="xs"] .calq,
+  .win[data-w="s"] .calq,
+  .win[data-w="xs"] .daybar,
+  .win[data-w="s"] .daybar {
+    flex-wrap: nowrap;
+  }
+  .win[data-w="xs"] .calq .btn.go,
+  .win[data-w="xs"] .daybar .btn.go {
+    font-size: 0;
+    gap: 0;
+    width: 34px;
+    min-width: 34px;
+    padding: 0;
+    flex: none;
+  }
+  .win[data-w="xs"] .calq .seg,
+  .win[data-w="s"] .calq .seg {
+    flex: none;
+  }
+  .win[data-w="xs"] .calq .field,
+  .win[data-w="s"] .calq .field {
+    min-width: 0;
+  }
+  .win[data-w="xs"] .calq .pastb,
+  .win[data-w="s"] .calq .pastb {
+    width: 34px;
+    min-width: 34px;
+    padding: 0;
+    flex: none;
+  }
+  .win[data-w="xs"] .calq .qprev,
+  .win[data-w="s"] .calq .qprev {
+    flex-basis: 100%;
+  }
+}

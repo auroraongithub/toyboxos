@@ -1,0 +1,27 @@
+{
+  "_doc": "Provider types and shared settings. Your providers, keys and models are added in the app (Models window) and live in ai.json and secrets.json. See PROVIDERS.md.",
+
+  "reasoning": "low",
+  "max_tokens": 4000,
+  "web_tool": {"type": "openrouter:web_search", "parameters": {"max_results": 5}},
+
+  "kinds": {
+    "openrouter": {"label": "OpenRouter", "url": "https://openrouter.ai/api/v1/chat/completions", "models_url": "https://openrouter.ai/api/v1/models",
+                   "key_env": "OPENROUTER_API_KEY", "signup": "https://openrouter.ai/keys", "openrouter": true, "bare_ids": true},
+    "openai":     {"label": "OpenAI", "url": "https://api.openai.com/v1/chat/completions", "key_env": "OPENAI_API_KEY", "signup": "https://platform.openai.com/api-keys"},
+    "anthropic":  {"label": "Anthropic", "url": "https://api.anthropic.com/v1/messages", "protocol": "anthropic", "key_env": "ANTHROPIC_API_KEY",
+                   "signup": "https://console.anthropic.com/settings/keys"},
+    "gemini":     {"label": "Google Gemini", "url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", "key_env": "GEMINI_API_KEY",
+                   "signup": "https://aistudio.google.com/apikey", "free": true, "extra": {"reasoning_effort": "low"}},
+    "mistral":    {"label": "Mistral", "url": "https://api.mistral.ai/v1/chat/completions", "key_env": "MISTRAL_API_KEY", "signup": "https://console.mistral.ai", "free": true},
+    "groq":       {"label": "Groq", "url": "https://api.groq.com/openai/v1/chat/completions", "key_env": "GROQ_API_KEY", "signup": "https://console.groq.com", "free": true},
+    "cerebras":   {"label": "Cerebras", "url": "https://api.cerebras.ai/v1/chat/completions", "key_env": "CEREBRAS_API_KEY", "signup": "https://cloud.cerebras.ai", "free": true},
+    "deepseek":   {"label": "DeepSeek", "url": "https://api.deepseek.com/chat/completions", "models_url": "https://api.deepseek.com/models", "key_env": "DEEPSEEK_API_KEY",
+                   "signup": "https://platform.deepseek.com/api_keys"},
+    "xai":        {"label": "xAI", "url": "https://api.x.ai/v1/chat/completions", "key_env": "XAI_API_KEY", "signup": "https://console.x.ai"},
+    "ollama":     {"label": "Ollama", "url": "http://127.0.0.1:11434/v1/chat/completions", "nokey": true, "free": true, "needs_url": true},
+    "custom":     {"label": "OpenAI-compatible", "url": "", "needs_url": true}
+  },
+
+  "providers": {}
+}

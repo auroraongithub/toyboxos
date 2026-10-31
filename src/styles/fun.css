@@ -1,0 +1,260 @@
+/* ---- life: ticker, click notes, mascot, flush, small motion ---- */
+.bn b {
+  cursor: text;
+}
+.bnin {
+  font:
+    400 34px/1 "DotGothic16",
+    "Courier New",
+    monospace;
+  width: min(300px, 60vw);
+  background: var(--dark);
+  color: var(--on-dark);
+  border: 1px solid var(--hi);
+  padding: 2px 6px;
+  outline: none;
+}
+.bn-face {
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.12s steps(2);
+}
+.bn-face:active {
+  transform: translateY(-3px) rotate(-3deg);
+}
+.tick {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 17px;
+  background: rgba(0, 0, 0, 0.78);
+  color: var(--on-dark);
+  font:
+    12px/17px "DotGothic16",
+    "Courier New",
+    monospace;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+}
+.tkt {
+  display: inline-flex;
+  will-change: transform;
+}
+.tk {
+  display: inline-block;
+  white-space: pre;
+  flex: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tkt {
+    animation: tk var(--tkd, 40s) linear infinite;
+  }
+  @keyframes tk {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .spark {
+    animation: sp 1.3s ease-out forwards;
+  }
+  .win {
+    animation: winin 0.16s ease-out;
+  }
+  @keyframes winin {
+    from {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+  .stand {
+    animation: sway 7s ease-in-out infinite;
+    transform-origin: 50% 100%;
+  }
+  @keyframes sway {
+    50% {
+      transform: rotate(0.7deg);
+    }
+  }
+  .pop {
+    animation: bob 3.2s steps(2, jump-none) infinite;
+  }
+  .pop.sit {
+    animation-duration: 2.6s;
+  }
+  .pop.chib {
+    animation-duration: 3.8s;
+  }
+  @keyframes bob {
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+  .lcd {
+    --c: 1;
+  }
+  .flush.s1 img {
+    animation:
+      rise 0.5s ease-out both,
+      wob 0.35s steps(2) 0.5s 3;
+  }
+  .flush.s2 img {
+    animation: spin 1.4s ease-in forwards;
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(120%);
+    }
+  }
+  @keyframes wob {
+    50% {
+      transform: translateX(5px) rotate(3deg);
+    }
+  }
+  @keyframes spin {
+    to {
+      transform: translateY(130%) rotate(540deg) scale(0.2);
+    }
+  }
+}
+.spark {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  color: var(--on-dark);
+  font:
+    700 16px/1 Georgia,
+    serif;
+  text-shadow:
+    1px 1px 0 var(--frame),
+    -1px -1px 0 var(--frame),
+    1px -1px 0 var(--frame),
+    -1px 1px 0 var(--frame);
+}
+@keyframes sp {
+  to {
+    transform: translateY(-34px);
+    opacity: 0;
+  }
+}
+/* mascot */
+.picbtn {
+  all: unset;
+  cursor: pointer;
+  display: block;
+}
+.picbtn:focus-visible {
+  outline: 1px dotted var(--ink);
+  outline-offset: 2px;
+}
+/* the mascot window keeps its own size; the picture fits whatever box it gets (no reflow when it changes) */
+.wit-win .picbtn {
+  width: 100%;
+}
+.wit-win .me.pic {
+  width: 100%;
+  max-width: none;
+  height: var(--mh, 140px);
+  object-fit: contain;
+  border: 1px solid var(--edge);
+}
+.say {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 5;
+  background: var(--paper);
+  border: 1px solid var(--frame);
+  padding: 4px 7px;
+  font: 12px/1.25 var(--font);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+.wit-win .body {
+  position: static;
+}
+/* toilet egg */
+.flush {
+  position: fixed;
+  left: 50%;
+  bottom: 34px;
+  z-index: 200;
+  translate: -50% 0;
+  pointer-events: none;
+  text-align: center;
+  overflow: hidden;
+  padding-top: 6px;
+}
+.flush img {
+  display: block;
+  width: 110px;
+  height: auto;
+  border: 1px solid var(--frame);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+}
+.flush b {
+  display: block;
+  margin-top: 4px;
+  color: var(--on-dark);
+  font: 700 12px var(--title);
+  text-shadow:
+    1px 1px 0 var(--frame),
+    -1px -1px 0 var(--frame);
+}
+/* taskbar: icons only once it gets busy; no scrollbar */
+.tasks,
+.tabs {
+  scrollbar-width: none;
+}
+.tasks.compact .tbtn {
+  padding: 0 8px;
+  min-width: 34px;
+  justify-content: center;
+}
+.tasks.compact .tbtn span {
+  display: none;
+}
+.tasks .tbtn {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+/* packs without art: badges centre their text, the assistant shows its bubble icon */
+.b88.noart > span {
+  margin: 0 !important;
+}
+.noav {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  color: var(--ink-2);
+  background: var(--hover);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.noav.bav {
+  width: 26px;
+  height: 26px;
+}
+.noav.bhero {
+  width: 84px;
+  height: 84px;
+}
+.noav.bhero .ic {
+  width: 40px;
+  height: 40px;
+}
+.noav.bhero .ic.aic {
+  width: 48px !important;
+  height: 48px !important;
+}
+.ai-off .noav .ic.aic {
+  width: 32px !important;
+  height: 32px !important;
+}
+.ai-off .noav {
+  width: 72px;
+  height: 72px;
+}

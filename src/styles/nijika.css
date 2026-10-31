@@ -1,0 +1,321 @@
+/* ===== nijika: terminal / files / services ===== */
+[data-win="nijika"] > .mbody {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+[data-win="nijika"] > .mbody > .hubtabs {
+  flex: none;
+}
+.nj-mo {
+  margin-left: auto;
+}
+[data-win="nijika"] > .mbody > .nj-body,
+.nj-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.nj-body > .panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.nj-body > .tools,
+.nj-body > .statusbar {
+  flex: none;
+}
+.nj-part {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.nj-part[hidden],
+.nj-tv[hidden] {
+  display: none;
+}
+/* terminal */
+.nj-term {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.nj-tabs {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  padding: 4px;
+  background: var(--btn);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  flex: none;
+}
+.nj-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 2px 0 7px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: default;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.nj-tab[aria-selected="true"] {
+  background: var(--dark);
+  color: var(--on-dark);
+  border-color: var(--frame);
+}
+.nj-tab b {
+  font-weight: 400;
+}
+.nj-tab .x1 {
+  width: 20px;
+  height: 20px;
+  color: inherit;
+}
+.nj-tabs > .btn {
+  flex: none;
+  min-width: 0;
+  padding: 0 8px;
+}
+.nj-tv {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--dark);
+}
+.nj-xt {
+  flex: 1 1 auto;
+  min-height: 120px;
+  padding: 4px 0 0 6px;
+  overflow: hidden;
+}
+.nj-xt .xterm {
+  height: 100%;
+}
+.nj-st {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font:
+    12px ui-monospace,
+    Consolas,
+    monospace;
+  color: var(--ink-3);
+  background: #262626;
+  padding: 2px 6px;
+  border: 1px solid var(--edge);
+}
+.nj-keys {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  background: var(--btn);
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+  flex: none;
+}
+.nj-keys .btn {
+  min-width: 34px;
+  padding: 0 6px;
+  flex: none;
+}
+.nj-keys .btn.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+/* files */
+.nj-ft {
+  flex-wrap: nowrap;
+}
+.nj-path {
+  flex: 1 1 auto;
+  min-width: 60px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+}
+.nj-f {
+  cursor: default;
+  gap: 8px;
+}
+.nj-f:hover {
+  background: var(--hover);
+}
+.nj-f .tt {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nj-f .when {
+  min-width: 0;
+  flex: none;
+  font-size: 11px;
+}
+.nj-more {
+  opacity: 0.7;
+}
+.nj-ed,
+.nj-pv {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.nj-fn {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+.nj-ta {
+  flex: 1 1 auto;
+  min-height: 200px;
+  width: 100%;
+  resize: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  font:
+    13px/1.45 ui-monospace,
+    Consolas,
+    monospace;
+  padding: 8px;
+  white-space: pre;
+  overflow: auto;
+  tab-size: 2;
+}
+.nj-pvb {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dark);
+  overflow: auto;
+}
+.nj-pvb img,
+.nj-pvb video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.nj-pvb iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--paper);
+}
+/* services */
+.nj-s {
+  gap: 6px;
+}
+.nj-s .tt {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nj-s .tt em {
+  font-style: normal;
+  margin-left: 8px;
+  color: var(--ink-2, var(--ink-2));
+  font-size: 11px;
+}
+.nj-dot {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border: 1px solid var(--ink);
+  background: transparent;
+}
+.nj-dot.up {
+  background: #3b9a3b;
+  border-color: #1e5e1e;
+}
+.nj-dot.bad {
+  background: #b33;
+  border-color: #6d1a1a;
+}
+.nj-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 8px;
+}
+.nj-links .btn {
+  text-decoration: none;
+  color: var(--ink);
+}
+.nj-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(760px, 92vw);
+}
+.nj-logs pre {
+  margin: 0;
+  max-height: 60vh;
+  overflow: auto;
+  background: var(--dark);
+  color: #d8d8d8;
+  font:
+    11px/1.4 ui-monospace,
+    Consolas,
+    monospace;
+  padding: 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.nj-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px;
+  max-width: 300px;
+}
+.nj-pair b {
+  font:
+    700 28px ui-monospace,
+    Consolas,
+    monospace;
+  letter-spacing: 4px;
+}
+.nj-con .lr .field {
+  flex: 1 1 auto;
+}
+@media (max-width: 860px) {
+  /* a fixed height (not just min-height) so the terminal can fit rows to it */
+  .mcol > .win.cur[data-win="nijika"] {
+    height: calc(100dvh - var(--bh) - var(--tb-h) - 14px);
+  }
+  [data-win="nijika"] .mbody {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .nj-f .nj-m,
+  .nj-s .tt em {
+    display: none;
+  }
+  .nj-keys .btn {
+    min-width: 38px;
+    height: 34px;
+  }
+  .nj-ta {
+    font-size: 14px;
+  }
+  .nj-logs {
+    width: auto;
+  }
+}

@@ -1,0 +1,17 @@
+dist/
+native/
+vendor/
+build/
+node_modules/
+src-tauri/
+server/www/
+server/data/
+src/data/brands.js
+src/packs/*/
+!src/packs/default/
+*.md
+*.html
+*.json
+tools/
+art-src/
+docs/

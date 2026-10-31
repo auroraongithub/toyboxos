@@ -1,0 +1,146 @@
+/* ===== Moodle window ===== */
+[data-win="moodle"] > .mbody {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.mdl {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.mdl > .hubtabs,
+.mdl-head,
+.mdl-ctabs,
+.mdl-bar {
+  flex: none;
+}
+.mdl > .panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.mdl-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--face);
+  border-bottom: 1px solid var(--line);
+}
+.mdl-bar .sp {
+  flex: 1;
+}
+.mdl-busy {
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.mdl-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  background: var(--face);
+  border-bottom: 1px solid var(--edge);
+}
+.mdl-head b {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.mdl-ctabs {
+  display: flex;
+  gap: 2px;
+  padding: 5px 8px 0;
+  background: var(--face);
+  border-bottom: 1px solid var(--edge);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.mdl-row {
+  cursor: pointer;
+}
+.mdl-row:hover {
+  background: var(--hover);
+}
+.mdl-row > .ic {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: var(--ink-2);
+}
+.mdl-row .tt {
+  white-space: normal;
+  line-height: 1.25;
+  padding: 2px 0;
+}
+.mdl-row .tt small {
+  display: block;
+  font-weight: 400;
+  font-size: 11.5px;
+  color: var(--ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mdl-row.done .tt {
+  text-decoration: none;
+  color: var(--ink-2);
+}
+.mdl-row.open {
+  background: var(--hover);
+}
+.mdl-row.hi {
+  outline: 2px solid var(--frame);
+  outline-offset: -2px;
+}
+.mdl-row .tag {
+  flex: none;
+}
+.mdl-detail,
+.mdl-sum {
+  padding: 6px 10px 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.mdl-sum {
+  color: var(--ink-2);
+  font-size: 12.5px;
+}
+.mdl-md {
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.mdl-md p {
+  margin: 0 0 6px;
+}
+.mdl-md img {
+  max-width: 100%;
+}
+.mdl-dim {
+  color: var(--ink-3);
+  font-size: 12px;
+  margin: 4px 0;
+}
+.mdl-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.mdl-err {
+  margin-bottom: 6px;
+}
+.mdl-sheet {
+  max-height: 70vh;
+  overflow: auto;
+  padding: 4px 2px;
+}

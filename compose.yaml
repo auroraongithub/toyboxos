@@ -1,0 +1,11 @@
+services:
+  toybox:
+    build: .
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./toybox-data:/data
+    restart: unless-stopped
+    # AI keys (optional) go in as environment variables, for example:
+    # environment:
+    #   OPENROUTER_API_KEY: "..."

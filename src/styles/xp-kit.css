@@ -1,0 +1,226 @@
+/* ---- consistency layer: one definition per control so every module matches ---- */
+/* date / time: same box as every other field, no OS chrome */
+input.field[type="date"],
+input.field[type="time"],
+input.field[type="number"],
+input.field[type="search"] {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  font: inherit;
+}
+input.field[type="date"] {
+  flex: 0 1 112px;
+  min-width: 104px;
+}
+input.field[type="time"] {
+  flex: 0 1 92px;
+  min-width: 84px;
+}
+input.field[type="date"]::-webkit-calendar-picker-indicator,
+input.field[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0.55;
+  cursor: pointer;
+  margin: 0 -2px 0 2px;
+  padding: 0;
+  filter: grayscale(1);
+}
+input.field[type="date"]::-webkit-datetime-edit,
+input.field[type="time"]::-webkit-datetime-edit {
+  padding: 0;
+}
+input.field[type="number"]::-webkit-inner-spin-button {
+  display: none;
+}
+input.field[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+/* every control in a toolbar is the same height */
+.tools .field,
+.tools .selb,
+.lr.edit .field,
+.lr.edit .selb {
+  height: 24px;
+}
+.tools .btn,
+.lr.edit .btn {
+  height: 24px;
+}
+.pm .field {
+  max-width: none;
+  width: 100%;
+  height: 24px;
+}
+.pm .seg {
+  justify-content: center;
+}
+/* XP-ish scrollbars (gray bevel) */
+/* reset any older stylesheet's scrollbar-width/color (older installs keep their built-in CSS under live updates); they switch off ::-webkit-scrollbar styling */
+@supports selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--edge-2) var(--face-2);
+  }
+}
+/* classic desktop scrollbars: 16px, dithered track, raised square thumb with grip, bevelled arrow buttons, no rounding, no hover glow */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-corner {
+  background: var(--face);
+}
+::-webkit-scrollbar-track {
+  background: repeating-conic-gradient(var(--paper) 0 25%, var(--face-2) 0 50%) 0 0/2px 2px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--face);
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1px solid var(--frame);
+  border-radius: 0;
+  box-shadow:
+    inset 1px 1px 0 var(--hi),
+    inset -1px -1px 0 var(--edge-2);
+}
+::-webkit-scrollbar-thumb:vertical {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='6'%3E%3Cpath d='M0 0h7M0 2h7M0 4h7' stroke='%23000' stroke-opacity='.45'/%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%23fff' stroke-opacity='.8'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-thumb:horizontal {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='7'%3E%3Cpath d='M0 0v7M2 0v7M4 0v7' stroke='%23000' stroke-opacity='.45'/%3E%3Cpath d='M1 0v7M3 0v7M5 0v7' stroke='%23fff' stroke-opacity='.8'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: var(--face) center/7px 7px no-repeat;
+  border: 1px solid var(--frame);
+  border-radius: 0;
+  box-shadow:
+    inset 1px 1px 0 var(--hi),
+    inset -1px -1px 0 var(--edge-2);
+}
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Cpath d='M0 5h7L3.5 1z' fill='%23111'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Cpath d='M0 2h7L3.5 6z' fill='%23111'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:horizontal:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Cpath d='M5 0v7L1 3.5z' fill='%23111'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:horizontal:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Cpath d='M2 0v7l4-3.5z' fill='%23111'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:single-button:active {
+  box-shadow: inset 1px 1px 0 var(--edge-2);
+  background-position: calc(50% + 1px) calc(50% + 1px);
+}
+.ctxb {
+  position: fixed;
+  inset: 0;
+  z-index: 119;
+}
+.ctxm {
+  position: fixed;
+  z-index: 120;
+  min-width: 150px;
+  padding: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--frame);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.25);
+}
+.ctxm .mi {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 3px 8px;
+  font-size: 13px;
+}
+.ctxm .mi .ic {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.ctxm .mi:hover {
+  background: var(--sel);
+  color: var(--on-dark);
+}
+.ctxm .mi.dgr {
+  color: #b00020;
+}
+.ctxm .mi.dgr:hover {
+  color: var(--on-dark);
+}
+.acts .mi > em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tasks::-webkit-scrollbar,
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+/* calendar toolbar: keep it on one row */
+.mod .tools .seg .btn {
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  input.field[type="date"],
+  input.field[type="time"] {
+    flex: 1 1 110px;
+  }
+}
+/* habits: 7-day strip */
+.hb {
+  display: inline-flex;
+  gap: 2px;
+  flex: none;
+}
+.hb i {
+  width: 8px;
+  height: 12px;
+  border: 1px solid var(--edge);
+  background: var(--paper);
+}
+.hb i.on {
+  background: var(--dark);
+  border-color: var(--frame);
+}
+.lr .sub.ed {
+  cursor: text;
+}
+
+/* icon-only buttons: no label margin, so the glyph sits dead centre */
+.btn.ico .ic,
+.btn.ib .ic,
+.btn.bico .ic,
+.ib .ic {
+  margin: 0;
+}
+/* icon-only buttons (Btn with an icon and no text) are square-ish everywhere, not 70px wide */
+.btn.ico {
+  min-width: 28px;
+  padding: 0 6px;
+}
+@media (max-width: 860px) {
+  .btn.ico {
+    min-width: 40px;
+  }
+}

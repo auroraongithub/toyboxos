@@ -1,0 +1,357 @@
+/* ===== whiteboard.exe ===== */
+.wbtools {
+  gap: 4px;
+}
+.wbtools .ib {
+  width: 30px;
+  height: 24px;
+  min-width: 0;
+  padding: 0;
+}
+.wbtools .ib .ic {
+  margin: 0;
+}
+.wbtools .wbb {
+  min-width: 0;
+  max-width: 220px;
+  padding: 0 6px;
+  gap: 4px;
+}
+.wbtools .wbb .ic {
+  margin: 0;
+}
+.wbtools .wbb .ic:last-child {
+  width: 10px;
+  height: 10px;
+}
+.wbn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+.wbtools .wsp {
+  flex: 1 1 auto;
+}
+.wbtools .wsn {
+  width: auto;
+  padding: 0 7px;
+  gap: 4px;
+}
+.wsl {
+  font-size: 12px;
+}
+
+.wbx {
+  outline: none;
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.wbx canvas {
+  cursor: inherit;
+}
+.wbx .wtop {
+  touch-action: none;
+}
+.wbx[data-tool="select"] {
+  cursor: default;
+}
+.wbx[data-tool="hand"] {
+  cursor: grab;
+}
+.wbx[data-tool="text"] {
+  cursor: text;
+}
+.wbx[data-tool="eraser"] {
+  cursor: cell;
+}
+.wbx:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--ink-3);
+}
+
+/* the toolbox: MS Paint's, two columns down the left */
+.wbox {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 3px;
+  max-height: calc(100% - 16px);
+  overflow: auto;
+  scrollbar-width: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    3px 4px 0 rgba(0, 0, 0, 0.22);
+}
+.wtg {
+  display: grid;
+  grid-template-columns: repeat(2, 28px);
+  gap: 2px;
+}
+.btn.wt {
+  min-width: 0;
+  width: 28px;
+  height: 26px;
+  padding: 0;
+}
+.btn.wt .ic {
+  margin: 0;
+}
+.wsep {
+  height: 0;
+  border-top: 1px solid var(--edge-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+.wbsw {
+  display: grid;
+  grid-template-columns: repeat(2, 28px);
+  gap: 3px;
+}
+.wsw {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 28px;
+  height: 18px;
+  background: var(--c, var(--ink));
+  border: 1px solid var(--edge);
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.35);
+}
+.wsw[aria-pressed="true"] {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+.wbsz {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+.wbsz .sz {
+  all: unset;
+  cursor: pointer;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+.wbsz .sz i {
+  display: block;
+  width: 40px;
+  height: var(--d);
+  background: var(--ink);
+  border-radius: 2px;
+}
+.wbsz .sz[aria-pressed="true"] {
+  background: var(--sel);
+  border-color: var(--edge);
+}
+.wbsz .sz[aria-pressed="true"] i {
+  background: var(--on-dark);
+}
+
+.wzoom {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 3;
+  display: flex;
+  gap: 1px;
+}
+.wzoom .btn {
+  height: 22px;
+  min-width: 0;
+  padding: 0;
+}
+.wzoom .ib {
+  width: 24px;
+}
+.wzoom .ib .ic {
+  margin: 0;
+  width: 12px;
+  height: 12px;
+}
+.wzp {
+  width: 48px;
+  font-size: 11px;
+}
+.wempty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  pointer-events: none;
+  color: var(--ink-3);
+}
+.wempty b {
+  font:
+    400 20px "DotGothic16",
+    var(--font);
+  letter-spacing: 0.5px;
+}
+.wempty small {
+  font-size: 12.5px;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.wta {
+  position: absolute;
+  z-index: 4;
+  margin: 0;
+  padding: 0;
+  border: 1px dashed var(--ink-3);
+  background: transparent;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
+  line-height: 1.29;
+  white-space: pre;
+  min-width: 2em;
+  caret-color: currentColor;
+  transform-origin: 0 0;
+}
+.wta.note {
+  white-space: pre-wrap;
+  color: #1b1b1b;
+  -webkit-text-fill-color: #1b1b1b;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  line-height: 1.29;
+}
+.wbsh {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px;
+}
+.wbsh .wbsw {
+  grid-template-columns: repeat(7, 36px);
+  gap: 6px;
+}
+.wbsh .wsw {
+  width: 36px;
+  height: 28px;
+}
+.wbsh .wbsz {
+  flex-direction: row;
+  gap: 6px;
+}
+.wbsh .wbsz .sz {
+  flex: 1;
+  height: 30px;
+  border: 1px solid var(--edge-2);
+}
+.wbl .mi span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .wbtools {
+    flex-wrap: nowrap;
+  }
+  .wbtools .ib {
+    width: 32px;
+    height: 32px;
+  }
+  .wbtools .wbb {
+    height: 32px;
+    max-width: 46vw;
+  }
+  .wsl {
+    display: none;
+  }
+  .wbtools .wsn {
+    width: 32px;
+    padding: 0;
+  }
+  /* phone: one strip along the bottom of the canvas */
+  .wbox {
+    left: 6px;
+    right: 6px;
+    top: auto;
+    bottom: 6px;
+    flex-direction: row;
+    align-items: center;
+    padding: 3px;
+    max-height: none;
+    overflow: visible;
+  }
+  .wtg {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .wtg::-webkit-scrollbar {
+    display: none;
+  }
+  .btn.wt {
+    width: 38px;
+    height: 36px;
+    flex: none;
+  }
+  .btn.wt .ic {
+    width: 19px;
+    height: 19px;
+  }
+  .wst {
+    flex: none;
+  }
+  .wst .wsw {
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+  }
+  .wempty {
+    padding-bottom: 60px;
+  }
+  /* fill exactly the space between the toolbar and the tab bar, so the page never scrolls under your finger */
+  .gbox.wbx {
+    flex: none;
+    min-height: 240px;
+    height: calc(100dvh - var(--bh) - var(--tb-h) - 166px);
+  }
+}
+.wsr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  margin: 0;
+  padding: 0;
+}
+
+.wbsz .sz.tz {
+  height: 20px;
+  width: 100%;
+}
+.wbsz .sz.tz b {
+  color: var(--ink);
+  line-height: 1;
+  font-family: inherit;
+}
+.wbsz .sz.tz[aria-pressed="true"] b {
+  color: var(--on-dark);
+}
+.wbsh .wbsz .sz.tz {
+  height: 34px;
+}

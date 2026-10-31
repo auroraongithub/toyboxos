@@ -1,0 +1,46 @@
+node_modules/
+dist/
+native/
+server/www/
+server/__pycache__/
+__pycache__/
+# secrets: never commit
+token.txt
+openrouter_key.txt
+*_key.txt
+server/ai.json
+secrets.json
+server/secrets.json
+server/moodle-calendar.json
+server/caps.json
+server/app-changes/
+server/data/
+.osage-stage/
+keystore.properties
+*.keystore
+*.jks
+*.db
+.env*
+# build outputs
+src-tauri/target/
+src-tauri/gen/android/app/src/main/jniLibs/
+src-tauri/gen/schemas/
+# local notes and editor/tool folders
+HANDOFF*.md
+# docker compose data
+toybox-data/
+build/
+# character packs are private (art isn't ours to publish): only the neutral default pack is in the repo.
+# Keep yours in src/packs/<name>/ locally; nijika's autodeploy copies ~/sean-os-server/private/packs/* in before building.
+src/packs/*
+!src/packs/default/
+art-src/
+*-art.zip
+tools/clean_art.py
+docs/customization-audit.md
+# your own servers and accounts (see deploy.sh, server/updates.py, server/admin.py, server/moodle.py)
+deploy.local.sh
+server/channel.txt
+server/admin.json
+server/moodle.json
+server/jobs_profile.md

@@ -1,0 +1,11 @@
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+extend-exclude = ["server/www", "server/data", "server/app-changes"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+
+[tool.ruff.lint]
+# short names (l, O) and module-level lambdas are used on purpose in this codebase
+ignore = ["E741", "E731", "E402"]
