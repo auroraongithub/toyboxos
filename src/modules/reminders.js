@@ -144,7 +144,7 @@ function SoundPicker({ cur, onPick, def }) {
     ${own.map(o => row("f:" + o.id, o.name, html`<${Del} onClick=${e => {
       e && e.stopPropagation && e.stopPropagation();
       removeOwnSound(o.id);
-      if (sel === "f:" + o.id) setSel(def ? "" : "classic");
+      if (sel === "f:" + o.id) setSel(def ? "" : "mechanical");
     }}/>`))}
     <label class="btn sndadd"><${Icon} n="plus"/>Add a sound file…<input type="file" accept="audio/*" hidden onChange=${async e => {
       const k = await addOwnSound(e.target.files[0]);
@@ -155,6 +155,17 @@ function SoundPicker({ cur, onPick, def }) {
 export const pickSound = (title, cur, onPick, def, at) =>
   openSheet({ title, Body: SoundPicker, props: { cur, onPick, def }, at, onClose: stopPreview });
 const pickDefault = at => pickSound("Alarm sound", defaultSound(), setDefaultSound, false, at);
+export const openSoundPicker = pickDefault;
+/* after setting a loud alarm: the toast says which sound it will ring with, and Change picks another for this one */
+const alarmToast = (title, at) =>
+  toast("Alarm set for " + when(at) + " · " + soundName(defaultSound()), {
+    label: "Change sound",
+    run: () => {
+      const iso = new Date(at).toISOString(),
+        r = D.reminders.find(x => x.loud && x.at === iso && x.title === title);
+      if (r) pickSound("Sound for this alarm", r.sound || "", k => W.upd("reminders", r._id, { sound: k }), true);
+    },
+  });
 
 function Row({ r }) {
   const past = !r.done && Date.parse(r.at) < Date.now();
@@ -180,17 +191,20 @@ function Reminders() {
     lo0 = said ? said.v === "alarm" : false,
     lo = lo0;
   const p = q.trim() ? parseRemind(said ? said.arg : q) : null;
-  /* two buttons that each add: Remind (quiet) and Alarm (loud); Enter follows what you typed ("alarm 7am"), else quiet */
+  /* two buttons that each add: Remind (quiet) and Alarm (loud); Enter follows what you typed ("alarm 7am"), else quiet.
+     A pressed button wins over the wording ("in 30m stretch" reads as a reminder, but Alarm means alarm) */
   const add = a => {
     if (!q.trim()) return;
     if (!p) {
       toast("Add a time: 5pm, tomorrow 8am, in 20m");
       return;
     }
-    const lo = typeof a === "boolean" && !said ? a : lo0;
-    addReminder({ title: p.title || (lo ? "Alarm" : "Reminder"), at: p.at, loud: lo, repeat: p.repeat });
+    const lo = typeof a === "boolean" ? a : lo0; // the button you pressed decides; Enter follows the wording
+    const title = p.title || (lo ? "Alarm" : "Reminder");
+    addReminder({ title, at: p.at, loud: lo, repeat: p.repeat });
     setQ("");
-    toast((lo ? "Alarm set for " : "Reminder set for ") + when(p.at));
+    if (lo) alarmToast(title, p.at);
+    else toast("Reminder set for " + when(p.at));
   };
   const all = list(),
     up = all.filter(r => !r.done),
@@ -199,8 +213,10 @@ function Reminders() {
       <${Btn} go icon="bell" aria-label="Add reminder" title="Quiet reminder" onClick=${() => add(false)}>Remind<//>
       <${Btn} icon="alarm" aria-label="Add alarm" title="Loud alarm" onClick=${() => add(true)}>Alarm<//>
       ${q.trim() ? html`<div class="qprev">${p ? html`<${Icon} n=${lo ? "alarm" : "bell"}/>${when(p.at)}${p.repeat ? " · " + p.repeat : ""}${p.title ? "" : " · (no title)"}` : "Add a time: 5pm, tomorrow 8am, fri 14:30, in 20m"}</div>` : null}<//>
+    <div class="sndbar"><${Icon} n="alarm"/><label class="sndlab" for="sndsel">Alarm sound</label>
+      <div class="dsel"><button type="button" id="sndsel" class="selb" aria-haspopup="listbox" onClick=${e => pickDefault(e.currentTarget)}><span class="sl">${soundName(defaultSound())}</span></button></div>
+      <button type="button" class="btn sndplay" aria-label="Play the alarm sound" title="Play" onClick=${() => preview(defaultSound())}><${Icon} n="play"/></button></div>
     <${Panel}><${List}>${up.length ? up.map(r => html`<${Row} r=${r}/>`) : html`<${Empty}>Nothing set. Try “in 20m stretch” or “7am wake up daily”.<//>`}
-      <button class="lr sndset" onClick=${e => pickDefault(e.currentTarget)}><${Icon} n="alarm"/><span class="tt">Alarm sound</span><span class="when">${soundName(defaultSound())} ›</span></button>
       ${done.length ? html`<${Group} title="Done" meta=${html`<button class="gl" onClick=${() => setShowDone(!showDone)}>${showDone ? "hide" : "show " + done.length}</button>`}/>${showDone ? done.slice(0, 15).map(r => html`<${Row} r=${r}/>`) : null}` : null}<//><//>
 `;
 }
@@ -221,6 +237,8 @@ export default {
       })),
   cmd: (v, arg) => {
     const al = ["alarm", "wake"].includes(v);
+    if (["sound", "sounds", "ringtone", "tone"].includes(v) || (al && /^(sound|sounds|tone|ringtone)$/i.test(arg || "")))
+      return [{ icon: "alarm", l: "Alarm sound: " + soundName(defaultSound()) + "…", r: () => pickDefault() }];
     if (!(al || ["remind", "reminder", "r", "rem"].includes(v))) return [];
     if (!arg)
       return [
@@ -239,13 +257,10 @@ export default {
           when(p.at) +
           (p.repeat ? " · " + p.repeat : ""),
         r: () => {
-          addReminder({
-            title: p.title || (al ? "Alarm" : "Reminder"),
-            at: p.at,
-            loud: al,
-            repeat: p.repeat,
-          });
-          toast((al ? "Alarm set for " : "Reminder set for ") + when(p.at));
+          const title = p.title || (al ? "Alarm" : "Reminder");
+          addReminder({ title, at: p.at, loud: al, repeat: p.repeat });
+          if (al) alarmToast(title, p.at);
+          else toast("Reminder set for " + when(p.at));
         },
       },
     ];

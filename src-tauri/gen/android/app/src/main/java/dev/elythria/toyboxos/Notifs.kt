@@ -47,7 +47,7 @@ object Notifs {
 
   // ---- alarm sounds: one channel per sound (a channel's sound can't change once made) ----
   // presets are res/raw/snd_<key>.ogg; your own sounds are files/sounds/<id>, copied over by the web app (alarmSound)
-  private val PRESETS = setOf("classic", "beep", "buzzer", "rooster", "argon", "helium", "timing", "osmium", "firedrill")
+  private val PRESETS = setOf("mechanical", "digital", "classic", "schoolbell", "telephone", "rooster", "beep", "buzzer", "smoke", "siren")
   private val SAFE = Regex("^[A-Za-z0-9_-]{6,64}$")
   fun soundFile(c: Context, id: String) = File(File(c.filesDir, "sounds").apply { mkdirs() }, id)
 

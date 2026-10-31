@@ -10,7 +10,7 @@ import { ls } from "./pref.js";
 import { D, W, onChange } from "./store.js";
 import { toast, warn } from "./bus.js";
 import { when as nlpWhen, remindAt } from "./nlp.js";
-import { beep, play, soundOf, nativeSound } from "./sounds.js";
+import { play, soundOf, nativeSound } from "./sounds.js";
 
 const WD = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const UNIT = {
@@ -123,7 +123,6 @@ export function alerts() {
 }
 
 /* ---- ringing ---- */
-export { beep } from "./sounds.js"; // the old two-tone beep (now also the "chime" sound)
 const tauri = () => window.__TAURI_INTERNALS__;
 export function askPermission() {
   const B = bridge();
@@ -201,7 +200,7 @@ function ring(a) {
     alEmit();
   } else {
     toast("🔔 " + a.title);
-    if (!isAndroid()) beep(2);
+    if (!isAndroid()) play("beep"); // a quiet reminder: one short beep
   }
   if (!isAndroid()) sysNotify(a.title, a.body);
 }

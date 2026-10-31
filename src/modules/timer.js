@@ -6,6 +6,7 @@ import { useCols, W, D } from "../core/store.js";
 import { Tabs, Panel, StatusBar, Btn, Field, Seg } from "../ui/index.js";
 import { openMod } from "../shell/os.js";
 import { askPermission } from "../core/alarms.js";
+import { play, defaultSound } from "../core/sounds.js";
 const NB = () => window.AndroidBridge || null;
 
 const PM = { focus: 25, short: 5, long: 15 };
@@ -80,23 +81,6 @@ export const setMode = m => {
       warn("android timer", e);
     }
 };
-function beep() {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    [0, 0.25, 0.5].forEach(t => {
-      const o = c.createOscillator(),
-        g = c.createGain();
-      o.frequency.value = 880;
-      g.gain.value = 0.15;
-      o.connect(g);
-      g.connect(c.destination);
-      o.start(c.currentTime + t);
-      o.stop(c.currentTime + t + 0.15);
-    });
-  } catch (e) {
-    warn("timer sound", e);
-  }
-}
 function finish() {
   ps.running = false;
   notify();
@@ -107,7 +91,7 @@ function finish() {
   } else ps.mode = "focus";
   ps.remain = PM[ps.mode] * 60;
   save();
-  if (!NB()) beep();
+  if (!NB()) play(defaultSound()); // the alarm sound, once
   toast("Timer done");
   emit();
   const B = NB();

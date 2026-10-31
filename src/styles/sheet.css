@@ -793,24 +793,37 @@
 }
 
 /* reminders: the "Alarm sound" row under the list, and the sound picker (radio rows, play button, your own files) */
-.sndset {
-  all: unset;
-  box-sizing: border-box;
+.sndbar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
-  cursor: pointer;
-  border-top: 1px solid var(--line);
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--face-2);
 }
-.sndset .ic {
+.sndbar > .ic {
   width: 16px;
   height: 16px;
-  color: var(--ink-2);
+  flex: none;
 }
-.sndset:hover,
-.sndset:focus-visible {
-  background: var(--hover);
+.sndlab {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sndbar .dsel {
+  flex: 0 1 220px;
+  min-width: 0;
+}
+.sndbar .selb {
+  width: 100%;
+}
+.sndbar .sndplay {
+  min-width: 0;
+  padding: 0 8px;
+}
+.sndbar .sndplay .ic {
+  width: 12px;
+  height: 12px;
 }
 .sndl {
   min-width: 260px;

@@ -1,35 +1,36 @@
-/* Alarm sounds. Presets ship in dist/sounds (Android Open Source Project tones, Apache-2.0: assets/sounds/LICENSE.md);
+/* Alarm sounds: real recordings only (public domain / CC0 from Wikimedia Commons, a few from the Android Open Source
+   Project; sources in assets/sounds/LICENSE.md), shipped in dist/sounds and fetched when one plays.
    your own sound files are saved like page attachments (IndexedDB + the sync server), so every device gets them.
    The choice is synced in config/alarm {sound, own: [{id, name}]}; a reminder can carry its own `sound`.
-   A sound key is a preset id, "f:<file id>" (your own) or "chime" (the built-in synth beep, no file). */
+   A sound key is a preset id or "f:<file id>" (your own). */
 import { D, W } from "./store.js";
 import { toast, warn } from "./bus.js";
 import { saveFile, fileUrl } from "./files.js";
 import { syncConfig, HOME_SERVER } from "./sync.js";
 
 export const PRESETS = [
+  ["mechanical", "Alarm clock bell"],
+  ["digital", "Digital alarm clock"],
   ["classic", "Classic bell"],
-  ["beep", "Digital beep"],
-  ["buzzer", "Buzzer"],
+  ["schoolbell", "School bell"],
+  ["telephone", "Old telephone"],
   ["rooster", "Rooster"],
-  ["argon", "Argon"],
-  ["helium", "Helium"],
-  ["timing", "Timing"],
-  ["osmium", "Osmium"],
-  ["firedrill", "Fire drill"],
-  ["chime", "Chime"],
+  ["beep", "Beeping"],
+  ["buzzer", "Buzzer"],
+  ["smoke", "Smoke alarm"],
+  ["siren", "Siren"],
 ];
 const conf = () => (D.config || []).find(x => x._id === "alarm") || {};
 export const ownSounds = () => (Array.isArray(conf().own) ? conf().own : []);
 const known = k =>
   PRESETS.some(p => p[0] === k) || (/^f:/.test(k || "") && ownSounds().some(o => "f:" + o.id === k));
-export const defaultSound = () => (known(conf().sound) ? conf().sound : "classic");
+export const defaultSound = () => (known(conf().sound) ? conf().sound : "mechanical");
 export const soundOf = r => (r && known(r.sound) ? r.sound : defaultSound());
 export const soundName = k => {
   const p = PRESETS.find(x => x[0] === k);
   if (p) return p[1];
   const o = ownSounds().find(x => "f:" + x.id === k);
-  return o ? o.name : "Classic bell";
+  return o ? o.name : "Alarm clock bell";
 };
 const save = o => W.set("config", "alarm", { ...conf(), ...o, upd: new Date().toISOString() });
 export const setDefaultSound = k => save({ sound: k });
@@ -44,42 +45,13 @@ async function urls(k) {
   return ["sounds/" + k + ".ogg", ...(srv ? [srv + "/sounds/" + k + ".ogg"] : [])];
 }
 
-/* the old two-tone beep: the "chime" sound, and the fallback when no file plays */
-export function beep(n = 3) {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    for (let i = 0; i < n; i++) {
-      const o = c.createOscillator(),
-        g = c.createGain();
-      o.frequency.value = i % 2 ? 660 : 880;
-      g.gain.value = 0.18;
-      o.connect(g);
-      g.connect(c.destination);
-      o.start(c.currentTime + i * 0.28);
-      o.stop(c.currentTime + i * 0.28 + 0.2);
-    }
-    setTimeout(() => c.close(), n * 280 + 400);
-  } catch (e) {
-    warn("alarm sound", e);
-  }
-}
-const beepLoop = () => {
-  beep(3);
-  const t = setInterval(() => beep(3), 2500);
-  return () => clearInterval(t);
-};
-
 /* play a sound (looping for a ringing alarm); returns stop() */
 export function play(k, loop = false) {
   let stop = () => {},
     done = false;
-  if (k === "chime") {
-    if (!loop) beep(3);
-    else stop = beepLoop();
-    return () => stop();
-  }
   (async () => {
-    const list = await urls(k);
+    /* the chosen sound, then the default bell if that one can't be found (offline, removed file) */
+    const list = [...(await urls(k)), ...(k === "mechanical" ? [] : await urls("mechanical"))];
     for (const u of list) {
       if (done) return;
       const a = new Audio(u);
@@ -93,10 +65,9 @@ export function play(k, loop = false) {
         };
         return;
       } catch (e) {
-        if (e && e.name === "NotAllowedError") break; // the page may not make sound yet: the beep can't either, but try
+        if (e && e.name === "NotAllowedError") return; // the page may not make sound yet (no tap so far)
       }
     }
-    if (!done) stop = loop ? beepLoop() : (beep(3), () => {});
   })();
   return () => {
     done = true;
@@ -131,7 +102,7 @@ export async function addOwnSound(file) {
 }
 export function removeOwnSound(id) {
   const was = conf();
-  save({ own: ownSounds().filter(o => o.id !== id), sound: was.sound === "f:" + id ? "classic" : was.sound });
+  save({ own: ownSounds().filter(o => o.id !== id), sound: was.sound === "f:" + id ? "mechanical" : was.sound });
   toast("Sound removed", { label: "Undo", run: () => W.set("config", "alarm", was) });
 }
 

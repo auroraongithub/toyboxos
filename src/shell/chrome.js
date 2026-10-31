@@ -210,6 +210,7 @@ export function StartMenu({ open, close, openList, minList, view, mobile, onCmd 
       "profile",
       [
         ["profile", "Profile", () => openMod("profile", true)],
+        ["reminders", "Alarm sound", () => import("../modules/reminders.js").then(m => m.openSoundPicker())],
         featOn("ai") ? ["models", "Models and keys", () => openMod("models", true)] : null,
         ["reset", "Setup…", openSetup],
         ["export", "Backup", bk],
