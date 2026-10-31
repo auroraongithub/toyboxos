@@ -1,0 +1,8 @@
+{
+  "places": [["Media", "~/media"], ["Downloads", "~/Downloads"]],
+  "user_units": [],
+  "system_units": ["nginx"],
+  "links": [["jellyfin", 8096, "http"]],
+  "origins": [],
+  "gh_repo": ""
+}

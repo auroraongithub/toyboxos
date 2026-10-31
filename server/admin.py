@@ -85,7 +85,13 @@ ORIGINS = (
 LOCAL_ORIGIN = re.compile(r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$")
 MAXTEXT = 2 * 1024 * 1024
 MAXUP = 4 * 1024 * 1024 * 1024
-USER_UNITS = list(dict.fromkeys((CONF.get("user_units") or []) + ["sos-sync", "sos-admin"]))
+# the server's own units: sos-* on older setups, toybox-* from install.sh; only the ones installed here are listed
+_OWN = [
+    u
+    for u in ("sos-sync", "sos-admin", "toybox-sync", "toybox-admin")
+    if os.path.exists(os.path.join(HOME, ".config/systemd/user", u + ".service"))
+]
+USER_UNITS = list(dict.fromkeys((CONF.get("user_units") or []) + _OWN))
 SYS_UNITS = list(CONF.get("system_units") or [])
 LINKS = [[str(n), int(p), str(sc)] for n, p, sc in CONF.get("links") or []]
 NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$")
@@ -938,6 +944,28 @@ class Server(ThreadingHTTPServer):
     allow_reuse_address = True
 
 
+def cli_pair():
+    """`python3 admin.py pair`: a one-time code for the first device, from the running service on this machine."""
+    import urllib.request
+
+    req = urllib.request.Request(
+        f"http://127.0.0.1:{PORT}/api/pair/new",
+        b"{}",
+        method="POST",
+        headers={"Authorization": "Bearer " + TOKEN, "Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as r:
+            print(json.loads(r.read())["code"])
+    except OSError:
+        raise SystemExit("the admin service isn't running on port %d" % PORT)
+
+
 if __name__ == "__main__":
+    import sys
+
+    if sys.argv[1:2] == ["pair"]:
+        cli_pair()
+        raise SystemExit
     print(f"sos-admin on http://{HOST}:{PORT}", flush=True)
     Server((HOST, PORT), H).serve_forever()

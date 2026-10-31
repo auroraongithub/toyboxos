@@ -51,6 +51,37 @@ working offline) when it is served over `https`, and you need a public address t
 way is Tailscale: install it on the server, then run `tailscale funnel --bg 8787`, and use the `https://…ts.net`
 address it prints. A reverse proxy such as Caddy in front of port 8787 works too.
 
+## Home server window (optional)
+
+Start > Home server gives you a terminal, a file manager and service status for the machine the server runs on. It
+is a second, separate service (`admin.py`) with its own token, and it is never on the public internet: it listens on
+127.0.0.1 only and is published to your own Tailscale network on port 8443. Anyone with its token has a shell on that
+machine, so keep it that way and never use `tailscale funnel` for it.
+
+It needs Linux with systemd and [Tailscale](https://tailscale.com/download) on the server, and Tailscale on every
+device that uses the window. It isn't available on Windows, macOS or in Docker. Install it with the sync server:
+
+    bash server/install.sh --admin
+
+The script starts it as the `toybox-admin` user service, publishes it with `tailscale serve --bg --https=8443`
+(the first time that may need `sudo`, or `sudo tailscale set --operator=$USER` once), then prints its address and a
+pairing code. In the app turn on Profile > Modules > Home server (it is listed once the server has it), open
+Start > Home server, enter the address (`https://<machine>.<tailnet>.ts.net:8443`) and
+the code. Codes work once, for 5 minutes. For the next device use the window's settings button > Pair another device,
+or run `python3 ~/toybox-server/admin.py pair` on the server.
+
+What the window shows is up to you, in `admin.json` next to `admin.py` (start from `admin.example.json`):
+
+- `places`: extra folders for the Files tab, as `[label, path]`. Your home folder is always there.
+- `user_units` / `system_units`: systemd services to list. The sync and admin services are added for you.
+  Restarting system services needs passwordless `sudo`; without it the window shows status and logs only.
+- `links`: web apps on the server as `[name, port, "http" or "https"]`, opened at the machine's tailnet address.
+- `origins`: extra web addresses the app is opened from, if not the server's own.
+- `gh_repo`: `owner/repo` for the assistant's GitHub tool (token in `github_token.txt`).
+
+Docker containers show up by themselves when the user can run `docker`. Restart after editing:
+`systemctl --user restart toybox-admin`.
+
 ## Settings
 
 Environment variables: `SOS_PORT` (8787), `SOS_HOST` (0.0.0.0), `SOS_DB`, `SOS_FILES`, `SOS_TOKEN_FILE`, `SOS_WWW`.

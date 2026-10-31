@@ -54,14 +54,14 @@ function Connect() {
     setMsg("Pairing…");
     setMsg(await claimPair(url.trim(), code.trim()));
   };
-  return html`<${Tools}><${Field} w="w" aria-label="Admin address" placeholder=${ADMIN_URL} value=${url} onInput=${e => setUrl(e.target.value)}/><//>
+  return html`<${Tools}><${Field} w="w" aria-label="Admin address" placeholder=${ADMIN_URL || "https://<server>.<tailnet>.ts.net:8443"} value=${url} onInput=${e => setUrl(e.target.value)}/><//>
     <${Panel}><div class="ll nj-con">
       <${Group} title="Pairing code"/>
-      <div class="lr"><${Field} w="w" aria-label="Pairing code" placeholder="From a device that's already connected" autocapitalize="characters" autocomplete="off" value=${code} onInput=${e => setCode(e.target.value)} onEnter=${pair}/><${Btn} go onClick=${pair}>Pair<//></div>
+      <div class="lr"><${Field} w="w" aria-label="Pairing code" placeholder="From the installer or a connected device" autocapitalize="characters" autocomplete="off" value=${code} onInput=${e => setCode(e.target.value)} onEnter=${pair}/><${Btn} go onClick=${pair}>Pair<//></div>
       <${Group} title="Or admin token"/>
       <div class="lr"><${Field} w="w" type="password" aria-label="Admin token" placeholder="admin_token.txt on the server" autocomplete="off" value=${tok} onInput=${e => setTok(e.target.value)} onEnter=${go}/><${Btn} go onClick=${go}>Connect<//></div>
       ${msg ? html`<div class="lr late"><span class="tt">${msg}</span></div>` : null}
-      <div class="emp">Tailnet only: Tailscale has to be on for this device.</div>
+      <div class="emp">Not set up yet? On the Linux server run <code class="selectable">bash server/install.sh --admin</code>. It prints the address and a code. Tailnet only: Tailscale has to be on for this device.</div>
     </div><//>`;
 }
 

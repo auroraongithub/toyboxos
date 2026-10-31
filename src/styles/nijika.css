@@ -319,3 +319,8 @@
     width: auto;
   }
 }
+.nj-con .emp code {
+  background: var(--code);
+  padding: 0 3px;
+  overflow-wrap: anywhere;
+}

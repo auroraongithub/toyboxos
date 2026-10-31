@@ -96,6 +96,9 @@ Other options:
 All of these are covered in [`server/README.md`](server/README.md), along with HTTPS, using the server away from home,
 and backups.
 
+On a Linux server, `bash server/install.sh --admin` also sets up the Home server window (terminal, files, services)
+for your own Tailscale network; see [Home server window](server/README.md#home-server-window-optional).
+
 ### 2. Connect your devices
 
 Open `http://<server>:8787` and enter the pairing code when Setup asks for it. To add more devices, get a new code
