@@ -271,7 +271,7 @@ flowchart TD
     <section class="win" id="deploy" aria-labelledby="h-deploy">
       <div class="cap"><h2 id="h-deploy">deploy.exe</h2><span class="bx"><i></i><i></i><i></i></span></div>
       <div class="body">
-        <p>Two ways in, one way out: a new release that installed apps pick up by themselves. Native code (Windows tray, Android alarms) still needs a new installer.</p>
+        <p>Two ways in, one way out: a new release that installed apps pick up by themselves. Native code (Windows and Linux tray, Android alarms) still needs a new installer; the Linux app rebuilds itself in CI.</p>
         <div class="fig tall"><pre class="mermaid">
 %%{init: {"theme":"base","themeVariables":{"primaryColor":"#ffffff","primaryBorderColor":"#151515","primaryTextColor":"#151515","lineColor":"#3b3b3b","fontFamily":"Atkinson Hyperlegible, sans-serif","fontSize":"14px"}}}%%
 flowchart TD
@@ -367,7 +367,7 @@ flowchart TD
           <tr><td>Daily jobs</td><td>Jobs feed 06:45, exchange rate 3× a day, Moodle calendar 06:17.</td><td><code>pull_jobs.py pull_fx.py pull_calendar.py</code></td></tr>
           <tr><td>Releases</td><td>Live updates, a neutral public release, self-updating servers.</td><td><code>release.py updates.py autodeploy.sh</code></td></tr>
           <tr><td>Ingest</td><td>Other programs drop in jobs, jots, links, events, reminders.</td><td><code>ingest.py INGEST.md</code></td></tr>
-          <tr><td>Native shells</td><td>Windows (tray, title bar) and Android (alarms, timer notification).</td><td><code>src-tauri/</code></td></tr>
+          <tr><td>Native shells</td><td>Windows and Linux (tray, title bar, built-in sync server) and Android (alarms, timer notification).</td><td><code>src-tauri/</code></td></tr>
         </tbody></table></div></div>
     </section>
   </div>

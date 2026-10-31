@@ -6,7 +6,7 @@ works, but everything stays on one device.
 
 ## Install
 
-The easiest way: in the desktop app (Windows), Start > Sync > tick **Host sync on this computer**. The app runs the
+The easiest way: in the desktop app (Windows or Linux), Start > Sync > tick **Host sync on this computer**. The app runs the
 server itself while it is open or in the tray, connects to it, and **Pair a device** shows a QR code and a pairing
 code for your phone. **Set up** next to Tailscale walks through reaching it from anywhere.
 
