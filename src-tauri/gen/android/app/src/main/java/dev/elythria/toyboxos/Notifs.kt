@@ -11,6 +11,8 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.FileProvider
+import java.io.File
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -43,20 +45,54 @@ object Notifs {
     m.createNotificationChannel(NotificationChannel(CH_TIMER, "Timer", NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null) })
   }
 
+  // ---- alarm sounds: one channel per sound (a channel's sound can't change once made) ----
+  // presets are res/raw/snd_<key>.ogg; your own sounds are files/sounds/<id>, copied over by the web app (alarmSound)
+  private val PRESETS = setOf("classic", "beep", "buzzer", "rooster", "argon", "helium", "timing", "osmium", "firedrill")
+  private val SAFE = Regex("^[A-Za-z0-9_-]{6,64}$")
+  fun soundFile(c: Context, id: String) = File(File(c.filesDir, "sounds").apply { mkdirs() }, id)
+
+  private fun alarmChannel(c: Context, sound: String): String {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return CH_ALARM
+    val (chId, uri) = when {
+      sound in PRESETS -> "alarm_$sound" to Uri.parse("android.resource://${c.packageName}/raw/snd_$sound")
+      sound.startsWith("f:") && SAFE.matches(sound.substring(2)) && soundFile(c, sound.substring(2)).isFile -> {
+        val u = FileProvider.getUriForFile(c, "${c.packageName}.fileprovider", soundFile(c, sound.substring(2)))
+        c.grantUriPermission("com.android.systemui", u, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        "alarm_f_${sound.substring(2)}" to u
+      }
+      else -> return CH_ALARM // the phone's own alarm sound
+    }
+    val m = nm(c)
+    if (m.getNotificationChannel(chId) == null)
+      m.createNotificationChannel(NotificationChannel(chId, "Alarms", NotificationManager.IMPORTANCE_HIGH).apply {
+        enableVibration(true); vibrationPattern = longArrayOf(0, 600, 300, 600, 300, 600)
+        setSound(uri, AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build())
+        lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
+      })
+    return chId
+  }
+
+  fun hasSound(c: Context, id: String) = SAFE.matches(id) && soundFile(c, id).isFile
+
+  fun saveSound(c: Context, id: String, b64: String) {
+    if (!SAFE.matches(id)) return
+    soundFile(c, id).writeBytes(android.util.Base64.decode(b64, android.util.Base64.DEFAULT))
+  }
+
   private fun open(c: Context): PendingIntent {
     val i = c.packageManager.getLaunchIntentForPackage(c.packageName) ?: Intent()
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
     return PendingIntent.getActivity(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
   }
 
-  private fun alarmPi(c: Context, id: String, kind: String, title: String, body: String, loud: Boolean): PendingIntent {
+  private fun alarmPi(c: Context, id: String, kind: String, title: String, body: String, loud: Boolean, sound: String = ""): PendingIntent {
     val i = Intent(c, AlarmReceiver::class.java).setData(Uri.parse("sos://alarm/$id"))
-      .putExtra("id", id).putExtra("kind", kind).putExtra("title", title).putExtra("body", body).putExtra("loud", loud)
+      .putExtra("id", id).putExtra("kind", kind).putExtra("title", title).putExtra("body", body).putExtra("loud", loud).putExtra("sound", sound)
     return PendingIntent.getBroadcast(c, id.hashCode(), i, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
   }
 
-  fun scheduleOne(c: Context, id: String, at: Long, title: String, body: String, loud: Boolean, kind: String = "alarm") {
-    val pi = alarmPi(c, id, kind, title, body, loud)
+  fun scheduleOne(c: Context, id: String, at: Long, title: String, body: String, loud: Boolean, kind: String = "alarm", sound: String = "") {
+    val pi = alarmPi(c, id, kind, title, body, loud, sound)
     try {
       am(c).setAlarmClock(AlarmManager.AlarmClockInfo(at, open(c)), pi)
     } catch (_: SecurityException) {
@@ -80,7 +116,7 @@ object Notifs {
       val o = arr.getJSONObject(k)
       if (o.getLong("at") <= now) continue
       keep.put(o)
-      scheduleOne(c, o.getString("id"), o.getLong("at"), o.optString("title"), o.optString("body"), o.optBoolean("loud"))
+      scheduleOne(c, o.getString("id"), o.getLong("at"), o.optString("title"), o.optString("body"), o.optBoolean("loud"), "alarm", o.optString("sound"))
     }
     prefs(c).edit().putString("alarms", keep.toString()).apply()
   }
@@ -91,7 +127,7 @@ object Notifs {
     val arr = JSONArray(prefs(c).getString("alarms", "[]"))
     for (k in 0 until arr.length()) {
       val o = arr.getJSONObject(k)
-      if (o.getLong("at") > now) scheduleOne(c, o.getString("id"), o.getLong("at"), o.optString("title"), o.optString("body"), o.optBoolean("loud"))
+      if (o.getLong("at") > now) scheduleOne(c, o.getString("id"), o.getLong("at"), o.optString("title"), o.optString("body"), o.optBoolean("loud"), "alarm", o.optString("sound"))
     }
     val t = timer(c)
     if (t != null && t.optBoolean("running")) {
@@ -106,7 +142,7 @@ object Notifs {
     prefs(c).edit().putString("alarms", keep.toString()).apply()
   }
 
-  fun fire(c: Context, id: String, title: String, body: String, loud: Boolean, kind: String) {
+  fun fire(c: Context, id: String, title: String, body: String, loud: Boolean, kind: String, sound: String = "") {
     channels(c)
     if (kind == "timer") {
       val t = timer(c)
@@ -115,7 +151,7 @@ object Notifs {
     } else removeStored(c, id)
     val nid = id.hashCode()
     val text = if (body.isEmpty()) "toybox.os" else body
-    val b = NotificationCompat.Builder(c, if (loud) CH_ALARM else CH_REM)
+    val b = NotificationCompat.Builder(c, if (loud) alarmChannel(c, sound) else CH_REM)
       .setSmallIcon(R.drawable.ic_stat).setContentTitle(title).setContentText(text)
       .setStyle(NotificationCompat.BigTextStyle().bigText(text))
       .setContentIntent(open(c)).setAutoCancel(true).setWhen(System.currentTimeMillis()).setShowWhen(true)
@@ -124,7 +160,8 @@ object Notifs {
       .setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setGroup("sos.alert.$id")
     val act = { a: String, req: Int ->
       PendingIntent.getBroadcast(c, nid + req, Intent(c, AlarmReceiver::class.java).setAction(a).setData(Uri.parse("sos://alarm/$id/$a"))
-        .putExtra("id", id).putExtra("title", title).putExtra("body", body).putExtra("loud", loud).putExtra("kind", kind).putExtra("nid", nid),
+        .putExtra("id", id).putExtra("title", title).putExtra("body", body).putExtra("loud", loud).putExtra("kind", kind).putExtra("nid", nid)
+        .putExtra("sound", sound),
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     }
     b.addAction(0, "Snooze 10 min", act(ACT_SNOOZE, 1)).addAction(0, "Dismiss", act(ACT_DISMISS, 2))

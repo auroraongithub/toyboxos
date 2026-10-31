@@ -107,6 +107,17 @@ FILE_TYPES = {
     "text/plain",
     "text/markdown",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    # your own alarm sounds (core/sounds.js)
+    "audio/ogg",
+    "audio/mpeg",
+    "audio/wav",
+    "audio/x-wav",
+    "audio/wave",
+    "audio/mp4",
+    "audio/x-m4a",
+    "audio/aac",
+    "audio/webm",
+    "audio/flac",
 }
 os.makedirs(FILES, exist_ok=True)
 
@@ -344,7 +355,7 @@ class H(BaseHTTPRequestHandler):
             return self._send(401, {"error": "bad token"}, extra=cors)
         ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
         if ctype not in FILE_TYPES:
-            return self._send(415, {"error": "images and documents only"}, extra=cors)
+            return self._send(415, {"error": "images, documents and sounds only"}, extra=cors)
         n = self._len()
         if n <= 0 or n > MAXFILE:
             return self._send(413, {"error": "too big"}, extra=cors)

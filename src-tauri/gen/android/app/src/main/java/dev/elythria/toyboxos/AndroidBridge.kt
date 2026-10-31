@@ -19,6 +19,9 @@ class AndroidBridge(private val a: Activity) {
     Build.VERSION.SDK_INT < 33 || a.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
 
   @JavascriptInterface fun alarmSync(json: String) { Notifs.channels(a); Notifs.syncAlarms(a, json) }
+  /** your own alarm sound (core/sounds.js): kept in files/sounds so it rings with the app closed */
+  @JavascriptInterface fun alarmSound(id: String, b64: String) = Notifs.saveSound(a, id, b64)
+  @JavascriptInterface fun hasSound(id: String): Boolean = Notifs.hasSound(a, id)
 
   @JavascriptInterface fun timerStart(mode: String, label: String, endAt: Double) = Notifs.timerStart(a, mode, label, endAt.toLong())
   @JavascriptInterface fun timerPause() = Notifs.timerPause(a)

@@ -395,6 +395,90 @@ textarea.field {
   display: flex;
   flex: none;
 }
+/* dragging cards (modules/board.js): a grip (touch drags by it; a mouse drags the whole card), the gap where the
+   card will land, the lifted copy under the pointer, and the column it's over */
+.bd .lr {
+  position: relative;
+}
+.bgrip {
+  flex: none;
+  width: 8px;
+  align-self: stretch;
+  margin: -2px 0 -2px -4px;
+  background: radial-gradient(circle, var(--ink-3) 1px, transparent 1.3px) 0 0 / 4px 4px;
+  opacity: 0;
+  cursor: grab;
+  touch-action: none;
+}
+.bd .lr:hover .bgrip {
+  opacity: 1;
+}
+@media (pointer: coarse) {
+  .bgrip {
+    opacity: 1;
+    width: 14px;
+    margin-left: -6px;
+    background-size: 5px 5px;
+  }
+}
+@media (pointer: fine) {
+  .bd .lr[data-id] {
+    cursor: grab;
+  }
+  .bd .lr[data-id] :is(button, .x1, .ck) {
+    cursor: pointer;
+  }
+}
+.bph {
+  border: 1px dashed var(--ink-3);
+  background: var(--hover);
+  margin: 2px 4px;
+  box-sizing: border-box;
+}
+.bd > .ll.dropon {
+  background: var(--hover);
+}
+.lr.bfly {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  margin: 0;
+  pointer-events: none;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.28);
+  transition: box-shadow 0.12s;
+  will-change: transform;
+}
+.lr.bfly .acts2 {
+  visibility: hidden;
+}
+.lr.bfly .bgrip {
+  opacity: 1;
+}
+.lr.bfly.land {
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+html.bdragging,
+html.bdragging * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+/* the open project's ⋯ (rename / delete) sits at the end of the project tabs */
+.bdtabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+.bdtabs .tabs {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.bdtabs .bdpm {
+  opacity: 1;
+  margin-bottom: 2px;
+}
 .pj {
   display: flex;
   gap: 2px;

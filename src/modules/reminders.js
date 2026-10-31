@@ -1,15 +1,26 @@
 /* Reminders: quick reminders and real alarms. "5pm call mom", "in 20m stretch", "tomorrow 7am wake up daily".
    Rings on Android (notification / alarm sound, even with the app closed) and on desktop (alarm screen + system notification). */
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { html, plural } from "../core/lib.js";
 import { useCols, W, D } from "../core/store.js";
 import { toast } from "../core/bus.js";
 import { Tools, Panel, List, StatusBar, Btn, Seg, Del, Empty, Icon, Group, Check } from "../ui/index.js";
 import { AutoField } from "../ui/suggest.js";
-import { actionSheet, askText } from "../ui/sheet.js";
+import { actionSheet, askText, openSheet } from "../ui/sheet.js";
 import { openMod } from "../shell/os.js";
 import { parseRemind, addReminder, when, parseAhead, aheadFor } from "../core/alarms.js";
 import { intent } from "../core/nlp.js";
+import {
+  PRESETS,
+  ownSounds,
+  defaultSound,
+  soundName,
+  setDefaultSound,
+  preview,
+  stopPreview,
+  addOwnSound,
+  removeOwnSound,
+} from "../core/sounds.js";
 
 const RPT = { daily: "daily", weekly: "weekly", weekdays: "weekdays" };
 const list = () => D.reminders.slice().sort((a, b) => String(a.at).localeCompare(String(b.at)));
@@ -84,6 +95,13 @@ export function reminderMenu(r, at) {
         r.loud ? "Make it a quiet reminder" : "Make it a loud alarm",
         () => W.upd("reminders", r._id, { loud: !r.loud }),
       ],
+      r.loud
+        ? [
+            "alarm",
+            "Sound: " + (r.sound ? soundName(r.sound) : "default") + "…",
+            () => pickSound("Sound for this alarm", r.sound || "", k => W.upd("reminders", r._id, { sound: k }), true, at),
+          ]
+        : null,
       "-",
       [
         "trash",
@@ -99,6 +117,44 @@ export function reminderMenu(r, at) {
     at,
   );
 }
+
+/* the alarm sound list: tap one to hear it and pick it; your own files under the presets.
+   cur "" = "use the default" (only offered for one alarm, with def) */
+function SoundPicker({ cur, onPick, def }) {
+  useCols("config");
+  const [sel, setSel] = useState(cur);
+  useEffect(() => stopPreview, []);
+  const pick = k => {
+    setSel(k);
+    onPick(k);
+    if (k) preview(k);
+    else stopPreview();
+  };
+  const row = (k, l, extra) =>
+    html`<div class=${"lr snd" + (sel === k ? " on" : "")} key=${k || "def"} role="radio" aria-checked=${sel === k} tabindex="0" onClick=${() => pick(k)} onKeyDown=${e => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), pick(k))}>
+      <span class="sndr" aria-hidden="true"/><span class="tt">${l}</span>${k ? html`<button class="x1 sndp" aria-label=${"Play " + l} title="Play" onClick=${e => {
+        e.stopPropagation();
+        preview(k);
+      }}><${Icon} n="play"/></button>` : null}${extra || null}</div>`;
+  const own = ownSounds();
+  return html`<div class="ll sndl" role="radiogroup" aria-label="Alarm sound">
+    ${def ? row("", "Default (" + soundName(defaultSound()) + ")") : null}
+    ${PRESETS.map(([k, l]) => row(k, l))}
+    ${own.length ? html`<${Group} title="Your sounds"/>` : null}
+    ${own.map(o => row("f:" + o.id, o.name, html`<${Del} onClick=${e => {
+      e && e.stopPropagation && e.stopPropagation();
+      removeOwnSound(o.id);
+      if (sel === "f:" + o.id) setSel(def ? "" : "classic");
+    }}/>`))}
+    <label class="btn sndadd"><${Icon} n="plus"/>Add a sound file…<input type="file" accept="audio/*" hidden onChange=${async e => {
+      const k = await addOwnSound(e.target.files[0]);
+      e.target.value = "";
+      if (k) pick(k);
+    }}/></label></div>`;
+}
+export const pickSound = (title, cur, onPick, def, at) =>
+  openSheet({ title, Body: SoundPicker, props: { cur, onPick, def }, at, onClose: stopPreview });
+const pickDefault = at => pickSound("Alarm sound", defaultSound(), setDefaultSound, false, at);
 
 function Row({ r }) {
   const past = !r.done && Date.parse(r.at) < Date.now();
@@ -116,7 +172,7 @@ function Row({ r }) {
 }
 
 function Reminders() {
-  useCols("reminders");
+  useCols("reminders", "config");
   const [q, setQ] = useState(""),
     [showDone, setShowDone] = useState(false);
   const it = intent(q),
@@ -144,6 +200,7 @@ function Reminders() {
       <${Btn} icon="alarm" aria-label="Add alarm" title="Loud alarm" onClick=${() => add(true)}>Alarm<//>
       ${q.trim() ? html`<div class="qprev">${p ? html`<${Icon} n=${lo ? "alarm" : "bell"}/>${when(p.at)}${p.repeat ? " · " + p.repeat : ""}${p.title ? "" : " · (no title)"}` : "Add a time: 5pm, tomorrow 8am, fri 14:30, in 20m"}</div>` : null}<//>
     <${Panel}><${List}>${up.length ? up.map(r => html`<${Row} r=${r}/>`) : html`<${Empty}>Nothing set. Try “in 20m stretch” or “7am wake up daily”.<//>`}
+      <button class="lr sndset" onClick=${e => pickDefault(e.currentTarget)}><${Icon} n="alarm"/><span class="tt">Alarm sound</span><span class="when">${soundName(defaultSound())} ›</span></button>
       ${done.length ? html`<${Group} title="Done" meta=${html`<button class="gl" onClick=${() => setShowDone(!showDone)}>${showDone ? "hide" : "show " + done.length}</button>`}/>${showDone ? done.slice(0, 15).map(r => html`<${Row} r=${r}/>`) : null}` : null}<//><//>
 `;
 }

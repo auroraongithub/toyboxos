@@ -344,35 +344,34 @@
     overflow: hidden;
   }
 }
-/* board: columns run the full window height and light up while a card is dragged over them */
+/* board: columns run the full window height (their dividers too); the panel's drawing sits over the bottom corner
+   instead of taking the space under the columns */
 @media (min-width: 861px) {
-  .win.fl > .mbody > .panel:has(> .bd) {
+  .win.fl > .mbody > .panel.bdp {
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
-  .win.fl .bd {
+  .win.fl > .mbody > .panel.bdp > .bd {
     flex: 1 1 auto;
+    min-height: 180px;
     align-items: stretch;
+  }
+  .win.fl > .mbody > .panel.bdp > .pfill {
+    position: absolute;
+    inset: auto 0 0 auto;
+    width: 45%;
+    height: 45%;
+    flex: none;
   }
   .bd > .ll {
     display: flex;
     flex-direction: column;
-    min-height: 180px;
   }
   .bd > .ll > .lcap {
     flex: 1 1 auto;
-  }
-  .bd .lr[draggable="true"] {
-    cursor: grab;
-  }
-  .bd .lr.drag {
-    opacity: 0.45;
-  }
-  .bd > .ll.dropon {
-    background: var(--hover);
-    box-shadow: inset 0 0 0 2px var(--ink);
   }
 }
 /* mouse: a row's small buttons (delete ×, move arrows, Inbox "Page") show on hover or keyboard focus, so lists read calm */

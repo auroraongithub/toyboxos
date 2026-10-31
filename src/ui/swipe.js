@@ -69,7 +69,7 @@ export function installSwipe() {
     e => {
       if (e.pointerType !== "touch" || row) return;
       const t = e.target;
-      if (t.closest("input,textarea,select,[contenteditable=true],.lr.edit")) return;
+      if (t.closest("input,textarea,select,[contenteditable=true],.lr.edit,.bgrip")) return; // a board grip drags the card
       const r = t.closest(".lr");
       if (!r || !(del(r) || chk(r) || r.querySelector(".ed"))) return;
       row = r;
@@ -157,7 +157,7 @@ export function installSwipe() {
     e => {
       if (e.defaultPrevented || e.shiftKey) return;
       const t = e.target;
-      if (t.closest("input,textarea,select,[contenteditable=true],.lr.edit")) return;
+      if (t.closest("input,textarea,select,[contenteditable=true],.lr.edit,.bgrip")) return; // a board grip drags the card
       const r = t.closest(".lr");
       if (!r) return;
       if (held) {

@@ -109,7 +109,8 @@ export function Tabs({ items, cur, onChange, counts }) {
 
 /* dropdown that matches the theme (native <select> never does) */
 /* a dropdown list floats on the screen (fixed) under its control, or above it when there's more room there,
-   so it never stretches the window it sits in; scrolling anything closes it */
+   so it never stretches the window it sits in; scrolling what it sits in closes it (not some other window scrolling,
+   like Osage's chat following a new message) */
 function useFloat(open, setOpen) {
   const ref = useRef(),
     [st, setSt] = useState("");
@@ -133,7 +134,10 @@ function useFloat(open, setOpen) {
           : `top:${Math.round(r.bottom)}px;max-height:${Math.round(Math.min(260, Math.max(80, below)))}px`),
     );
     const off = e => {
-      if (!(e.target && e.target.closest && e.target.closest(".dd"))) setOpen(false);
+      const t = e.target;
+      if (t && t.closest && t.closest(".dd")) return; // the list's own scrolling
+      if (e.type === "scroll" && t !== document && !(t.contains && t.contains(el))) return;
+      setOpen(false);
     };
     addEventListener("scroll", off, true);
     addEventListener("resize", off);

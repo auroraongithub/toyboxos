@@ -11,13 +11,14 @@ class AlarmReceiver : BroadcastReceiver() {
     val body = i.getStringExtra("body") ?: ""
     val loud = i.getBooleanExtra("loud", false)
     val kind = i.getStringExtra("kind") ?: "alarm"
+    val sound = i.getStringExtra("sound") ?: ""
     when (i.action) {
       Notifs.ACT_DISMISS -> Notifs.dismiss(c, i.getIntExtra("nid", id.hashCode()))
       Notifs.ACT_SNOOZE -> {
         Notifs.dismiss(c, i.getIntExtra("nid", id.hashCode()))
-        Notifs.scheduleOne(c, id, System.currentTimeMillis() + 10 * 60 * 1000, title, body, loud, kind)
+        Notifs.scheduleOne(c, id, System.currentTimeMillis() + 10 * 60 * 1000, title, body, loud, kind, sound)
       }
-      else -> Notifs.fire(c, id, title, body, loud, kind)
+      else -> Notifs.fire(c, id, title, body, loud, kind, sound)
     }
   }
 }

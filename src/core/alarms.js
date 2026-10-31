@@ -10,6 +10,7 @@ import { ls } from "./pref.js";
 import { D, W, onChange } from "./store.js";
 import { toast, warn } from "./bus.js";
 import { when as nlpWhen, remindAt } from "./nlp.js";
+import { beep, play, soundOf, nativeSound } from "./sounds.js";
 
 const WD = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const UNIT = {
@@ -122,23 +123,7 @@ export function alerts() {
 }
 
 /* ---- ringing ---- */
-export function beep(n = 3) {
-  try {
-    const c = new (window.AudioContext || window.webkitAudioContext)();
-    for (let i = 0; i < n; i++) {
-      const o = c.createOscillator(),
-        g = c.createGain();
-      o.frequency.value = i % 2 ? 660 : 880;
-      g.gain.value = 0.18;
-      o.connect(g);
-      g.connect(c.destination);
-      o.start(c.currentTime + i * 0.28);
-      o.stop(c.currentTime + i * 0.28 + 0.2);
-    }
-  } catch (e) {
-    warn("alarm sound", e);
-  }
-}
+export { beep } from "./sounds.js"; // the old two-tone beep (now also the "chime" sound)
 const tauri = () => window.__TAURI_INTERNALS__;
 export function askPermission() {
   const B = bridge();
@@ -180,15 +165,14 @@ function webNotify(title, body) {
 const AL = { cur: null, q: [] };
 const alSubs = new Set();
 const alEmit = () => alSubs.forEach(f => f());
-let ringTimer = 0;
+let stopRing = () => {};
 function startRing() {
-  clearInterval(ringTimer);
+  stopRing();
   if (isAndroid()) return;
-  beep(3);
-  ringTimer = setInterval(() => beep(3), 2500);
+  stopRing = play(soundOf(AL.cur && AL.cur.r), true);
 }
 export function dismissAlarm() {
-  clearInterval(ringTimer);
+  stopRing();
   AL.cur = AL.q.shift() || null;
   if (AL.cur) startRing();
   alEmit();
@@ -202,6 +186,7 @@ export function snoozeAlarm(min = 10) {
       loud: a.loud,
       repeat: "",
       done: false,
+      ...(a.r && a.r.sound ? { sound: a.r.sound } : {}),
     });
   toast("Snoozed " + min + " min");
   dismissAlarm();
@@ -291,13 +276,14 @@ export function syncNative() {
           n = 0;
         while (at < now && n++ < 400) at = nextAt(at, a.r.repeat);
         for (let i = 0; i < 10 && at < now + 21 * 864e5; i++) {
-          list.push({ id: a.id + "#" + at, at, title: a.title, body: a.body, loud: a.loud });
+          list.push({ id: a.id + "#" + at, at, title: a.title, body: a.body, loud: a.loud, sound: soundOf(a.r) });
           at = nextAt(at, a.r.repeat);
         }
       } else if (a.at > now && a.at < now + 60 * 864e5)
-        list.push({ id: a.id, at: a.at, title: a.title, body: a.body, loud: a.loud });
+        list.push({ id: a.id, at: a.at, title: a.title, body: a.body, loud: a.loud, sound: soundOf(a.r) });
     });
     list.sort((x, y) => x.at - y.at);
+    new Set(list.map(x => x.sound)).forEach(k => nativeSound(B, k)); // your own sounds: copied to the phone once
     try {
       B.alarmSync(JSON.stringify(list.slice(0, 64)));
     } catch (e) {
@@ -331,7 +317,7 @@ export function initAlarms() {
   setInterval(tick, 5000);
   setTimeout(tick, 1500);
   onChange(c => {
-    if (c === "reminders" || c === "events" || c === "loans" || c === "*") syncNative();
+    if (c === "reminders" || c === "events" || c === "loans" || c === "config" || c === "*") syncNative();
   });
   setTimeout(syncNative, 2000);
   document.addEventListener("visibilitychange", () => {

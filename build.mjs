@@ -54,6 +54,10 @@ for (const n of ["icon-192.png", "icon-512.png"])
     fs.existsSync(`src/packs/${pack}/${n}`) ? `src/packs/${pack}/${n}` : `assets/${n}`,
     OUT + "/" + n,
   );
+// alarm sounds (assets/sounds, AOSP, Apache-2.0): fetched only when one rings or is previewed (core/sounds.js)
+fs.mkdirSync(OUT + "/sounds", { recursive: true });
+for (const f of fs.readdirSync("assets/sounds").filter(f => f.endsWith(".ogg")))
+  fs.copyFileSync("assets/sounds/" + f, OUT + "/sounds/" + f);
 // the document reader's pdf.js: its own files, fetched only when a PDF opens (core/docs.js); .js so any server sends a script type
 fs.mkdirSync(OUT + "/pdfjs", { recursive: true });
 for (const f of ["pdf", "pdf.worker"])
