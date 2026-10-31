@@ -6,7 +6,7 @@ A personal operating system that runs in the browser. Notes, calendar, tasks, mo
 optional AI assistant live together in one grayscale, Windows XP–style desktop that also works as a phone app.
 
 It is **local-first**: every device keeps its own full copy of your data and works offline. A small sync server that
-you host yourself keeps your devices in step. It runs as a PWA, as a Windows desktop app and as an Android app.
+you host yourself keeps your devices in step. It runs as a PWA, as a Windows and Linux desktop app and as an Android app.
 
 ![The desktop: Notes, Plan and Today windows side by side](docs/screenshots/desktop.png)
 
@@ -87,6 +87,10 @@ The [latest release](https://github.com/auroraongithub/toyboxos/releases/latest)
 - `toybox.os_<version>_x64-setup.exe`: the Windows app. It installs for your user only and can also host the sync
   server for your other devices (Start > Sync > Host sync on this computer). Windows may warn that the publisher is
   unknown, because the installer isn't code-signed: choose More info > Run anyway.
+- the Linux app, for x64 (`amd64`, `x86_64`) or arm64 (`aarch64`): `.AppImage` runs on any distro (`chmod +x` it,
+  then open it), `.deb` for Debian/Ubuntu (`sudo apt install ./toybox.os_*.deb`), `.rpm` for Fedora/openSUSE
+  (`sudo dnf install ./toybox.os-*.rpm`). It needs glibc 2.35 or newer and, for the tray icon on GNOME, the
+  AppIndicator extension.
 - `toybox-os-android-arm64.apk`: the Android app. Allow installs from your browser or file manager when asked.
 - `toybox-server-windows.exe`, `toybox-server-linux-x64`, `toybox-server-linux-arm64`: the sync server on its own,
   for a computer that stays on (a Raspberry Pi or other ARM board takes `arm64`).
@@ -157,20 +161,24 @@ npm run test:ui
 
 ### Native apps
 
-`src-tauri` holds the [Tauri 2](https://tauri.app) shells for Windows (tray icon, title bar, built-in server) and
+`src-tauri` holds the [Tauri 2](https://tauri.app) shells for Windows and Linux (tray icon, title bar, built-in server) and
 Android (alarms, timer notification). The app itself is the same web build, so most updates reach installed apps
 without a new installer.
 
 ```sh
-npx tauri build          # Windows installer
+npx tauri build          # Windows installer, or .deb/.rpm/AppImage on Linux
 npx tauri android build  # Android APK
 ```
+
+Linux builds need `libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libssl-dev` (Debian
+names) and PyInstaller for the built-in server. CI builds them in `.github/workflows/linux-app.yml`.
 
 ### Releases
 
 Every push to `main` that changes the app publishes an update release (`.github/workflows/release.yml`): the update
 zip and `latest.json` that servers install from, with the installers carried over from the release before. A change to
-the native shells (`src-tauri`) needs new installers built and attached by hand.
+the native shells (`src-tauri`) rebuilds the Linux app automatically (`linux-app.yml`); the Windows installer and APK
+are built and attached by hand.
 
 ### Project layout
 

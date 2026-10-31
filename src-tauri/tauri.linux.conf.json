@@ -1,0 +1,4 @@
+{
+  "build": {"beforeBuildCommand": "npm run build && python3 server/package.py --sidecar"},
+  "bundle": {"resources": {"../build/server/": "server/"}}
+}

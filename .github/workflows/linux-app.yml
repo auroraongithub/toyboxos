@@ -1,0 +1,86 @@
+# The Linux desktop app (.deb, .rpm, AppImage for x64 and arm64), built when the native shell changes or by hand, and
+# attached to the latest release in place of the previous Linux builds. release.yml carries them over like the other
+# installers, since web changes reach installed apps as live updates.
+name: linux-app
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src-tauri/**"
+      - "!src-tauri/gen/**"
+      - ".github/workflows/linux-app.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  CHANNEL: https://github.com/${{ github.repository }}/releases/latest/download/latest.json
+
+jobs:
+  build:
+    if: github.repository == 'auroraongithub/toyboxos'
+    strategy:
+      matrix:
+        # 22.04 so the app runs on older glibc too (Debian 12, Ubuntu 22.04, Raspberry Pi OS)
+        os: [ubuntu-22.04, ubuntu-22.04-arm]
+    runs-on: ${{ matrix.os }}
+    env:
+      CARGO_TARGET_DIR: ${{ github.workspace }}/src-tauri/target
+      APPIMAGE_EXTRACT_AND_RUN: 1
+    steps:
+      - uses: actions/checkout@v4
+      - name: System libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev \
+            libssl-dev build-essential file rpm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci --ignore-scripts
+      - run: pip install pyinstaller==6.19.0
+      - name: Build
+        run: |
+          printf '%s' "$CHANNEL" > server/channel.txt
+          npx tauri build --bundles deb,rpm,appimage
+          mkdir out
+          cp src-tauri/target/release/bundle/deb/*.deb src-tauri/target/release/bundle/rpm/*.rpm \
+            src-tauri/target/release/bundle/appimage/*.AppImage out/
+          ls -l out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.os }}
+          path: out/*
+
+  attach:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Replace the Linux builds on the latest release
+        run: |
+          chmod +x out/*.AppImage
+          tag=$(gh release view -R "$GITHUB_REPOSITORY" --json tagName -q .tagName)
+          gh release view "$tag" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' \
+            | grep -E '\.(deb|rpm|AppImage)$' \
+            | while read -r a; do gh release delete-asset "$tag" "$a" -R "$GITHUB_REPOSITORY" -y; done
+          gh release upload "$tag" out/* -R "$GITHUB_REPOSITORY"

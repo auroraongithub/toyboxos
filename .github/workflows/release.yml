@@ -1,7 +1,7 @@
 # Every push to main that changes the app publishes an update release: servers pick it up from
 # releases/latest/download/latest.json within 6 hours and their apps offer a restart. The server programs (Windows,
-# Linux x64 and arm64) are built fresh each time; the desktop installer and the APK are carried over from the previous
-# release, so the latest release always has every download.
+# Linux x64 and arm64) are built fresh each time; the desktop installers (Windows, and Linux from linux-app.yml) and the
+# APK are carried over from the previous release, so the latest release always has every download.
 name: release
 
 on:
@@ -87,10 +87,10 @@ jobs:
           path: out
           merge-multiple: true
       - name: Carry over the installers
-        run: gh release download --dir out -p "*-setup.exe" -p "*.apk"
+        run: gh release download --dir out -p "*-setup.exe" -p "*.apk" -p "*.deb" -p "*.rpm" -p "*.AppImage"
       - name: Publish
         run: |
-          chmod +x out/toybox-server-linux-*
+          chmod +x out/toybox-server-linux-* out/*.AppImage 2>/dev/null || true
           prev=$(gh release view --json tagName -q .tagName)
           ver=$(node -p "require('./src-tauri/tauri.conf.json').version")
           tag="v$ver-u$GITHUB_RUN_NUMBER"
