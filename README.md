@@ -76,9 +76,22 @@ lives in the code.
 
 ## Getting started
 
+### Download
+
+The [latest release](https://github.com/auroraongithub/toyboxos/releases/latest) has:
+
+- `toybox.os_<version>_x64-setup.exe`: the Windows app. It installs for your user only and can also host the sync
+  server for your other devices (Start > Sync > Host sync on this computer). Windows may warn that the publisher is
+  unknown, because the installer isn't code-signed: choose More info > Run anyway.
+- `toybox-os-android-arm64.apk`: the Android app. Allow installs from your browser or file manager when asked.
+- `toybox-server-windows.exe`: the sync server on its own, for a Windows PC that stays on.
+
+On one device you can stop here: the app works fully offline. To keep several devices in step, run a sync server.
+
 ### 1. Run the sync server
 
-The quickest way is Docker:
+On Windows, the desktop app or `toybox-server-windows.exe` above is enough. On Linux, macOS or a NAS, Docker is the
+quickest:
 
 ```sh
 docker compose up -d
@@ -91,7 +104,7 @@ data is stored in `./toybox-data`.
 Other options:
 
 - a Linux or macOS service via `bash server/install.sh`
-- a standalone Windows or Linux executable
+- a standalone executable (Windows in the release; Linux built with `python server/package.py`)
 - hosting from inside the Windows desktop app
 
 All of these are covered in [`server/README.md`](server/README.md), along with HTTPS, using the server away from home,
@@ -105,10 +118,9 @@ for your own Tailscale network; see [Home server window](server/README.md#home-s
 Open `http://<server>:8787` and enter the pairing code when Setup asks for it. To add more devices, get a new code
 from Start > Sync > Pair another device.
 
-Phones can only install the PWA when it is served over HTTPS. [Tailscale Funnel](https://tailscale.com/kb/1223/funnel)
-or a reverse proxy such as Caddy gives you that.
-
-You can also use the app without a server. It works fully offline, but your data stays on that one device.
+On Android, the APK connects the same way. Without the APK (iPhone, other phones), the browser can install the app
+only when the server is reached over HTTPS: [Tailscale Funnel](https://tailscale.com/kb/1223/funnel) or a reverse
+proxy such as Caddy gives you that, and it also lets your devices sync away from home.
 
 ## Development
 
@@ -149,6 +161,12 @@ without a new installer.
 npx tauri build          # Windows installer
 npx tauri android build  # Android APK
 ```
+
+### Releases
+
+Every push to `main` that changes the app publishes an update release (`.github/workflows/release.yml`): the update
+zip and `latest.json` that servers install from, with the installers carried over from the release before. A change to
+the native shells (`src-tauri`) needs new installers built and attached by hand.
 
 ### Project layout
 

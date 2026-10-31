@@ -10,11 +10,11 @@ The easiest way: in the desktop app (Windows), Start > Sync > tick **Host sync o
 server itself while it is open or in the tray, connects to it, and **Pair a device** shows a QR code and a pairing
 code for your phone. **Set up** next to Tailscale walks through reaching it from anywhere.
 
-Without the desktop app, download `toybox-server-windows.exe` (or `-linux`) and double-click or run it. It needs
-nothing installed, keeps your data in `%LOCALAPPDATA%\toybox-server` (Linux `~/.local/share/toybox-server`), opens the
-app in your browser on the first run and prints the addresses and a pairing code. `toybox-server pair` prints a new
-code; `--port` and `--data` change the port and data folder. Build them with `python server/package.py` (PyInstaller;
-for Linux run it inside WSL).
+Without the desktop app, download `toybox-server-windows.exe` from the
+[latest release](https://github.com/auroraongithub/toyboxos/releases/latest) and double-click it. It needs nothing
+installed, keeps your data in `%LOCALAPPDATA%\toybox-server`, opens the app in your browser on the first run and prints
+the addresses and a pairing code. `toybox-server pair` prints a new code; `--port` and `--data` change the port and
+data folder. To build it yourself (or a Linux one, inside WSL or on Linux): `python server/package.py` (PyInstaller).
 
 On a Linux or macOS machine that stays on (an old laptop, a mini PC, a Raspberry Pi), from a clone of the repo:
 
@@ -85,8 +85,8 @@ Docker containers show up by themselves when the user can run `docker`. Restart 
 ## Settings
 
 Environment variables: `SOS_PORT` (8787), `SOS_HOST` (0.0.0.0), `SOS_DB`, `SOS_FILES`, `SOS_TOKEN_FILE`, `SOS_WWW`.
-AI keys for the assistant are read from `<provider>_key.txt` next to `server.py` or from environment variables such
-as `OPENROUTER_API_KEY` (see PROVIDERS.md when present).
+AI keys for the assistant are added in the app (Start > Models and keys) and kept in `secrets.json` next to
+`server.py`; environment variables such as `OPENROUTER_API_KEY` work too. See [PROVIDERS.md](PROVIDERS.md).
 
 ## Backups
 

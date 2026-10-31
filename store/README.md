@@ -4,7 +4,7 @@ Packs change how toybox.os looks and talks: colours, wallpaper, banner, art, mas
 
 ## How it works
 
-- `store/index.json` lists every pack. The app reads it from this repo (`raw.githubusercontent.com/auroraongithub/toyboxos/main/store/`), from your own sync server's `/store/` (put the same folder in `~/sean-os-server/store/`), and from any other store added under ⋯ › Stores.
+- `store/index.json` lists every pack. The app reads it from this repo (`raw.githubusercontent.com/auroraongithub/toyboxos/main/store/`), from your own sync server's `/store/` (put the same folder in `store/` next to `server.py`, or point `SOS_STORE` at it), and from any other store added under ⋯ › Stores.
 - Each pack lives in `store/packs/<id>/`: `pack.json` (the file Theme editor › Packs › Export file makes), `meta.json`, and screenshots.
 - The index pins every `pack.json` by sha256. The app refuses a file that doesn't match, so a pack can't change after it was reviewed.
 - Installing runs the file through the same allowlists as importing a pack by hand: colours must be `#rrggbb`, fonts come from a fixed list, pictures must be inline png/jpeg/webp/gif, icons must be 16×16 grids, layout values are numbers in range. Nothing in a pack can add CSS, scripts or links. Store packs never switch modules on or off.
