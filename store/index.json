@@ -4,19 +4,19 @@
   {
    "id": "asuka",
    "name": "Asuka",
-   "by": "Sean",
-   "desc": "Hot red-orange accents, watercolour banner and a bossy, competitive assistant.",
+   "by": "toybox.os",
+   "desc": "red and orange, watercolor asuka, loud",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "light",
     "red",
     "bold"
    ],
    "file": "packs/asuka/pack.json",
-   "sha256": "05bc80f1e36f4a80de158f084bbfd6d10d5e0999f748973d8ffecde571e30c61",
-   "size": 1103146,
+   "sha256": "7644b4efdabdb5a4150d8a901bfc97810f23ec6279051c3466062ddb63001977",
+   "size": 1103160,
    "thumb": "packs/asuka/thumb.webp",
    "shots": [
     "packs/asuka/desktop.webp",
@@ -43,19 +43,19 @@
   {
    "id": "frieren",
    "name": "Frieren",
-   "by": "Sean",
-   "desc": "Soft sage and sky blue, a lily-field wallpaper and an unhurried, dry assistant.",
+   "by": "toybox.os",
+   "desc": "sage and sky blue, lily field, frieren not caring what year it is",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "light",
     "green",
     "calm"
    ],
    "file": "packs/frieren/pack.json",
-   "sha256": "e5ada1f44502616f38e10a856d5bd17a5f9b1726f8fad0954994c329ec3370ce",
-   "size": 792849,
+   "sha256": "076f8282361d09eb81b457918da4c62ababb30468189f4307bc4abf88dc039a4",
+   "size": 792862,
    "thumb": "packs/frieren/thumb.webp",
    "shots": [
     "packs/frieren/desktop.webp",
@@ -82,19 +82,19 @@
   {
    "id": "haruhi",
    "name": "Haruhi",
-   "by": "Sean",
-   "desc": "Sunflower wallpaper, orange accents and a loud SOS Brigade assistant.",
+   "by": "toybox.os",
+   "desc": "sunflowers and orange, sos brigade energy",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "light",
     "orange",
     "bold"
    ],
    "file": "packs/haruhi/pack.json",
-   "sha256": "cb261f6bda5943ed8be71e7871bbc4bfd20b6ef4c298c293234f7653e3324d22",
-   "size": 881788,
+   "sha256": "9a02f21f61ed97fd9c8bfd920ca2a38b59e3e5d33bb5e4d8b867742361e9d084",
+   "size": 881802,
    "thumb": "packs/haruhi/thumb.webp",
    "shots": [
     "packs/haruhi/desktop.webp",
@@ -121,19 +121,19 @@
   {
    "id": "kanade",
    "name": "Kanade",
-   "by": "Sean",
-   "desc": "Pastel lavender with a soft-wings banner and a quiet, polite assistant.",
+   "by": "toybox.os",
+   "desc": "lavender, angel wings, kanade",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "light",
     "purple",
     "soft"
    ],
    "file": "packs/kanade/pack.json",
-   "sha256": "ddcc7f079800b9ba6692ab3c8d7afd5b59e722aa7879de7a3500d9c40b78e719",
-   "size": 628984,
+   "sha256": "ca13201b8da4e99511b9b909c79589c684b7403c66f4646cc4dc0a1bc90b1d4e",
+   "size": 628998,
    "thumb": "packs/kanade/thumb.webp",
    "shots": [
     "packs/kanade/desktop.webp",
@@ -160,19 +160,19 @@
   {
    "id": "lain",
    "name": "Lain",
-   "by": "Sean",
-   "desc": "Pixel-room banner, purple-night colours, DotGothic16 titles and a quiet Wired-flavoured assistant.",
+   "by": "toybox.os",
+   "desc": "purple night, pixel room, lain staring at you",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "dark",
     "purple",
     "pixel"
    ],
    "file": "packs/lain/pack.json",
-   "sha256": "6cd525190cb8cd1395a795964d1afa421c7557e7b346b53f916b58a870872300",
-   "size": 896305,
+   "sha256": "6b6cc4184d93c18d05385e574d93905283f7761f63a13bcfc4c420ab1cc37a46",
+   "size": 896319,
    "thumb": "packs/lain/thumb.webp",
    "shots": [
     "packs/lain/desktop.webp",
@@ -277,19 +277,19 @@
   {
    "id": "nijika",
    "name": "Nijika",
-   "by": "Sean",
-   "desc": "Sunny yellow desk with a bright close-up banner and an encouraging drummer assistant.",
+   "by": "toybox.os",
+   "desc": "yellow everything, nijika grinning",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "light",
     "yellow",
     "warm"
    ],
    "file": "packs/nijika/pack.json",
-   "sha256": "d46524b7ce7f67190bccc6978317f0121f034497f12a183052acaa838e587253",
-   "size": 618787,
+   "sha256": "ec59929e72835c374e0ced9c415fb4c8073169af1b28c455b10fa0e7ad38e41f",
+   "size": 618801,
    "thumb": "packs/nijika/thumb.webp",
    "shots": [
     "packs/nijika/desktop.webp",
@@ -393,19 +393,19 @@
   {
    "id": "rei",
    "name": "Rei",
-   "by": "Sean",
-   "desc": "Pale blue and white with a rooftop watercolour wallpaper, plus a calm, minimal assistant.",
+   "by": "toybox.os",
+   "desc": "pale blue, rooftop watercolor, rei being quiet",
    "v": "1",
    "license": "Fan art, rights stay with artists",
-   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
     "light",
     "blue",
     "calm"
    ],
    "file": "packs/rei/pack.json",
-   "sha256": "a1082d0defe0cb17acf1c90d8e4c049c8158e71c45674cd002b65535a59624a3",
-   "size": 1083823,
+   "sha256": "7a11ab6e5ad6be8cd3d2e4d2bc7581435713ca096a27bc4a3bee9d3660cb6547",
+   "size": 1083837,
    "thumb": "packs/rei/thumb.webp",
    "shots": [
     "packs/rei/desktop.webp",
