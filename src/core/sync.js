@@ -106,8 +106,12 @@ export async function syncNow() {
     return;
   }
   busy = true;
-  st.state = "syncing";
-  emit();
+  /* most syncs take a fraction of a second: only say "Syncing…" (status text, turning tray icon) when one runs long,
+     otherwise every 20 s background round trip made "Up to date" flicker */
+  const slow = setTimeout(() => {
+    st.state = "syncing";
+    emit();
+  }, 700);
   try {
     const sent = ad.pending();
     const r = await api(cfg, "/api/sync", {
@@ -129,6 +133,7 @@ export async function syncNow() {
     st.state = navigator.onLine ? "error" : "offline";
     st.err = String(e.message || e);
   }
+  clearTimeout(slow);
   busy = false;
   emit();
 }
