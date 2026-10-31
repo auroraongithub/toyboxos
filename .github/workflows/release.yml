@@ -1,6 +1,7 @@
 # Every push to main that changes the app publishes an update release: servers pick it up from
-# releases/latest/download/latest.json within 6 hours and their apps offer a restart. The installers, APK and server
-# exe are carried over from the previous release, so the latest release always has the downloads.
+# releases/latest/download/latest.json within 6 hours and their apps offer a restart. The server programs (Windows,
+# Linux x64 and arm64) are built fresh each time; the desktop installer and the APK are carried over from the previous
+# release, so the latest release always has every download.
 name: release
 
 on:
@@ -23,9 +24,45 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+env:
+  CHANNEL: https://github.com/${{ github.repository }}/releases/latest/download/latest.json
+
 jobs:
-  release:
+  server:
     if: github.repository == 'auroraongithub/toyboxos'
+    strategy:
+      matrix:
+        include:
+          # 22.04 so the Linux programs run on older glibc too (Debian 12, Ubuntu 22.04, Raspberry Pi OS)
+          - { os: ubuntu-22.04, name: toybox-server-linux-x64 }
+          - { os: ubuntu-22.04-arm, name: toybox-server-linux-arm64 }
+          - { os: windows-latest, name: toybox-server-windows.exe }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: pip install pyinstaller==6.19.0
+      - name: Package
+        shell: bash
+        run: |
+          printf '%s' "$CHANNEL" > server/channel.txt
+          python server/package.py
+          mkdir out && mv native/toybox-server-* "out/${{ matrix.name }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: out/${{ matrix.name }}
+
+  release:
+    needs: server
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -45,10 +82,15 @@ jobs:
       - run: python -m unittest discover -s server -p "test_*.py"
       - name: Build the update
         run: python server/release.py out
-      - name: Carry over the downloads
-        run: gh release download --dir out -p "*.exe" -p "*.apk"
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Carry over the installers
+        run: gh release download --dir out -p "*-setup.exe" -p "*.apk"
       - name: Publish
         run: |
+          chmod +x out/toybox-server-linux-*
           prev=$(gh release view --json tagName -q .tagName)
           ver=$(node -p "require('./src-tauri/tauri.conf.json').version")
           tag="v$ver-u$GITHUB_RUN_NUMBER"

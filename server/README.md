@@ -10,11 +10,16 @@ The easiest way: in the desktop app (Windows), Start > Sync > tick **Host sync o
 server itself while it is open or in the tray, connects to it, and **Pair a device** shows a QR code and a pairing
 code for your phone. **Set up** next to Tailscale walks through reaching it from anywhere.
 
-Without the desktop app, download `toybox-server-windows.exe` from the
-[latest release](https://github.com/auroraongithub/toyboxos/releases/latest) and double-click it. It needs nothing
-installed, keeps your data in `%LOCALAPPDATA%\toybox-server`, opens the app in your browser on the first run and prints
-the addresses and a pairing code. `toybox-server pair` prints a new code; `--port` and `--data` change the port and
-data folder. To build it yourself (or a Linux one, inside WSL or on Linux): `python server/package.py` (PyInstaller).
+Without the desktop app, download a server program from the
+[latest release](https://github.com/auroraongithub/toyboxos/releases/latest): `toybox-server-windows.exe`,
+`toybox-server-linux-x64` or `toybox-server-linux-arm64` (Raspberry Pi and other ARM boards). It needs nothing
+installed. On Windows double-click it; on Linux run `chmod +x toybox-server-linux-*` once, then start it. It keeps your
+data in `%LOCALAPPDATA%	oybox-server` (Linux `~/.local/share/toybox-server`), opens the app in your browser on the
+first run and prints the addresses and a pairing code. `toybox-server pair` prints a new code; `--port` and `--data`
+change the port and data folder. The Linux programs need glibc 2.35 or newer (Ubuntu 22.04, Debian 12, Raspberry Pi OS
+bookworm). To build one yourself: `python server/package.py` (PyInstaller) on the OS you want it for.
+
+To keep it running after you log out on Linux, use `install.sh` below instead, which sets it up as a service.
 
 On a Linux or macOS machine that stays on (an old laptop, a mini PC, a Raspberry Pi), from a clone of the repo:
 

@@ -8,6 +8,10 @@ optional AI assistant live together in one grayscale, Windows XP–style desktop
 It is **local-first**: every device keeps its own full copy of your data and works offline. A small sync server that
 you host yourself keeps your devices in step. It runs as a PWA, as a Windows desktop app and as an Android app.
 
+![The desktop: Notes, Plan and Today windows side by side](docs/screenshots/desktop.png)
+
+<p align="center"><img src="docs/screenshots/phone.png" alt="On a phone: Today and a note" width="560"></p>
+
 ## Features
 
 The app is organised into hubs that make up the taskbar on desktop and the bottom bar on phones.
@@ -84,14 +88,14 @@ The [latest release](https://github.com/auroraongithub/toyboxos/releases/latest)
   server for your other devices (Start > Sync > Host sync on this computer). Windows may warn that the publisher is
   unknown, because the installer isn't code-signed: choose More info > Run anyway.
 - `toybox-os-android-arm64.apk`: the Android app. Allow installs from your browser or file manager when asked.
-- `toybox-server-windows.exe`: the sync server on its own, for a Windows PC that stays on.
+- `toybox-server-windows.exe`, `toybox-server-linux-x64`, `toybox-server-linux-arm64`: the sync server on its own,
+  for a computer that stays on (a Raspberry Pi or other ARM board takes `arm64`).
 
 On one device you can stop here: the app works fully offline. To keep several devices in step, run a sync server.
 
 ### 1. Run the sync server
 
-On Windows, the desktop app or `toybox-server-windows.exe` above is enough. On Linux, macOS or a NAS, Docker is the
-quickest:
+On Windows or Linux, the desktop app or a server program above is enough. On macOS or a NAS, Docker is the quickest:
 
 ```sh
 docker compose up -d
@@ -104,7 +108,7 @@ data is stored in `./toybox-data`.
 Other options:
 
 - a Linux or macOS service via `bash server/install.sh`
-- a standalone executable (Windows in the release; Linux built with `python server/package.py`)
+- a standalone program for Windows or Linux (in the release)
 - hosting from inside the Windows desktop app
 
 All of these are covered in [`server/README.md`](server/README.md), along with HTTPS, using the server away from home,
