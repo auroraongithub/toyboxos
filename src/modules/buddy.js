@@ -33,6 +33,10 @@ import {
   styleNotes,
   setStyleNotes,
   warmUp,
+  compactNow,
+  ctxPrefs,
+  ctxWindow,
+  CTX_STEPS,
 } from "../core/ai.js";
 import {
   localModels,
@@ -713,16 +717,11 @@ function Chat() {
   const hit = findModel(cat, cur),
     label = hit ? hit.m.label : (cur || "").replace(/^.*[/:]/, ""),
     live = st.model === cur; // the last reply's numbers are fresher
-  const kk = n => (n >= 1000 ? Math.round(n / 1000) + "k" : String(n));
+  const cmax = hit && hit.m.context && chat ? chat.cmax || hit.m.context : 0,
+    cwin = cmax ? ctxWindow({ cmax }) : 0;
   const ctxm =
-    hit && hit.m.context && chat && chat.cmax && chat.ctx
-      ? "context " +
-        kk(chat.ctx) +
-        " / " +
-        kk(chat.cmax) +
-        " (" +
-        Math.round((chat.ctx / chat.cmax) * 100) +
-        "%)"
+    cwin && chat.ctx
+      ? "context " + kk(chat.ctx) + " / " + kk(cwin) + " (" + Math.round((chat.ctx / cwin) * 100) + "%)"
       : "";
   const cost = !hit
     ? ""
@@ -770,13 +769,13 @@ function Chat() {
             }),
           { sub: [label, cost].filter(Boolean).join(" · ") },
         ],
-        ...(ctxm
+        ...(cwin
           ? [
               [
                 "meter",
                 "Context",
-                () => {},
-                { sub: ctxm.replace(/^context /, "") + (chat.cmax ? " · compacts at 80%" : "") },
+                () => openSheet({ title: "Context", Body: CtxPanel, props: { chatId: chat._id, cmax }, at }),
+                { sub: (ctxm ? ctxm.replace(/^context /, "") : kk(cwin) + " window") + " · " + ctxSub() },
               ],
             ]
           : []), // phones have no status bar, so the meter lives here too
@@ -890,6 +889,47 @@ const _send = send;
 
 /* the model picker: each provider that can run (or this PC) with its models, what they cost and why one can't run right now;
    providers without a key collapse into one line so the list stays short */
+/* the context panel: how full the chat is, how much of the model's window to use, when to compact */
+const kk = n => (n >= 1e6 ? +(n / 1e6).toFixed(1) + "M" : n >= 1000 ? Math.round(n / 1000) + "k" : String(n));
+const ctxSub = () => {
+  const at = ctxPrefs().at;
+  return at ? "compacts at " + at + "%" : "auto-compact off";
+};
+const COMPACT_AT = [0, 50, 60, 70, 80, 90];
+function CtxPanel({ chatId, cmax }) {
+  useCols("chats");
+  const ai = useAI(),
+    [p, setP] = usePref("os-ai-ctx", {}),
+    o = { ...ctxPrefs(), ...p };
+  const chat = D.chats.find(c => c._id === chatId) || {},
+    max = chat.cmax || cmax,
+    win = ctxWindow({ cmax: max }),
+    used = chat.ctx || 0,
+    pct = win ? Math.min(100, Math.round((used / win) * 100)) : 0,
+    mark = o.at || 95;
+  const set = x => setP({ ...o, ...x });
+  const wins = [0, ...CTX_STEPS.filter(n => n < max)];
+  return html`<div class="cwp">
+    <div class="cwm" role="meter" aria-label="Context used" aria-valuemin="0" aria-valuemax=${win} aria-valuenow=${used}>
+      <i style=${"width:" + pct + "%"}/><b style=${"left:" + mark + "%"} title=${o.at ? "compacts here" : "model's limit"}/>
+    </div>
+    <div class="cwn"><span>${used ? kk(used) + " of " + kk(win) + " used" : "Measured on the next reply"}</span><span>${used ? pct + "%" : ""}</span></div>
+    <div class="cwr"><span class="cwl">Window</span>
+      <div class="seg">${wins.map(
+        n =>
+          html`<${Btn} key=${n} aria-pressed=${String((o.win && o.win < max ? o.win : 0) === n)} onClick=${() => set({ win: n })}>${n ? kk(n) : "All " + kk(max)}<//>`,
+      )}</div></div>
+    <div class="cwr"><span class="cwl">Auto-compact</span>
+      <div class="seg">${COMPACT_AT.map(
+        n =>
+          html`<${Btn} key=${n} aria-pressed=${String(o.at === n)} onClick=${() => set({ at: n })}>${n ? n + "%" : "Off"}<//>`,
+      )}</div></div>
+    <p class="cwh">${o.at ? "At " + o.at + "% of the window, older messages fold into a short summary. The last few turns stay word for word." : "Off: the chat only folds when the model's own window is nearly full."}${o.win && o.win < max ? " A smaller window keeps each reply cheaper." : ""}</p>
+    <div class="cwb"><${Btn} icon="layout" disabled=${ai.busy || ai.folding} onClick=${() => compactNow(chatId)}>${ai.folding ? "Compacting…" : "Compact now"}<//>
+      ${chat.sum ? html`<span class="cws">Has a summary of earlier messages</span>` : null}</div>
+  </div>`;
+}
+
 function ModelPicker({ cat, cur, def, onPick, close }) {
   const pick = id => {
       close();

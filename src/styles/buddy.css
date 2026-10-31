@@ -992,3 +992,71 @@
   display: inline-block;
   flex: none;
 }
+
+/* context panel (Osage ⋯ > Context) */
+.cwp {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  min-width: 300px;
+}
+.cwm {
+  position: relative;
+  height: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: inset 1px 1px 0 var(--edge);
+}
+.cwm i {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  max-width: calc(100% - 2px);
+  background: repeating-linear-gradient(90deg, var(--sel) 0 7px, transparent 7px 9px);
+}
+.cwm b {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ink);
+}
+.cwn {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: -4px;
+}
+.cwr {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cwl {
+  font-weight: 700;
+  font-size: 12px;
+}
+.cwr .seg {
+  display: flex;
+  flex-wrap: wrap;
+}
+.cwr .seg .btn {
+  flex: 1 0 auto;
+  min-width: 0;
+  padding: 0 8px;
+}
+.cwh {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.cwb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cws {
+  font-size: 12px;
+  opacity: 0.75;
+}

@@ -377,7 +377,15 @@ const stampNow = () =>
   fmt(new Date(), { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 const MAXSTEPS = 8,
   FOLD_AT = 48000,
-  FOLD_FRAC = 0.8;
+  FULL = 0.95;
+/* context settings (pref os-ai-ctx): win = use less than the model's window (0 = all of it),
+   at = compact at this % of the window (0 = off: only when the model's own window is nearly full) */
+export const CTX_STEPS = [32000, 64000, 128000, 256000, 512000];
+export const ctxPrefs = () => ({ win: 0, at: 80, ...ls.get("os-ai-ctx", {}) });
+export const ctxWindow = chat => {
+  const w = ctxPrefs().win;
+  return chat && chat.cmax ? (w && w < chat.cmax ? w : chat.cmax) : 0;
+};
 /* usage numbers from the server ride on the chat too (ctx = tokens the last request sent, cmax = the model's window), so the meter survives reloads */
 const noteMeta = (chatId, m) => {
   Object.assign(ST, { month: m.month, cap: m.cap, model: m.model, day: m.day });
@@ -729,16 +737,26 @@ export async function reattach() {
   }
 }
 
-/* long chats: fold everything before the last few user turns into a short summary (one cheap call, then the prefix is small again) */
-async function fold(chatId) {
-  const chat = D.chats.find(c => c._id === chatId),
-    ms = msgsOf(chatId).filter(m => (m.o || 0) >= (chat.cut || 0));
+/* long chats: fold everything before the last few user turns into a short summary (one cheap call, then the prefix is small again).
+   now = Compact now from the context panel: keeps only the last turn and skips the threshold */
+async function fold(chatId, now = false) {
+  const chat = D.chats.find(c => c._id === chatId);
+  if (!chat) return false;
+  const ms = msgsOf(chatId).filter(m => (m.o || 0) >= (chat.cut || 0));
   const size = ms.reduce((a, m) => a + (m.t || "").length + (m.ctx || "").length, 0);
-  /* models with a known window compact at 80% of it (the server's own token count); the rest fold by size */
-  if (chat.cmax ? (chat.ctx || 0) < chat.cmax * FOLD_FRAC : size < FOLD_AT) return;
+  /* models with a known window compact at the chosen % of it (the server's own token count); the rest fold by size */
+  const { at } = ctxPrefs(),
+    lim = chat.cmax
+      ? at
+        ? (ctxWindow(chat) * at) / 100
+        : chat.cmax * FULL
+      : at
+        ? (FOLD_AT * at) / 80
+        : FOLD_AT * 2;
+  if (!now && (chat.cmax ? chat.ctx || 0 : size) < lim) return false;
   const users = ms.filter(m => m.r === "user");
-  if (users.length < 4) return;
-  const keepFrom = users[users.length - 3],
+  if (users.length < (now ? 2 : 4)) return false;
+  const keepFrom = users[users.length - (now ? 1 : 3)],
     old = ms.filter(m => m.o < keepFrom.o);
   const transcript = old
     .map(m =>
@@ -764,10 +782,22 @@ async function fold(chatId) {
     },
     () => {},
   ); // the server's cheap utility model (providers.json), never the paid chat model
-  if (r.text) {
-    W.upd("chats", chatId, { sum: r.text.trim(), cut: keepFrom.o, ctx: 0 });
-    if (chat.cmax) toast(AI.name + " compacted this chat");
-  } // ctx is measured again on the next reply
+  if (!r.text) return false;
+  W.upd("chats", chatId, { sum: r.text.trim(), cut: keepFrom.o, ctx: 0 }); // ctx is measured again on the next reply
+  if (chat.cmax && !now) toast(AI.name + " compacted this chat");
+  return true;
+}
+export async function compactNow(chatId) {
+  if (ST.busy || ST.folding) return toast("Wait for the reply to finish");
+  ST.folding = true;
+  emit();
+  try {
+    toast((await fold(chatId, true)) ? "Chat compacted" : "Nothing to compact yet");
+  } catch (e) {
+    toast("Couldn't compact: " + (e.message || e));
+  }
+  ST.folding = false;
+  emit();
 }
 
 export { ST, TOOLS, U, emit };
