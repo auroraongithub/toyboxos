@@ -925,7 +925,7 @@ function CtxPanel({ chatId, cmax }) {
           html`<${Btn} key=${n} aria-pressed=${String(o.at === n)} onClick=${() => set({ at: n })}>${n ? n + "%" : "Off"}<//>`,
       )}</div></div>
     <p class="cwh">${o.at ? "At " + o.at + "% of the window, older messages fold into a short summary. The last few turns stay word for word." : "Off: the chat only folds when the model's own window is nearly full."}${o.win && o.win < max ? " A smaller window keeps each reply cheaper." : ""}</p>
-    <div class="cwb"><${Btn} icon="layout" disabled=${ai.busy || ai.folding} onClick=${() => compactNow(chatId)}>${ai.folding ? "Compacting…" : "Compact now"}<//>
+    <div class="cwb"><${Btn} icon="compact" disabled=${ai.busy || ai.folding} onClick=${() => compactNow(chatId)}>${ai.folding ? "Compacting…" : "Compact now"}<//>
       ${chat.sum ? html`<span class="cws">Has a summary of earlier messages</span>` : null}</div>
   </div>`;
 }
