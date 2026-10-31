@@ -24,8 +24,7 @@ export const okSource = u => {
   try {
     const x = new URL(u);
     return (
-      x.protocol === "https:" ||
-      (x.protocol === "http:" && /^(localhost|127\.0\.0\.1|100\.\d+\.\d+\.\d+)$/.test(x.hostname))
+      x.protocol === "https:" || (x.protocol === "http:" && /^(localhost|127\.0\.0\.1|100\.\d+\.\d+\.\d+)$/.test(x.hostname))
     );
   } catch (e) {
     return false;
@@ -34,9 +33,7 @@ export const okSource = u => {
 export const hostOf = u => {
   try {
     const x = new URL(u);
-    return x.hostname === "raw.githubusercontent.com"
-      ? "github.com/" + x.pathname.split("/").slice(1, 3).join("/")
-      : x.host;
+    return x.hostname === "raw.githubusercontent.com" ? "github.com/" + x.pathname.split("/").slice(1, 3).join("/") : x.host;
   } catch (e) {
     return u;
   }
@@ -46,8 +43,7 @@ export const hostOf = u => {
 async function bytes(url, max) {
   /* raw.githubusercontent.com keeps files in its own cache for minutes (even for revalidation), so the index and a
      pack file can disagree right after a push: a fresh query makes it fetch the current one */
-  if (/^https:\/\/raw\.githubusercontent\.com\//.test(url))
-    url += (url.includes("?") ? "&" : "?") + "t=" + Date.now();
+  if (/^https:\/\/raw\.githubusercontent\.com\//.test(url)) url += (url.includes("?") ? "&" : "?") + "t=" + Date.now();
   const r = await fetch(url, { cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" });
   if (!r.ok) throw new Error(r.status === 404 ? "not found" : "HTTP " + r.status);
   const n = +r.headers.get("content-length") || 0;
@@ -64,13 +60,7 @@ const ID = /^[a-z0-9][a-z0-9-]{1,31}$/,
   PIC = /^packs\/[a-z0-9][a-z0-9-]{1,31}\/[a-z0-9_.-]{1,40}\.(webp|png|jpe?g|gif)$/,
   SHA = /^[0-9a-f]{64}$/,
   HEX = /^#[0-9a-f]{6}$/i;
-const s = (v, n) =>
-  typeof v === "string"
-    ? v
-        .replace(/[\u0000-\u001f]/g, " ")
-        .trim()
-        .slice(0, n)
-    : "";
+const s = (v, n) => (typeof v === "string" ? v.replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n) : "");
 const n = (v, hi) => (Number.isFinite(+v) ? Math.max(0, Math.min(hi, Math.round(+v))) : 0);
 export function cleanEntry(e, src) {
   if (!e || typeof e !== "object" || !ID.test(e.id) || !FILE.test(e.file) || !SHA.test(e.sha256)) return null;
@@ -86,10 +76,7 @@ export function cleanEntry(e, src) {
     v: s(String(e.v ?? "1"), 12) || "1",
     license: s(e.license, 40),
     credits: s(e.credits, 200),
-    tags: (Array.isArray(e.tags) ? e.tags : [])
-      .map(t => s(t, 16).toLowerCase())
-      .filter(Boolean)
-      .slice(0, 6),
+    tags: (Array.isArray(e.tags) ? e.tags : []).map(t => s(t, 16).toLowerCase()).filter(Boolean).slice(0, 6),
     file: e.file,
     sha256: e.sha256,
     size,
@@ -136,16 +123,7 @@ export async function loadAll() {
   const packs = res.flatMap(r => r.packs || []),
     errs = res.filter(r => r.err && !(r.src !== HOME && r.err === "not found"));
   if (packs.length) ls.set("os-store-cache", packs);
-  return {
-    packs: packs.length
-      ? packs
-      : ls
-          .get("os-store-cache", [])
-          .map(e => cleanEntry(e, e.src))
-          .filter(Boolean),
-    errs,
-    offline: !packs.length && errs.length > 0,
-  };
+  return { packs: packs.length ? packs : ls.get("os-store-cache", []).map(e => cleanEntry(e, e.src)).filter(Boolean), errs, offline: !packs.length && errs.length > 0 };
 }
 
 /* ---- pictures: only real png/jpeg/webp/gif bytes, shown through a blob URL of that type ---- */
@@ -154,14 +132,7 @@ const sniff = b =>
     ? "image/png"
     : b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff
       ? "image/jpeg"
-      : b[0] === 0x52 &&
-          b[1] === 0x49 &&
-          b[2] === 0x46 &&
-          b[3] === 0x46 &&
-          b[8] === 0x57 &&
-          b[9] === 0x45 &&
-          b[10] === 0x42 &&
-          b[11] === 0x50
+      : b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50
         ? "image/webp"
         : b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46
           ? "image/gif"
@@ -217,11 +188,7 @@ export function contents(o) {
     pics: (Array.isArray(m.pics) ? m.pics : []).filter(p => p && DATA.test(p.src || "")).slice(0, 12),
     say: (Array.isArray(m.say) ? m.say : []).filter(x => typeof x === "string").slice(0, 40),
     badges: (Array.isArray(o.badges) ? o.badges : []).filter(b => b && typeof b === "object").slice(0, 16),
-    ai: {
-      name: s(ai.name, 24),
-      full: s(ai.full, 40),
-      persona: typeof ai.persona === "string" ? ai.persona.slice(0, 12000) : "",
-    },
+    ai: { name: s(ai.name, 24), full: s(ai.full, 40), persona: typeof ai.persona === "string" ? ai.persona.slice(0, 12000) : "" },
   };
 }
 /* one entry per id across sources: the first source wins (the public store first) */
