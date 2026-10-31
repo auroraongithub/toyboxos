@@ -1,0 +1,64 @@
+# Every push to main that changes the app publishes an update release: servers pick it up from
+# releases/latest/download/latest.json within 6 hours and their apps offer a restart. The installers, APK and server
+# exe are carried over from the previous release, so the latest release always has the downloads.
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "server/**"
+      - "assets/**"
+      - "vendor/**"
+      - "build.mjs"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'auroraongithub/toyboxos'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: python -m unittest discover -s server -p "test_*.py"
+      - name: Build the update
+        run: python server/release.py out
+      - name: Carry over the downloads
+        run: gh release download --dir out -p "*.exe" -p "*.apk"
+      - name: Publish
+        run: |
+          prev=$(gh release view --json tagName -q .tagName)
+          ver=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          tag="v$ver-u$GITHUB_RUN_NUMBER"
+          {
+            echo "Update for toybox.os $ver. Servers install it by themselves within 6 hours; apps then offer a restart."
+            echo
+            echo "## Changes"
+            git log --no-merges --format="- %s" "$prev..HEAD"
+            echo
+            echo "New here? Download the installer, APK or server below and see the [README](https://github.com/$GITHUB_REPOSITORY#getting-started)."
+          } > notes.md
+          gh release create "$tag" --target "$GITHUB_SHA" --title "toybox.os $ver update $GITHUB_RUN_NUMBER" \
+            --notes-file notes.md --latest out/*
