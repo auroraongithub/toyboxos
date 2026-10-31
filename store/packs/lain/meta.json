@@ -1,0 +1,18 @@
+{
+ "name": "Lain",
+ "by": "Sean",
+ "desc": "Pixel-room banner, purple-night colours, DotGothic16 titles and a quiet Wired-flavoured assistant.",
+ "license": "Fan art, rights stay with artists",
+ "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+ "tags": [
+  "dark",
+  "purple",
+  "pixel"
+ ],
+ "v": "1",
+ "thumb": "thumb.webp",
+ "shots": [
+  "desktop.webp",
+  "phone.webp"
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "name": "Osage-chan",
+ "by": "auroraongithub",
+ "desc": "inabakumori's quiet mascot all over the desk: banner, Start menu, peeking widgets, mascot window, badges, and a deadpan assistant voice.",
+ "license": "Fan pack, non-commercial",
+ "credits": "Osage-chan by inabakumori, drawn by Nukunuku Nigirimeshi. Fan use only; removed on request.",
+ "tags": [
+  "anime",
+  "gray",
+  "mascot"
+ ],
+ "v": "1",
+ "thumb": "thumb.webp",
+ "shots": [
+  "desktop.webp",
+  "phone.webp"
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "name": "Peach paper",
+ "by": "toybox.os",
+ "desc": "Warm peach on paper white, a cloud banner and a redrawn Today sun.",
+ "license": "CC0-1.0",
+ "credits": "Banner and icon drawn for toybox.os, public domain.",
+ "tags": [
+  "light",
+  "warm"
+ ],
+ "v": "1",
+ "thumb": "thumb.webp",
+ "shots": [
+  "desktop.webp",
+  "phone.webp"
+ ]
+}

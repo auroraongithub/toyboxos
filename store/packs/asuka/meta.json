@@ -1,0 +1,18 @@
+{
+ "name": "Asuka",
+ "by": "Sean",
+ "desc": "Hot red-orange accents, watercolour banner and a bossy, competitive assistant.",
+ "license": "Fan art, rights stay with artists",
+ "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+ "tags": [
+  "light",
+  "red",
+  "bold"
+ ],
+ "v": "1",
+ "thumb": "thumb.webp",
+ "shots": [
+  "desktop.webp",
+  "phone.webp"
+ ]
+}

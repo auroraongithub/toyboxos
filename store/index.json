@@ -1,0 +1,433 @@
+{
+ "toybox_store": 1,
+ "packs": [
+  {
+   "id": "asuka",
+   "name": "Asuka",
+   "by": "Sean",
+   "desc": "Hot red-orange accents, watercolour banner and a bossy, competitive assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "light",
+    "red",
+    "bold"
+   ],
+   "file": "packs/asuka/pack.json",
+   "sha256": "05bc80f1e36f4a80de158f084bbfd6d10d5e0999f748973d8ffecde571e30c61",
+   "size": 1103146,
+   "thumb": "packs/asuka/thumb.webp",
+   "shots": [
+    "packs/asuka/desktop.webp",
+    "packs/asuka/phone.webp"
+   ],
+   "colours": [
+    "#b57469",
+    "#a53a27",
+    "#e9e3e2",
+    "#7b2b1e"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Asuka",
+    "layout": false
+   }
+  },
+  {
+   "id": "frieren",
+   "name": "Frieren",
+   "by": "Sean",
+   "desc": "Soft sage and sky blue, a lily-field wallpaper and an unhurried, dry assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "light",
+    "green",
+    "calm"
+   ],
+   "file": "packs/frieren/pack.json",
+   "sha256": "e5ada1f44502616f38e10a856d5bd17a5f9b1726f8fad0954994c329ec3370ce",
+   "size": 792849,
+   "thumb": "packs/frieren/thumb.webp",
+   "shots": [
+    "packs/frieren/desktop.webp",
+    "packs/frieren/phone.webp"
+   ],
+   "colours": [
+    "#889592",
+    "#5b716b",
+    "#e5e6e6",
+    "#445550"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Frieren",
+    "layout": false
+   }
+  },
+  {
+   "id": "haruhi",
+   "name": "Haruhi",
+   "by": "Sean",
+   "desc": "Sunflower wallpaper, orange accents and a loud SOS Brigade assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "light",
+    "orange",
+    "bold"
+   ],
+   "file": "packs/haruhi/pack.json",
+   "sha256": "cb261f6bda5943ed8be71e7871bbc4bfd20b6ef4c298c293234f7653e3324d22",
+   "size": 881788,
+   "thumb": "packs/haruhi/thumb.webp",
+   "shots": [
+    "packs/haruhi/desktop.webp",
+    "packs/haruhi/phone.webp"
+   ],
+   "colours": [
+    "#da9743",
+    "#c37009",
+    "#ece6df",
+    "#935406"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Haruhi",
+    "layout": false
+   }
+  },
+  {
+   "id": "kanade",
+   "name": "Kanade",
+   "by": "Sean",
+   "desc": "Pastel lavender with a soft-wings banner and a quiet, polite assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "light",
+    "purple",
+    "soft"
+   ],
+   "file": "packs/kanade/pack.json",
+   "sha256": "ddcc7f079800b9ba6692ab3c8d7afd5b59e722aa7879de7a3500d9c40b78e719",
+   "size": 628984,
+   "thumb": "packs/kanade/thumb.webp",
+   "shots": [
+    "packs/kanade/desktop.webp",
+    "packs/kanade/phone.webp"
+   ],
+   "colours": [
+    "#86819d",
+    "#574f7d",
+    "#e5e4e7",
+    "#413b5e"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Kanade",
+    "layout": false
+   }
+  },
+  {
+   "id": "lain",
+   "name": "Lain",
+   "by": "Sean",
+   "desc": "Pixel-room banner, purple-night colours, DotGothic16 titles and a quiet Wired-flavoured assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "dark",
+    "purple",
+    "pixel"
+   ],
+   "file": "packs/lain/pack.json",
+   "sha256": "6cd525190cb8cd1395a795964d1afa421c7557e7b346b53f916b58a870872300",
+   "size": 896305,
+   "thumb": "packs/lain/thumb.webp",
+   "shots": [
+    "packs/lain/desktop.webp",
+    "packs/lain/phone.webp"
+   ],
+   "colours": [
+    "#16161d",
+    "#3e4066",
+    "#29292d",
+    "#515599"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Lain",
+    "layout": false
+   }
+  },
+  {
+   "id": "moss",
+   "name": "Moss",
+   "by": "toybox.os",
+   "desc": "Soft green desk with a pixel leaf wallpaper, Georgia titles and a few quiet lines for the mascot.",
+   "v": "1",
+   "license": "CC0-1.0",
+   "credits": "Leaf wallpaper drawn for toybox.os, public domain.",
+   "tags": [
+    "light",
+    "green",
+    "calm"
+   ],
+   "file": "packs/moss/pack.json",
+   "sha256": "01823afe4642568e8af560dda40616bc3741e92e3f8b6883409deff4cfade5e0",
+   "size": 1419,
+   "thumb": "packs/moss/thumb.webp",
+   "shots": [
+    "packs/moss/desktop.webp",
+    "packs/moss/phone.webp"
+   ],
+   "colours": [
+    "#8c9d81",
+    "#617d4f",
+    "#e5e7e4",
+    "#495e3b"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 0,
+    "badges": 3,
+    "pics": 0,
+    "say": 3,
+    "icons": 0,
+    "ai": "",
+    "layout": false
+   }
+  },
+  {
+   "id": "night-shift",
+   "name": "Night shift",
+   "by": "toybox.os",
+   "desc": "Dark indigo for late study sessions: starfield wallpaper, Consolas everywhere and a sleepy assistant called Pip.",
+   "v": "1",
+   "license": "CC0-1.0",
+   "credits": "Starfield drawn for toybox.os, public domain.",
+   "tags": [
+    "dark",
+    "blue",
+    "study"
+   ],
+   "file": "packs/night-shift/pack.json",
+   "sha256": "b884650e8474f41fa885ddb7e2b1cd50195eeb9cb81a7175a637e3df3afc42fb",
+   "size": 2086,
+   "thumb": "packs/night-shift/thumb.webp",
+   "shots": [
+    "packs/night-shift/desktop.webp",
+    "packs/night-shift/phone.webp"
+   ],
+   "colours": [
+    "#15161e",
+    "#3b3e69",
+    "#29292e",
+    "#4c519e"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 0,
+    "badges": 3,
+    "pics": 0,
+    "say": 2,
+    "icons": 0,
+    "ai": "Pip",
+    "layout": false
+   }
+  },
+  {
+   "id": "nijika",
+   "name": "Nijika",
+   "by": "Sean",
+   "desc": "Sunny yellow desk with a bright close-up banner and an encouraging drummer assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "light",
+    "yellow",
+    "warm"
+   ],
+   "file": "packs/nijika/pack.json",
+   "sha256": "d46524b7ce7f67190bccc6978317f0121f034497f12a183052acaa838e587253",
+   "size": 618787,
+   "thumb": "packs/nijika/thumb.webp",
+   "shots": [
+    "packs/nijika/desktop.webp",
+    "packs/nijika/phone.webp"
+   ],
+   "colours": [
+    "#bfa35f",
+    "#b58817",
+    "#e9e7e2",
+    "#886611"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Nijika",
+    "layout": false
+   }
+  },
+  {
+   "id": "osage",
+   "name": "Osage-chan",
+   "by": "auroraongithub",
+   "desc": "inabakumori's quiet mascot all over the desk: banner, Start menu, peeking widgets, mascot window, badges, and a deadpan assistant voice.",
+   "v": "1",
+   "license": "Fan pack, non-commercial",
+   "credits": "Osage-chan by inabakumori, drawn by Nukunuku Nigirimeshi. Fan use only; removed on request.",
+   "tags": [
+    "anime",
+    "gray",
+    "mascot"
+   ],
+   "file": "packs/osage/pack.json",
+   "sha256": "a34d0bc1310571decd3b9bdf174d0536a2bd2d4a804aa46de6fc2c51cf000a55",
+   "size": 777330,
+   "thumb": "packs/osage/thumb.webp",
+   "shots": [
+    "packs/osage/desktop.webp",
+    "packs/osage/phone.webp"
+   ],
+   "colours": [
+    "#8c8c8c",
+    "#222222",
+    "#ece9d8",
+    "#333333"
+   ],
+   "has": {
+    "theme": true,
+    "wall": false,
+    "art": 15,
+    "badges": 8,
+    "pics": 5,
+    "say": 10,
+    "icons": 0,
+    "ai": "Osage",
+    "layout": false
+   }
+  },
+  {
+   "id": "peach-paper",
+   "name": "Peach paper",
+   "by": "toybox.os",
+   "desc": "Warm peach on paper white, a cloud banner and a redrawn Today sun.",
+   "v": "1",
+   "license": "CC0-1.0",
+   "credits": "Banner and icon drawn for toybox.os, public domain.",
+   "tags": [
+    "light",
+    "warm"
+   ],
+   "file": "packs/peach-paper/pack.json",
+   "sha256": "7f9fd9308b99652aded7ae235bd13cfd8277400664a4121a18dd04434a16ddc6",
+   "size": 3770,
+   "thumb": "packs/peach-paper/thumb.webp",
+   "shots": [
+    "packs/peach-paper/desktop.webp",
+    "packs/peach-paper/phone.webp"
+   ],
+   "colours": [
+    "#a4887a",
+    "#885b44",
+    "#e7e5e4",
+    "#664433"
+   ],
+   "has": {
+    "theme": true,
+    "wall": false,
+    "art": 0,
+    "badges": 2,
+    "pics": 0,
+    "say": 1,
+    "icons": 1,
+    "ai": "",
+    "layout": false
+   }
+  },
+  {
+   "id": "rei",
+   "name": "Rei",
+   "by": "Sean",
+   "desc": "Pale blue and white with a rooftop watercolour wallpaper, plus a calm, minimal assistant.",
+   "v": "1",
+   "license": "Fan art, rights stay with artists",
+   "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+   "tags": [
+    "light",
+    "blue",
+    "calm"
+   ],
+   "file": "packs/rei/pack.json",
+   "sha256": "a1082d0defe0cb17acf1c90d8e4c049c8158e71c45674cd002b65535a59624a3",
+   "size": 1083823,
+   "thumb": "packs/rei/thumb.webp",
+   "shots": [
+    "packs/rei/desktop.webp",
+    "packs/rei/phone.webp"
+   ],
+   "colours": [
+    "#7d8da0",
+    "#496383",
+    "#e4e5e7",
+    "#374a62"
+   ],
+   "has": {
+    "theme": true,
+    "wall": true,
+    "art": 2,
+    "badges": 3,
+    "pics": 5,
+    "say": 8,
+    "icons": 0,
+    "ai": "Rei",
+    "layout": false
+   }
+  }
+ ]
+}

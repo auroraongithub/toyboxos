@@ -1,0 +1,18 @@
+{
+ "name": "Rei",
+ "by": "Sean",
+ "desc": "Pale blue and white with a rooftop watercolour wallpaper, plus a calm, minimal assistant.",
+ "license": "Fan art, rights stay with artists",
+ "credits": "Art by various artists via Safebooru; source links are in the art folder. The character belongs to its creators.",
+ "tags": [
+  "light",
+  "blue",
+  "calm"
+ ],
+ "v": "1",
+ "thumb": "thumb.webp",
+ "shots": [
+  "desktop.webp",
+  "phone.webp"
+ ]
+}
