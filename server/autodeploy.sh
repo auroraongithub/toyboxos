@@ -70,7 +70,9 @@ if [ "$changed" = all ] || grep -q "^server/admin.py$" <<<"$changed"; then
 fi
 # publish it on the release channel self-updating servers read (/releases/latest.json); a failure here doesn't undo the deploy
 python3 server/release.py "$SRV/data/releases" >>"$LOG" 2>&1 || log "release packing failed"
-cp server/autodeploy.sh "$SRV/autodeploy.sh"         # the deployer updates itself for the next run
+# the deployer updates itself for the next run: through a rename, never in place (bash is still reading this file;
+# overwriting it mid-run made the rest of the run read the new file at the old offset and die before "deployed")
+cp server/autodeploy.sh "$SRV/autodeploy.sh.new" && mv -f "$SRV/autodeploy.sh.new" "$SRV/autodeploy.sh"
 echo "$new" >"$WORK/deployed"; rm -f "$WORK/failed"
 status deployed
 log "deployed $new build $(python3 -c "import json;print(json.load(open('dist/version.json'))['build'])" 2>/dev/null)"
