@@ -37,7 +37,7 @@ export const Tools = ({ children, frm = true, cls = "" }) =>
 /* the filler takes whatever height a tall window leaves under the content and shows a faint drawing there
    (desktop windows only; hidden when the gap is small) */
 export const Panel = ({ children, cls = "" }) =>
-  html`<div class=${"panel" + (cls ? " " + cls : "")}>${children}<div class="pfill" aria-hidden="true">${(ART.panelFill || []).map((a, i) => html`<img class=${"pa" + (i + 1)} src=${a} alt=""/>`)}</div></div>`;
+  html`<div class=${"panel" + (cls ? " " + cls : "")}>${children}<div class="pfill" aria-hidden="true">${(ART.panelFill || []).map((a, i) => (a ? html`<img class=${"pa" + (i + 1)} src=${a} alt=""/>` : null))}</div></div>`;
 /* how wide the window around el is: "xs" <440, "s" <620, "m" <900, "l" (desktop windows; phones are always "xs") */
 export const widthOf = w => (w < 440 ? "xs" : w < 620 ? "s" : w < 900 ? "m" : "l");
 export function useWinWidth(ref) {

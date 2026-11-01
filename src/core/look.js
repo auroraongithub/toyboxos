@@ -82,7 +82,8 @@ export async function applyLook() {
     if (s.startsWith("panelFill.")) pf[+s.split(".")[1]] = u;
     else art[s] = u;
   }
-  art.panelFill = pf.filter(Boolean).length ? pf.filter(Boolean) : null;
+  /* keep each corner in its own slot (a hidden corner 1 must not pull corner 2 into its place) */
+  art.panelFill = pf.some(Boolean) ? Array.from(pf, x => x || null) : null;
   /* the app icon defaults to the build's own (dist/icon-192.png); only a picked one goes to the shell */
   const ownIcon = (a.appIcon && art.appIcon) || null;
   if (!art.appIcon) art.appIcon = BASE.art.appIcon || "icon-192.png";
