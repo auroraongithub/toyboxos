@@ -126,8 +126,19 @@ os.makedirs(FILES, exist_ok=True)
 os.makedirs(os.path.dirname(DB), exist_ok=True)
 
 
+class _Conn(sqlite3.Connection):
+    """`with conn() as c:` commits and then closes. A plain sqlite3 connection only commits there, and the open
+    handles piled up until the process hit its file limit and every database call failed."""
+
+    def __exit__(self, *exc):
+        try:
+            return super().__exit__(*exc)
+        finally:
+            self.close()
+
+
 def conn():
-    c = sqlite3.connect(DB, timeout=10)
+    c = sqlite3.connect(DB, timeout=10, factory=_Conn)
     c.execute("PRAGMA journal_mode=WAL")
     return c
 
