@@ -6,7 +6,7 @@
    "name": "Asuka",
    "by": "toybox.os",
    "desc": "Red and orange theme with a watercolour banner and an action wallpaper.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -15,8 +15,8 @@
     "bold"
    ],
    "file": "packs/asuka/pack.json",
-   "sha256": "7644b4efdabdb5a4150d8a901bfc97810f23ec6279051c3466062ddb63001977",
-   "size": 1103160,
+   "sha256": "ba9ee3c04a625d2df100f598d68bbddad0a9f4316864f3253c15ede2f7c96f54",
+   "size": 1687484,
    "thumb": "packs/asuka/thumb.webp",
    "shots": [
     "packs/asuka/desktop.webp",
@@ -31,7 +31,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 11,
     "badges": 3,
     "pics": 5,
     "say": 8,
@@ -45,7 +45,7 @@
    "name": "Frieren",
    "by": "toybox.os",
    "desc": "Sage green and sky blue theme with a lily field wallpaper.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -54,8 +54,8 @@
     "calm"
    ],
    "file": "packs/frieren/pack.json",
-   "sha256": "076f8282361d09eb81b457918da4c62ababb30468189f4307bc4abf88dc039a4",
-   "size": 792862,
+   "sha256": "95b3f0b66fdebaac998e39a3111b6370836faea702cc74aa081b84cc2a685cb5",
+   "size": 1185650,
    "thumb": "packs/frieren/thumb.webp",
    "shots": [
     "packs/frieren/desktop.webp",
@@ -70,7 +70,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 11,
     "badges": 3,
     "pics": 5,
     "say": 8,
@@ -84,7 +84,7 @@
    "name": "Haruhi",
    "by": "toybox.os",
    "desc": "Orange theme with a sunflower field wallpaper.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -93,8 +93,8 @@
     "bold"
    ],
    "file": "packs/haruhi/pack.json",
-   "sha256": "9a02f21f61ed97fd9c8bfd920ca2a38b59e3e5d33bb5e4d8b867742361e9d084",
-   "size": 881802,
+   "sha256": "a98cf78b2593ba9dc392503434419631cb56b0a97ade2744114e909ceafc4046",
+   "size": 1291150,
    "thumb": "packs/haruhi/thumb.webp",
    "shots": [
     "packs/haruhi/desktop.webp",
@@ -109,7 +109,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 11,
     "badges": 3,
     "pics": 5,
     "say": 8,
@@ -123,7 +123,7 @@
    "name": "Kanade",
    "by": "toybox.os",
    "desc": "Lavender theme with a winged banner and a pastel wallpaper.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -132,8 +132,8 @@
     "soft"
    ],
    "file": "packs/kanade/pack.json",
-   "sha256": "ca13201b8da4e99511b9b909c79589c684b7403c66f4646cc4dc0a1bc90b1d4e",
-   "size": 628998,
+   "sha256": "d70fb4be67133e793799e0427b40d68579b012de02a72b8e9c112101c3a56a3c",
+   "size": 1035202,
    "thumb": "packs/kanade/thumb.webp",
    "shots": [
     "packs/kanade/desktop.webp",
@@ -148,7 +148,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 11,
     "badges": 3,
     "pics": 5,
     "say": 8,
@@ -162,7 +162,7 @@
    "name": "Lain",
    "by": "toybox.os",
    "desc": "Dark purple theme with a pixel-art room banner and wallpaper.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -171,8 +171,8 @@
     "pixel"
    ],
    "file": "packs/lain/pack.json",
-   "sha256": "6b6cc4184d93c18d05385e574d93905283f7761f63a13bcfc4c420ab1cc37a46",
-   "size": 896319,
+   "sha256": "b1b5c4aa613b866dd7465c49119b599837cb506c06358972a6ad462a68a89ad9",
+   "size": 1170824,
    "thumb": "packs/lain/thumb.webp",
    "shots": [
     "packs/lain/desktop.webp",
@@ -187,7 +187,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 10,
     "badges": 3,
     "pics": 5,
     "say": 8,
@@ -279,7 +279,7 @@
    "name": "Nijika",
    "by": "toybox.os",
    "desc": "Yellow theme with a close-up banner and a wallpaper of her in a white hoodie.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -288,8 +288,8 @@
     "warm"
    ],
    "file": "packs/nijika/pack.json",
-   "sha256": "ec59929e72835c374e0ced9c415fb4c8073169af1b28c455b10fa0e7ad38e41f",
-   "size": 618801,
+   "sha256": "7bf2f30449d4163502e5aae30c8e278654c5b1f9f763c511a0893ebafa473c16",
+   "size": 981013,
    "thumb": "packs/nijika/thumb.webp",
    "shots": [
     "packs/nijika/desktop.webp",
@@ -304,7 +304,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 11,
     "badges": 3,
     "pics": 5,
     "say": 8,
@@ -395,7 +395,7 @@
    "name": "Rei",
    "by": "toybox.os",
    "desc": "Pale blue theme with a rooftop watercolour wallpaper.",
-   "v": "1",
+   "v": "2",
    "license": "Fan art, rights stay with artists",
    "credits": "art from safebooru, artists in the sources list. characters belong to their creators",
    "tags": [
@@ -404,8 +404,8 @@
     "calm"
    ],
    "file": "packs/rei/pack.json",
-   "sha256": "7a11ab6e5ad6be8cd3d2e4d2bc7581435713ca096a27bc4a3bee9d3660cb6547",
-   "size": 1083837,
+   "sha256": "a67e3ede1a3b5555d62aa5c6985c21d1a2132cbca0a8cc7c84c465d5ff17126b",
+   "size": 1332389,
    "thumb": "packs/rei/thumb.webp",
    "shots": [
     "packs/rei/desktop.webp",
@@ -420,7 +420,7 @@
    "has": {
     "theme": true,
     "wall": true,
-    "art": 2,
+    "art": 11,
     "badges": 3,
     "pics": 5,
     "say": 8,
