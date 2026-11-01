@@ -63,6 +63,26 @@ support them.
 The whole look comes from a **pack**: art, colours, fonts, wallpaper, mascot and badges. The Theme editor changes any
 of it from inside the app, including the app icon on the taskbar, tray and browser tab (Art > App icon). Only the neutral `default` pack ships in this repository (see [Art packs](#art-packs)).
 
+## Looks
+
+Pick a pack from the Pack store (Start > Appearance > Pack store) and the art, colours, fonts, wallpaper, mascot,
+badges and icons change in one go. Moss, Night shift and Peach paper are original and CC0; the rest are fan packs
+that credit their artists.
+
+<table>
+<tr><td align="center"><img src="store/packs/moss/thumb.webp" width="260" alt="Moss"><br><sub>Moss</sub></td><td align="center"><img src="store/packs/night-shift/thumb.webp" width="260" alt="Night shift"><br><sub>Night shift</sub></td><td align="center"><img src="store/packs/peach-paper/thumb.webp" width="260" alt="Peach paper"><br><sub>Peach paper</sub></td></tr>
+<tr><td align="center"><img src="store/packs/frieren/thumb.webp" width="260" alt="Frieren"><br><sub>Frieren</sub></td><td align="center"><img src="store/packs/lain/thumb.webp" width="260" alt="Lain"><br><sub>Lain</sub></td><td align="center"><img src="store/packs/haruhi/thumb.webp" width="260" alt="Haruhi"><br><sub>Haruhi</sub></td></tr>
+<tr><td align="center"><img src="store/packs/rei/thumb.webp" width="260" alt="Rei"><br><sub>Rei</sub></td><td align="center"><img src="store/packs/kanade/thumb.webp" width="260" alt="Kanade"><br><sub>Kanade</sub></td><td align="center"><img src="store/packs/nijika/thumb.webp" width="260" alt="Nijika"><br><sub>Nijika</sub></td></tr>
+<tr><td align="center"><img src="store/packs/asuka/thumb.webp" width="260" alt="Asuka"><br><sub>Asuka</sub></td><td align="center"><img src="store/packs/osage/thumb.webp" width="260" alt="Osage-chan"><br><sub>Osage-chan</sub></td></tr>
+</table>
+
+Or keep it simple: 11 built-in skins (the swatches at the bottom of the Start menu), and the Theme editor makes your own from one colour.
+
+<table>
+<tr><td align="center"><img src="docs/screenshots/skins/night.webp" width="190" alt="Night"><br><sub>Night</sub></td><td align="center"><img src="docs/screenshots/skins/luna.webp" width="190" alt="Luna"><br><sub>Luna</sub></td><td align="center"><img src="docs/screenshots/skins/cherry.webp" width="190" alt="Cherry"><br><sub>Cherry</sub></td><td align="center"><img src="docs/screenshots/skins/lilac.webp" width="190" alt="Lilac"><br><sub>Lilac</sub></td></tr>
+<tr><td align="center"><img src="docs/screenshots/skins/teal.webp" width="190" alt="Teal"><br><sub>Teal</sub></td><td align="center"><img src="docs/screenshots/skins/sepia.webp" width="190" alt="Sepia"><br><sub>Sepia</sub></td><td align="center"><img src="docs/screenshots/skins/bubble.webp" width="190" alt="Bubblegum"><br><sub>Bubblegum</sub></td><td align="center"><img src="docs/screenshots/skins/mono.webp" width="190" alt="Paper"><br><sub>Paper</sub></td></tr>
+</table>
+
 ## How it works
 
 - Every change is saved on the device first, so nothing waits on the network.
