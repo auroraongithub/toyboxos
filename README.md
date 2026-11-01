@@ -66,8 +66,7 @@ of it from inside the app, including the app icon on the taskbar, tray and brows
 ## Looks
 
 Pick a pack from the Pack store (Start > Appearance > Pack store) and the art, colours, fonts, wallpaper, mascot,
-badges and icons change in one go. Moss, Night shift and Peach paper are original and CC0; the rest are fan packs
-that credit their artists.
+badges and icons change in one go.
 
 <table>
 <tr><td align="center"><img src="store/packs/moss/thumb.webp" width="260" alt="Moss"><br><sub>Moss</sub></td><td align="center"><img src="store/packs/night-shift/thumb.webp" width="260" alt="Night shift"><br><sub>Night shift</sub></td><td align="center"><img src="store/packs/peach-paper/thumb.webp" width="260" alt="Peach paper"><br><sub>Peach paper</sub></td></tr>
