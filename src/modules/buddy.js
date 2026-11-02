@@ -596,7 +596,7 @@ function Composer({ chat }) {
       <div class="field bbox" onClick=${e => {
         if (e.target === e.currentTarget) ta.current.focus();
       }}>
-        ${!refs.length && !img.length && !t ? html`<button class="bref sug" title="Send this along with your message" onPointerDown=${keep} onClick=${() => add(sug)}>+ ${sug.l}</button>` : null}
+        ${!refs.length && !img.length && !t ? html`<button class="bref sug" title="Send this along with your message" onPointerDown=${keep} onClick=${() => add(sug)}>+ <span>${sug.l}</span></button>` : null}
         <textarea ref=${ta} class="bin" rows="1" placeholder=${refs.length ? "Ask about this…" : "Message " + AI.name} value=${t} aria-label=${"Message " + AI.name}
           onInput=${e => {
             setT(e.target.value);
@@ -618,6 +618,13 @@ const AiBack = () =>
   html`<${Btn} cls="aiback" icon="back" aria-label="Back" onClick=${() => openMod(ls.get("os-ai-last", "today"), true)}/>`;
 
 /* ---------- chat part ---------- */
+const THINK = [
+  ["", "Model default", "what the server picks"],
+  ["off", "Off", "fastest, no reasoning"],
+  ["low", "Low", "a quick think"],
+  ["medium", "Medium", "balanced"],
+  ["high", "High", "slowest, most careful"],
+];
 function Chat() {
   useCols("chats", "amsg", "sources", "pages");
   const st = useAI();
@@ -625,6 +632,7 @@ function Chat() {
   const [web, setWeb] = usePref("os-ai-web", true);
   const [model, setModel] = usePref("os-ai-model", "");
   const [tps, setTps] = usePref("os-ai-tps", true);
+  const [think, setThink] = usePref("os-ai-think", "");
   const [u, setU] = useState(null);
   const [loc, setLoc] = useState(null); // loc = models running on this machine (null = still looking)
   useEffect(() => {
@@ -781,6 +789,17 @@ function Chat() {
           : []), // phones have no status bar, so the meter lives here too
         "-",
         [web ? "applied" : "globe", "Web search", () => setWeb(!web), { sub: web ? "on" : "off" }],
+        [
+          "buddy",
+          "Thinking",
+          () =>
+            actionSheet(
+              "Thinking",
+              THINK.map(([k, l, s]) => [k === think ? "applied" : "clock", l, () => setThink(k), { sub: s, on: k === think }]),
+              at,
+            ),
+          { sub: (THINK.find(t => t[0] === think) || THINK[0])[1].toLowerCase() },
+        ],
         [
           tps ? "applied" : "clock",
           "Tokens per second",

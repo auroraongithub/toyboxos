@@ -195,7 +195,7 @@ async function open(body, signal) {
       loc,
     };
   }
-  const { web, model, ...rest } = body; // no web search tool locally
+  const { web, model, think, ...rest } = body; // no web search tool locally
   const find = web && aiBase(); // search runs on the server, so it needs Sync
   const DATE =
     "Today is " +
@@ -230,7 +230,7 @@ async function open(body, signal) {
         stream: true,
         stream_options: { include_usage: true },
         max_tokens: 4000,
-        chat_template_kwargs: { enable_thinking: false },
+        chat_template_kwargs: { enable_thinking: !!think && think !== "off" },
       }),
     }),
     loc,
@@ -499,6 +499,7 @@ export async function send(chatId, text, { refs = [], ctx, img = [], again = fal
         messages: await wire(chat),
         tools: toolset(chatId),
         web: ls.get("os-ai-web", true),
+        think: ls.get("os-ai-think", "") || undefined,
         model: ls.get("os-ai-model", "") || undefined,
         o: last ? last.o : 0,
       });
@@ -517,6 +518,7 @@ export async function send(chatId, text, { refs = [], ctx, img = [], again = fal
           messages: msgs,
           tools: toolset(chatId),
           web: ls.get("os-ai-web", true),
+          think: ls.get("os-ai-think", "") || undefined,
           model: (looped && aiBase() ? "" : ls.get("os-ai-model", "")) || undefined,
         },
         t => {

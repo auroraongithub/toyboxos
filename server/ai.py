@@ -265,7 +265,10 @@ def info(model):
     }
 
 
-def prepare(rt, body, think=True):
+LEVELS = ("low", "medium", "high")
+
+
+def prepare(rt, body, think=True, level=None):
     """Provider-specific additions to one request body (usage reporting, reasoning, OpenRouter routing, per-model extras).
     Shared by chat, job scoring and app drafts so a new provider only needs its catalogue entry."""
     c0 = cfg()
@@ -276,8 +279,10 @@ def prepare(rt, body, think=True):
         body["messages"] = _cache_hints(body["messages"])
     if prov.get("openrouter"):
         body["usage"] = {"include": True}
-        if not think:
+        if not think or level == "off":
             body["reasoning"] = {"enabled": False}
+        elif level in LEVELS:
+            body["reasoning"] = {"effort": level, "exclude": True}
         elif c0.get("reasoning"):
             body["reasoning"] = {"effort": c0["reasoning"], "exclude": True}
         if mc.get("pin"):
@@ -286,6 +291,8 @@ def prepare(rt, body, think=True):
         if body.get("stream") and rt.get("protocol", "openai") == "openai":
             body["stream_options"] = {"include_usage": True}
         body.update(rt["extra"])
+        if level in LEVELS and rt.get("protocol", "openai") == "openai":
+            body["reasoning_effort"] = level
     return body
 
 
@@ -587,7 +594,7 @@ def connect(body):
         if tools:
             up["tools"] = tools
         try:
-            req = request(rt, prepare(rt, up))
+            req = request(rt, prepare(rt, up, level=body.get("think")))
         except ValueError as e:
             raise Upstream(400, {"error": "messages", "msg": str(e)}) from None
         for wait in (4, 0):

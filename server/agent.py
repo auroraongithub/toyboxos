@@ -744,7 +744,14 @@ def _loop(run, body):
             if run.stopped:
                 break
             text, calls, cites = _complete(
-                run, {"messages": msgs, "tools": tools, "web": body.get("web"), "model": None if looped else model}
+                run,
+                {
+                    "messages": msgs,
+                    "tools": tools,
+                    "web": body.get("web"),
+                    "think": body.get("think"),
+                    "model": None if looped else model,
+                },
             )
             t = undash(text)
             run.live = ""
