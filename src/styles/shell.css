@@ -1384,7 +1384,8 @@ textarea.field,
 }
 /* command window v2 */
 .cmd {
-  padding-top: 12vh;
+  align-items: center;
+  padding: 10px;
 }
 .cmdwin {
   width: min(520px, 100%);
@@ -1580,6 +1581,7 @@ textarea.field,
     display: none;
   }
   .cmd {
+    align-items: flex-start;
     padding-top: 6vh;
   }
   .toast {
