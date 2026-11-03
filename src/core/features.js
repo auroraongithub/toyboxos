@@ -47,7 +47,8 @@ export async function refreshCaps() {
     }
     if (!r.ok) return;
     const j = await r.json();
-    ls.set("os-caps", { url: b, caps: Array.isArray(j.caps) ? j.caps : [] });
+    if (!Array.isArray(j.caps)) return;
+    ls.set("os-caps", { url: b, caps: j.caps });
     emit();
   } catch {
     // offline: keep what we knew

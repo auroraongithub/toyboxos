@@ -1052,8 +1052,12 @@ function SourceLib({ onPick, close }) {
 export default {
   id: "buddy",
   opt: "ai",
-  name: AI.name,
-  title: AI.name.toLowerCase(),
+  get name() {
+    return AI.name;
+  },
+  get title() {
+    return AI.name.toLowerCase();
+  },
   Comp: Chat,
   search: q =>
     D.chats

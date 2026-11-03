@@ -1,13 +1,13 @@
 /* Profile (extra window, Start > Profile / command "profile"): who uses this OS. Name, pronouns and a line about them go
    to the assistant; timezone and the two currencies drive dates and money everywhere. Saved as config/profile (synced). */
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { html, TZ, curSym } from "../core/lib.js";
 import { useCols } from "../core/store.js";
 import { toast } from "../core/bus.js";
 import { profile, setProfile, PRONOUNS } from "../core/profile.js";
 import { AI } from "../core/pack.js";
 import { Tools, Panel, Btn, Field, Select, Combo, Check, Icon, Group } from "../ui/index.js";
-import { FEATURES, wanted, setWanted, blocked, useMods, listed } from "../core/features.js";
+import { FEATURES, wanted, setWanted, blocked, useMods, listed, refreshCaps } from "../core/features.js";
 import { openMod } from "../shell/os.js";
 
 export const list = k => {
@@ -74,6 +74,9 @@ function Profile() {
 /* optional modules (core/features.js): saved straight away as config/modules, synced to every device */
 export function Modules() {
   useMods();
+  useEffect(() => {
+    refreshCaps();
+  }, []);
   return html`<${Group} title="Modules"/><div class="pmods">${FEATURES.filter(listed).map(f => {
     const w = wanted(f.id),
       why = w && blocked(f.id);
