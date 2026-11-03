@@ -325,6 +325,10 @@ function buildActs(q) {
 }
 /* modules whose id isn't an icon name */
 const MIC = {
+  "w-whiteboard": "whiteboard",
+  "w-graph": "graph",
+  "w-calc": "calc",
+  "w-links": "links",
   reminders: "bell",
   timer: "pomodoro",
   gcalc: "calc",

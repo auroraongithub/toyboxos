@@ -1,7 +1,8 @@
 /* Five hubs instead of twelve windows. Each hub is one window / one phone tab with a strip of parts;
    openMod("calendar") etc. still works: os.js maps a part id to its hub and selects that part. */
 import { html } from "../core/lib.js";
-import { usePref } from "../core/pref.js";
+import { usePref, isMobile } from "../core/pref.js";
+import { openMod } from "../shell/os.js";
 import { useEffect, useRef } from "preact/hooks";
 import { pushBack, dropBack, fromBack } from "../core/back.js";
 import { useScrollKey } from "../ui/gestures.js";
@@ -42,6 +43,13 @@ function ToolGrid({ hub }) {
   return html`<div class="tgrid">${tools.map(([k, l, , ic]) => html`<button class="tgi" key=${k} onClick=${() => hub.setSub(k)}><${AppIcon} id=${k} n=${ic}/><b>${l}</b></button>`)}</div>`;
 }
 
+/* a tool in a window of its own ("w-<id>"), so Pages and a tool can sit side by side */
+const popped = (m, name) => ({ id: "w-" + m.id, name, title: m.title, Comp: m.Comp, tab: false, pop: m.id });
+const popOut = (id, back) => {
+  back();
+  openMod("w-" + id, true);
+};
+
 function Hub({ id, parts }) {
   const [sub, setSub] = usePref("os-sub-" + id, parts[0][0]);
   const cur = parts.find(p => p[0] === sub) || parts[0],
@@ -68,7 +76,7 @@ function Hub({ id, parts }) {
               inTool = on && o.under === k;
             return html`<button class="ht" role="tab" key=${k} aria-selected=${String(on)} onClick=${() => setSub(k)}><${AppIcon} id=${inTool ? cur[0] : k} n=${inTool ? cur[3] : ic}/><span>${inTool ? l + " · " + cur[1] : l}</span></button>`;
           },
-        )}</div>`
+        )}${o.under && !isMobile() ? html`<button class="ht htpop" title="Open in its own window" onClick=${() => popOut(cur[0], () => setSub(parts[0][0]))}><${Icon} n="tile"/><span>Pop out</span></button>` : null}</div>`
       : null
   }
     ${o.hide && !o.under ? html`<div class="hubback"><button class="hbk" onClick=${() => setSub(tabs[0][0])}><${Icon} n="back"/>${tabs[0][1]}</button><b>${cur[1]}</b></div>` : null}
@@ -122,6 +130,10 @@ export const EXTRA = [
   { ...profile, tab: false },
   { ...moodle, tab: false },
   { ...models, tab: false },
+  popped(whiteboard, "Draw"),
+  popped(graph, "Graph"),
+  popped(gcalc, "Calc"),
+  popped(links, "Links"),
 ];
 export const ALL_MODULES = [
   today,
