@@ -7,6 +7,43 @@ import { toast, warn } from "../core/bus.js";
 
 export const TORN = (/[#&]win=([\w-]+)/.exec(location.hash || "") || [])[1] || "";
 const T = () => window.__TAURI_INTERNALS__;
+
+/* a torn window is a desktop window at any size: the phone layout (max-width 860 and below) never applies there,
+   in CSS or in matchMedia, so a narrow one reshapes like a narrow window on the desk (data-w buckets) */
+const PHONE = /\(\s*max-width:\s*(860|640|520|380)px\s*\)/g,
+  WIDE = /\(\s*min-width:\s*861px\s*\)/g;
+const deskQ = q => q.replace(PHONE, "(max-width: 0px)").replace(WIDE, "(min-width: 0px)");
+function deskRules(list) {
+  for (const r of list || []) {
+    if (r.media && r.media.mediaText) {
+      const t = deskQ(r.media.mediaText);
+      if (t !== r.media.mediaText) r.media.mediaText = t;
+    }
+    if (r.cssRules) deskRules(r.cssRules);
+  }
+}
+const deskSheets = () => {
+  for (const sh of document.styleSheets)
+    try {
+      deskRules(sh.cssRules);
+    } catch (e) {} // a cross-origin font sheet: nothing of ours in it
+};
+if (TORN) {
+  const mm = window.matchMedia.bind(window);
+  window.matchMedia = q => mm(deskQ(String(q)));
+  deskSheets();
+  addEventListener("load", deskSheets);
+  /* sheets added later (the theme, a live update's css) */
+  new MutationObserver(ms => {
+    if (ms.some(m => [...m.addedNodes].some(n => n.tagName === "STYLE" || n.tagName === "LINK"))) {
+      deskSheets();
+      for (const l of document.querySelectorAll("link[rel=stylesheet]"))
+        l.addEventListener("load", deskSheets, { once: true });
+    }
+  }).observe(document.documentElement, { childList: true, subtree: true });
+  for (const l of document.querySelectorAll("link[rel=stylesheet]"))
+    l.addEventListener("load", deskSheets, { once: true });
+}
 const native = () => !!(T() && T().invoke) && !/Android/i.test(navigator.userAgent);
 const label = id => "win-" + id.replace(/[^\w-]/g, "");
 const opened = {};
