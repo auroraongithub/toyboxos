@@ -11,6 +11,7 @@ import { fileUrl } from "../core/files.js";
 import { WinStickers } from "../shell/stickers.js";
 import { on as featOn } from "../core/features.js";
 import { tearMod } from "../shell/os.js";
+import { tornNative, tornCmd } from "../shell/tear.js";
 /* "sos:<id>" -> a url (window looks) */
 function useSrc(r) {
   const [u, setU] = useState(null);
@@ -460,6 +461,29 @@ const clamp = (p, D) => {
     y: Math.max(0, Math.min(p.y, D.h - 30)),
   };
 };
+/* a torn-off window's title bar: same look, but it drags and sizes the OS window (Tauri drag region) */
+function TornBar({ id, title }) {
+  const n = tornNative(),
+    [max, setMax] = useState(false);
+  useEffect(() => {
+    if (!n) return;
+    const r = () =>
+      window.__TAURI_INTERNALS__
+        .invoke("plugin:window|is_maximized", {
+          label: window.__TAURI_INTERNALS__.metadata.currentWindow.label,
+        })
+        .then(setMax)
+        .catch(() => {});
+    r();
+    addEventListener("resize", r);
+    return () => removeEventListener("resize", r);
+  }, []);
+  const cap = (c, l, cmd) =>
+    html`<span class=${"cap " + c} role="button" tabindex="0" aria-label=${l} title=${l} onClick=${() => tornCmd(cmd)}><i/></span>`;
+  return html`<div class="tb" data-tauri-drag-region>${appGrid(id) ? html`<${AppIcon} id=${id}/>` : null}<span class="t" data-tauri-drag-region>${title}</span>
+    ${n ? cap("mn", "Minimise", "minimize") : null}${n ? cap("mx" + (max ? " on" : ""), max ? "Restore" : "Maximise", "toggle_maximize") : null}${cap("x", "Close", "close")}</div>`;
+}
+const tornBar = (id, title) => html`<${TornBar} id=${id} title=${title}/>`;
 export function Window({
   id,
   title,
@@ -669,7 +693,7 @@ export function Window({
       }}>
     ${
       alone
-        ? null
+        ? tornBar(id, title)
         : html`<div class="tb" onPointerDown=${e => drag(e, "move")} onDblClick=${e => {
             if (!e.target.closest(".cap")) toggleMax();
           }}>${appGrid(id) ? html`<${AppIcon} id=${id}/>` : null}<span class="t">${title}</span>

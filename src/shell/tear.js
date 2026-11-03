@@ -10,6 +10,14 @@ const T = () => window.__TAURI_INTERNALS__;
 const native = () => !!(T() && T().invoke) && !/Android/i.test(navigator.userAgent);
 const label = id => "win-" + id.replace(/[^\w-]/g, "");
 const opened = {};
+/* the torn window's own title bar caps (app-drawn, like the desk's); a browser popup can only close */
+export const tornNative = () => native();
+export const tornCmd = cmd => {
+  if (!native()) return cmd === "close" && window.close();
+  T()
+    .invoke("plugin:window|" + cmd, { label: T().metadata.currentWindow.label })
+    .catch(() => cmd === "close" && window.close());
+};
 const tornList = () => ls.get("os-torn", []);
 export const isTorn = id => tornList().includes(id);
 const forget = id =>
@@ -40,6 +48,8 @@ export async function tearOff(id, title, b) {
           minWidth: 320,
           minHeight: 240,
           focus: true,
+          decorations: false,
+          shadow: true,
         },
       })
       .then(() => true)

@@ -1276,4 +1276,14 @@
     min-height: 100dvh !important;
     margin: 0 !important;
   }
+  /* narrow, but still a desktop window: keep the title bar to move and close it */
+  html.torn .mcol > .win.cur > .tb {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  html.torn .mcol > .win.cur > .tb .cap {
+    display: block;
+  }
 }

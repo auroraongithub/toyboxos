@@ -1019,9 +1019,12 @@ body.led-drag * {
     top: 0;
     width: 100%;
     height: 100%;
-    border: 0;
     box-shadow: none;
   }
+}
+/* its title bar moves the OS window, not itself */
+html.torn .win.alone > .tb {
+  cursor: default;
 }
 /* being pulled past the edge: let go and it opens on its own */
 .win.tearing {
