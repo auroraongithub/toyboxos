@@ -3,7 +3,7 @@
 import { actionSheet } from "../ui/sheet.js";
 import { openExternal } from "../core/lib.js";
 import { toast, openCmd } from "../core/bus.js";
-import { closeMod, toggleMin, resetWindows, openMod } from "./os.js";
+import { closeMod, toggleMin, resetWindows, openMod, tearMod } from "./os.js";
 import { ls } from "../core/pref.js";
 import { tileWindows, isLocked, setLocked, maxWin, isMaxed } from "../ui/index.js";
 import { setEditing } from "../core/layout.js";
@@ -149,7 +149,10 @@ function winItems(id, bar) {
       [lk ? "applied" : "lock", lk ? "Locked in place" : "Lock in place", () => setLocked(id, !lk)],
       ["theme", "Window look…", () => openWinLook(id)],
     ],
-    id.startsWith("w-") ? [["layout", "Dock back to Notes", () => closeMod(id)]] : [],
+    [
+      ["desktop", "Open in its own window", () => tearMod(id)],
+      id.startsWith("w-") ? ["layout", "Dock back to Notes", () => closeMod(id)] : null,
+    ],
     [["close", "Close window", () => closeMod(id), { danger: 1 }]],
   ];
 }
@@ -176,7 +179,10 @@ function menu(e) {
     id = w && w.dataset.win,
     side = !!id && /^side/.test(id),
     short = sel.length > 24 ? sel.slice(0, 22).trim() + "…" : sel;
-  const wg = id && !side && innerWidth > 860 && w.classList.contains("fl") ? winItems(id) : [];
+  const wg =
+    id && !side && innerWidth > 860 && w.classList.contains("fl") && !w.classList.contains("alone")
+      ? winItems(id)
+      : [];
   actionSheet(
     "",
     join(
@@ -291,7 +297,9 @@ function deskMenu(e, t) {
       [["layout", "Edit layout…", () => setEditing(true)], resetItem()],
       [
         ["theme", "Theme…", () => themeMenu(at)],
-        ls.get("os-side-clock", true) ? null : ["clock", "Show the clock", () => ls.set("os-side-clock", true)],
+        ls.get("os-side-clock", true)
+          ? null
+          : ["clock", "Show the clock", () => ls.set("os-side-clock", true)],
       ],
       [cmdItem(), reloadItem()],
     ),

@@ -6,9 +6,11 @@ import { warn } from "./bus.js";
 export function localAdapter(key = "sos-db") {
   const a = { name: "local", canWrite: true };
   let data = {},
-    dirty = new Set();
+    dirty = new Set(),
+    ver = "";
   const subs = {};
   const load = () => {
+    ver = localStorage.getItem(key + "-v") || "";
     try {
       data = JSON.parse(localStorage.getItem(key) || "{}");
     } catch (e) {
@@ -20,9 +22,15 @@ export function localAdapter(key = "sos-db") {
       dirty = new Set();
     }
   };
+  /* another window wrote since we last read: take its copy first so this write doesn't undo that one */
+  const fresh = () => {
+    if ((localStorage.getItem(key + "-v") || "") !== ver) load();
+  };
   const save = () => {
     try {
       localStorage.setItem(key, JSON.stringify(data));
+      ver = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      localStorage.setItem(key + "-v", ver);
     } catch (e) {
       warn("storage", e);
     }
@@ -57,6 +65,8 @@ export function localAdapter(key = "sos-db") {
       if (e.key === key) {
         load();
         Object.keys(subs).forEach(fire);
+        /* a torn-off window's edits are pushed by this window's sync (only the main window syncs) */
+        if (a.onWrite && dirty.size) a.onWrite();
       }
     });
   };
@@ -68,6 +78,7 @@ export function localAdapter(key = "sos-db") {
     };
   };
   const put = (c, id, o) => {
+    fresh();
     (data[c] = data[c] || {})[id] = o;
     dirty.add(c + "/" + id);
     save();
@@ -76,10 +87,14 @@ export function localAdapter(key = "sos-db") {
     if (a.onWrite) a.onWrite();
   };
   a.add = async (c, o) => put(c, uid(), Object.assign({}, o, { _u: Date.now() }));
-  a.update = async (c, id, o) => put(c, id, Object.assign({}, live(c, id), o, { _u: Date.now() }));
+  a.update = async (c, id, o) => {
+    fresh();
+    put(c, id, Object.assign({}, live(c, id), o, { _u: Date.now() }));
+  };
   a.set = async (c, id, o) => put(c, id, Object.assign({}, o, { _u: Date.now() }));
   a.del = async (c, id) => put(c, id, { _d: 1, _u: Date.now() });
   a.batch = async ops => {
+    fresh();
     const u = Date.now(),
       ch = new Set();
     ops.forEach(([op, c, id, o]) => {
@@ -104,6 +119,7 @@ export function localAdapter(key = "sos-db") {
       })
       .filter(Boolean);
   a.ack = sent => {
+    fresh();
     sent.forEach(s => {
       const v = (data[s.c] || {})[s.id];
       if (v && (v._u || 0) === s.u) dirty.delete(s.c + "/" + s.id);
@@ -111,6 +127,7 @@ export function localAdapter(key = "sos-db") {
     saveDirty();
   };
   a.apply = docs => {
+    fresh();
     const ch = new Set();
     docs.forEach(r => {
       const cur = (data[r.c] || {})[r.id];

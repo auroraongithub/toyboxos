@@ -1008,3 +1008,28 @@ body.led-drag * {
     flex-basis: 100%;
   }
 }
+
+/* ===== a window torn off into its own OS window (shell/tear.js): it is the whole page ===== */
+@media (min-width: 861px) {
+  html.torn .mcol {
+    inset: 0;
+  }
+  html.torn .win.alone {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    box-shadow: none;
+  }
+}
+/* being pulled past the edge: let go and it opens on its own */
+.win.tearing {
+  opacity: 0.55;
+  outline: 2px dashed var(--ink);
+  outline-offset: -2px;
+}
+.tornx {
+  padding: 24px;
+  font-family: var(--font);
+}

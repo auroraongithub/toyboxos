@@ -3,6 +3,7 @@ import { useState, useEffect } from "preact/hooks";
 import { toast } from "./bus.js";
 import { localAdapter } from "./adapters.js";
 import { startSync } from "./sync.js";
+import { TORN } from "../shell/tear.js";
 import { dkey, addDays, curSym } from "./lib.js";
 import { home, second } from "./profile.js";
 
@@ -57,7 +58,7 @@ export async function boot() {
   );
   meta.loaded = true;
   emit("*");
-  if (adapter.name === "local") startSync(adapter);
+  if (adapter.name === "local" && !TORN) startSync(adapter);
   return adapter;
 }
 export const getAdapter = () => adapter;

@@ -1,6 +1,7 @@
 /* window manager state. Components read via usePref, actions live here. */
 import { ls } from "../core/pref.js";
 import { isMobile } from "../core/pref.js";
+import { TORN, isTorn, focusTorn, tearOff } from "./tear.js";
 export const reg = { ids: [], alias: {}, names: {} };
 /* windows = hubs (+ sync); a hub's part ids (calendar, board, graph...) open the hub on that part */
 export const setModules = l => {
@@ -32,6 +33,15 @@ export function openMod(id, focus) {
     id = h;
   }
   if (!reg.ids.includes(id) || !gate(reg.mods[id])) return;
+  /* living in its own OS window: bring that forward (a torn window asking for another one hands it to the desk) */
+  if (isTorn(id) && !isMobile()) {
+    focusTorn(id).then(ok => ok || openMod(id, focus));
+    return;
+  }
+  if (TORN) {
+    ls.set("os-open", [...new Set([...openList(), id])]);
+    return;
+  }
   ls.set("os-open", [...new Set([...openList(), id])]);
   ls.set(
     "os-min",
@@ -42,11 +52,21 @@ export function openMod(id, focus) {
 }
 /* a tool popped out of Notes ("w-<part>") goes back into its hub when its window closes */
 export const closeMod = id => {
+  if (TORN && id === TORN) return window.close();
   ls.set(
     "os-open",
     openList().filter(x => x !== id),
   );
   if (id.startsWith("w-") && !isMobile()) openMod(id.slice(2), true);
+};
+/* move a desk window into its own OS window (b = screen box); it leaves the desk until that window closes */
+export const tearMod = async (id, b) => {
+  if (!(await tearOff(id, reg.names[id] || id, b))) return false;
+  ls.set(
+    "os-open",
+    openList().filter(x => x !== id),
+  );
+  return true;
 };
 export const toggleMin = id => {
   const m = minList();

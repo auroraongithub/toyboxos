@@ -11,6 +11,7 @@ import { WINDOWS } from "./modules/index.js";
 import App from "./shell/App.js";
 import { native } from "./core/sync.js";
 import { initContextMenu } from "./shell/ctxmenu.js";
+import { TORN } from "./shell/tear.js";
 import "./styles/xp-base.css";
 import "./styles/shell.css";
 import "./styles/xp-kit.css";
@@ -38,9 +39,10 @@ applyTheme();
 setModules(WINDOWS);
 render(html`<${App}/>`, document.getElementById("app"));
 boot();
-if (!window.__OSAGE_PREVIEW__) initAlarms();
+/* a torn-off window leaves alarms and update checks to the main window */
+if (!window.__OSAGE_PREVIEW__ && !TORN) initAlarms();
 liveOk();
-initUpdates();
+if (!TORN) initUpdates();
 if (!window.__OSAGE_PREVIEW__) initContextMenu();
 /* no service worker on localhost: it would serve the previous build while you're working on it */
 const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);

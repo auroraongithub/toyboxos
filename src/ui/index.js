@@ -10,6 +10,7 @@ import { useLayout } from "../core/layout.js";
 import { fileUrl } from "../core/files.js";
 import { WinStickers } from "../shell/stickers.js";
 import { on as featOn } from "../core/features.js";
+import { tearMod } from "../shell/os.js";
 /* "sos:<id>" -> a url (window looks) */
 function useSrc(r) {
   const [u, setU] = useState(null);
@@ -472,6 +473,7 @@ export function Window({
   label,
   desk,
   deco,
+  alone,
 }) {
   const ref = useRef(),
     [pos, setPos] = useState(null),
@@ -531,6 +533,7 @@ export function Window({
   const drag = (e, mode) => {
     if (
       !desk ||
+      alone ||
       locked ||
       e.button !== 0 ||
       !pos ||
@@ -553,7 +556,8 @@ export function Window({
     t.setPointerCapture(e.pointerId);
     document.body.classList.add(mode === "move" ? "wm-move" : "wm-size");
     let last = p0,
-      snap = null;
+      snap = null,
+      out = false;
     const mv = ev => {
       const dx = ev.clientX - sx,
         dy = ev.clientY - sy;
@@ -572,6 +576,11 @@ export function Window({
               : py <= 4
                 ? "max"
                 : null;
+        /* pulled past the edge of the app's window (onto another monitor): let go to give it its own window */
+        out =
+          ev.clientX < -4 || ev.clientY < -4 || ev.clientX > innerWidth + 4 || ev.clientY > innerHeight + 4;
+        if (out) snap = null;
+        t.parentNode.classList.toggle("tearing", out);
         snapShow(snap === "max" ? { x: 0, y: 0, w: D.w, h: D.h } : snap);
       } else {
         if (mode.includes("e")) n.w = p0.w + dx;
@@ -592,12 +601,20 @@ export function Window({
       last = clamp(n, D);
       setPos(last);
     };
-    const up = () => {
+    const up = ev => {
       t.removeEventListener("pointermove", mv);
       t.removeEventListener("pointerup", up);
       t.removeEventListener("pointercancel", up);
       document.body.classList.remove("wm-move", "wm-size");
+      t.parentNode.classList.remove("tearing");
       snapShow(null);
+      if (out && ev.type === "pointerup") {
+        const gx = sx - M.left - p0.x,
+          gy = sy - M.top - p0.y;
+        setPos(p0);
+        tearMod(id, { x: ev.screenX - gx, y: ev.screenY - gy, w: p0.w, h: p0.h });
+        return;
+      }
       const r = { w: p0.w, h: p0.h };
       if (snap === "max") last = { ...p0, max: true };
       else if (snap) last = { ...snap, r };
@@ -639,24 +656,30 @@ export function Window({
   }, [desk]);
   const zz = locked ? 3 : z;
   const st =
-    (desk && pos
-      ? pos.max
-        ? `left:0;top:0;width:100%;height:100%;z-index:${zz};`
-        : `left:${pos.x}px;top:${pos.y}px;width:${pos.w}px;height:${pos.h}px;z-index:${zz};`
-      : "") + look;
-  return html`<section ref=${ref} data-win=${id} class=${"win" + (mod ? " mod" : "") + (cls ? " " + cls : "") + (cur ? " cur" : "") + (min ? " min" : "") + (desk ? " fl" : "") + (pos && pos.max ? " max" : "") + (locked ? " lk" : "")} data-wbg=${bgU ? "" : null} data-wcap=${capU ? "" : null} style=${st} aria-label=${label || title}
+    (alone
+      ? ""
+      : desk && pos
+        ? pos.max
+          ? `left:0;top:0;width:100%;height:100%;z-index:${zz};`
+          : `left:${pos.x}px;top:${pos.y}px;width:${pos.w}px;height:${pos.h}px;z-index:${zz};`
+        : "") + look;
+  return html`<section ref=${ref} data-win=${id} class=${"win" + (mod ? " mod" : "") + (cls ? " " + cls : "") + (cur ? " cur" : "") + (min ? " min" : "") + (desk ? " fl" : "") + (pos && pos.max ? " max" : "") + (locked ? " lk" : "") + (alone ? " alone" : "")} data-wbg=${bgU ? "" : null} data-wcap=${capU ? "" : null} style=${st} aria-label=${label || title}
       onPointerDownCapture=${() => {
         if (desk && !locked && z !== zTop) setZ(raise(id));
       }}>
-    <div class="tb" onPointerDown=${e => drag(e, "move")} onDblClick=${e => {
-      if (!e.target.closest(".cap")) toggleMax();
-    }}>${appGrid(id) ? html`<${AppIcon} id=${id}/>` : null}<span class="t">${title}</span>
+    ${
+      alone
+        ? null
+        : html`<div class="tb" onPointerDown=${e => drag(e, "move")} onDblClick=${e => {
+            if (!e.target.closest(".cap")) toggleMax();
+          }}>${appGrid(id) ? html`<${AppIcon} id=${id}/>` : null}<span class="t">${title}</span>
       ${desk && id !== "buddy" && id !== "sync" && featOn("ai") ? cap("ai", "Ask " + AI.name + " about this", () => window.dispatchEvent(new CustomEvent("os-ask", { detail: id })), html`<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h12v8H8l-3.5 3v-3H2z"/></svg>`) : null}
       ${locked ? cap("lkc", "Locked in place: click to unlock", () => setLocked(id, false), html`<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="7"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></svg>`) : null}
-      ${onMin ? cap("mn", "Minimise", onMin) : null}${desk && !locked ? cap("mx" + (pos && pos.max ? " on" : ""), pos && pos.max ? "Restore" : "Maximise", toggleMax) : null}${onClose ? cap("x", "Close", onClose) : null}</div>
+      ${onMin ? cap("mn", "Minimise", onMin) : null}${desk && !locked ? cap("mx" + (pos && pos.max ? " on" : ""), pos && pos.max ? "Restore" : "Maximise", toggleMax) : null}${onClose ? cap("x", "Close", onClose) : null}</div>`
+    }
     ${mod ? html`<div class="mbody" style=${inner}>${children}</div>` : desk ? html`<div class="mbody nb" style=${inner}>${children}</div>` : children}
     ${deco || null}${desk ? html`<${WinStickers} win=${id}/>` : null}
-    ${desk && !locked && !(pos && pos.max) ? html`<i class="rz re" onPointerDown=${e => drag(e, "e")}/><i class="rz rs" onPointerDown=${e => drag(e, "s")}/><i class="rz rw" onPointerDown=${e => drag(e, "w")}/><i class="rz rse" onPointerDown=${e => drag(e, "se")}/><i class="rz rsw" onPointerDown=${e => drag(e, "sw")}/><i class="rz rn" onPointerDown=${e => drag(e, "n")}/><i class="rz rnw" onPointerDown=${e => drag(e, "nw")}/><i class="rz rne" onPointerDown=${e => drag(e, "ne")}/>` : null}
+    ${desk && !alone && !locked && !(pos && pos.max) ? html`<i class="rz re" onPointerDown=${e => drag(e, "e")}/><i class="rz rs" onPointerDown=${e => drag(e, "s")}/><i class="rz rw" onPointerDown=${e => drag(e, "w")}/><i class="rz rse" onPointerDown=${e => drag(e, "se")}/><i class="rz rsw" onPointerDown=${e => drag(e, "sw")}/><i class="rz rn" onPointerDown=${e => drag(e, "n")}/><i class="rz rnw" onPointerDown=${e => drag(e, "nw")}/><i class="rz rne" onPointerDown=${e => drag(e, "ne")}/>` : null}
   </section>`;
 }
 export const resetWindowPositions = () => {

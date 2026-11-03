@@ -23,6 +23,12 @@ export const ls = {
     subs.forEach(f => f(k));
   },
 };
+/* another window of this app (a torn-off window, another tab) changed a pref: follow it */
+addEventListener("storage", e => {
+  if (!e.key) return;
+  delete mem[e.key];
+  subs.forEach(f => f(e.key));
+});
 export function usePref(k, d) {
   const [v, set] = useState(() => ls.get(k, d));
   useEffect(() => {

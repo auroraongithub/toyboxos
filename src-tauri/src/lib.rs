@@ -77,9 +77,12 @@ pub fn run() {
       Ok(())
     })
     .on_window_event(|w, e| {
+      // only the main window hides to the tray; a window torn off the desk (label win-*) really closes
       if let tauri::WindowEvent::CloseRequested { api, .. } = e {
-        let _ = w.hide();
-        api.prevent_close();
+        if w.label() == "main" {
+          let _ = w.hide();
+          api.prevent_close();
+        }
       }
     });
 

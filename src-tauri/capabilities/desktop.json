@@ -1,9 +1,10 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "desktop",
-  "description": "desktop only: system notifications for reminders and alarms, and the app's own title bar (decorations off)",
+  "description": "desktop only: system notifications for reminders and alarms, and the app's own title bar (decorations off); windows torn off the desk onto another monitor (win-*)",
   "windows": [
-    "main"
+    "main",
+    "win-*"
   ],
   "platforms": [
     "windows",
@@ -18,6 +19,8 @@
     "core:window:allow-toggle-maximize",
     "core:window:allow-internal-toggle-maximize",
     "core:window:allow-close",
-    "core:window:allow-start-dragging"
+    "core:window:allow-start-dragging",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-set-focus"
   ]
 }

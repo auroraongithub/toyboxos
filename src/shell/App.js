@@ -21,10 +21,48 @@ import { OsBar, frameless } from "./titlebar.js";
 import { installSwipe } from "../ui/swipe.js";
 import { pushBack, dropBack, fromBack } from "../core/back.js";
 import { installGestures } from "../ui/gestures.js";
+import { TORN, tornLife, dockWatch } from "./tear.js";
 installSwipe();
 installGestures();
 
+/* one window on its own (index.html#win=<id>): no desk, taskbar or banner; the system frame is its title bar */
+function Torn() {
+  const mobile = useMedia("(max-width:860px)");
+  useMods();
+  useLook();
+  useLayout();
+  const [cmd, setCmd] = useState(false);
+  const m = liveWindows().find(w => w.id === TORN);
+  useEffect(() => {
+    tornLife();
+    document.documentElement.classList.add("torn");
+    const k = e => {
+      if (e.defaultPrevented) return;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCmd(c => !c);
+      } else if (e.key === "Escape") setCmd(false);
+    };
+    document.addEventListener("keydown", k);
+    return () => document.removeEventListener("keydown", k);
+  }, []);
+  useEffect(() => {
+    if (m) document.title = m.name + " · toybox.os";
+  }, [m && m.name]);
+  if (!m) return html`<div class="tornx">This window isn't available here.</div>`;
+  return html`<div class="desk"><div class="mcol" id="mcol">
+      <${Window} key=${m.id} id=${m.id} title=${m.title} label=${m.name} mod=${m.mod !== false} cls=${m.mod === false ? "main-win" : ""} cur=${mobile} desk=${!mobile} alone><${m.Comp}/><//>
+    </div></div>
+    <${CmdBar} open=${cmd} close=${() => setCmd(false)}/>
+    <${ReviewHost}/><${SheetHost}/><${Toast}/>`;
+}
+
 export default function App() {
+  if (TORN) return html`<${Torn}/>`;
+  return html`<${Desk}/>`;
+}
+
+function Desk() {
   const mobile = useMedia("(max-width:860px)");
   useMods();
   useLook();
@@ -39,6 +77,7 @@ export default function App() {
   const [menu, setMenu] = useState(false),
     [cmd, setCmd] = useState(false),
     [bar, setBar] = useState(false);
+  useEffect(dockWatch, []);
   /* an Osage reply still running on the home server from before a restart: follow it again */
   useEffect(() => {
     const t = setTimeout(() => import("../core/ai.js").then(m => m.reattach()), 2500);
