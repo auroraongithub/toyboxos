@@ -2092,3 +2092,31 @@ textarea.field,
   font-weight: 400;
   color: var(--ink-2);
 }
+.mcpc {
+  display: grid;
+  gap: 8px;
+  padding: 12px 16px 14px;
+  font-size: 13px;
+  width: min(480px, 100%);
+  box-sizing: border-box;
+}
+.mcpc p {
+  margin: 0;
+}
+.mcpc pre {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--code);
+  border: 1px solid var(--line);
+  font: 12px/1.45 "Courier New", monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.mcpc .mcpb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mcpc .dim {
+  opacity: 0.75;
+}

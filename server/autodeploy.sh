@@ -60,7 +60,7 @@ cp server/app_changes.py server/setup_changes.py "$SRV/" || fail "copy setup"
 
 # server code: copy what changed and restart only its own services (never the machine's other ones)
 changed=$( [ -n "$old" ] && git diff --name-only "$old" "$new" -- server/ 2>/dev/null || echo all)
-sync_files="server.py caps.py ai.py aiconf.py host.py updates.py providers.json ai_messages.py agent.py moodle.py moodle_setup.py MOODLE.md ingest.py INGEST.md pull_jobs.py pull_fx.py pull_calendar.py jobs_profile.md app_changes.py setup_changes.py"
+sync_files="server.py mcp.py caps.py ai.py aiconf.py host.py updates.py providers.json ai_messages.py agent.py moodle.py moodle_setup.py MOODLE.md ingest.py INGEST.md pull_jobs.py pull_fx.py pull_calendar.py jobs_profile.md app_changes.py setup_changes.py"
 if [ "$changed" = all ] || grep -qE "^server/($(echo $sync_files | tr ' ' '|' | sed 's/\./\\./g'))$" <<<"$changed"; then
   for f in $sync_files; do cp "server/$f" "$SRV/"; done
   systemctl --user restart sos-sync && log "restarted sos-sync"

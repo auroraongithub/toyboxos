@@ -56,6 +56,11 @@ working offline) when it is served over `https`, and you need a public address t
 way is Tailscale: install it on the server, then run `tailscale funnel --bg 8787`, and use the `https://…ts.net`
 address it prints. A reverse proxy such as Caddy in front of port 8787 works too.
 
+## AI apps (MCP)
+
+Claude Code, Codex, the Claude desktop app and other MCP clients can work with your data through `<address>/mcp`. In
+the app: Start > Sync > AI apps > Connect…, pick the app, Copy, paste. Details and what the tools do: [MCP.md](MCP.md).
+
 ## Home server window (optional)
 
 Start > Home server gives you a terminal, a file manager and service status for the machine the server runs on. It

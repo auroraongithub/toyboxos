@@ -26,6 +26,7 @@ import caps
 import aiconf
 import host
 import updates
+import mcp
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, quote
 
@@ -394,6 +395,8 @@ class H(BaseHTTPRequestHandler):
                 body = {}
             code, out = pair_claim(body if isinstance(body, dict) else {})
             return self._send(code, out, extra={**cors, "Cache-Control": "no-store"})
+        if p == "/mcp":
+            return self._mcp()
         if p not in ("/api/sync", "/api/ingest", "/api/ai") and p not in AI_JSON:
             return self._send(404, {"error": "not found"}, extra=cors)
         if not self._auth():
@@ -418,8 +421,36 @@ class H(BaseHTTPRequestHandler):
             )
         self._send(200, out, extra=cors)
 
+    def _mcp(self):
+        """MCP over Streamable HTTP for outside agents (server/mcp.py). JSON replies only, no server-sent stream."""
+        h = {"Cache-Control": "no-store"}
+        if self.command != "POST":
+            return self._send(405, {"error": "POST only"}, extra={**h, "Allow": "POST"})
+        if not self._auth():
+            return self._send(401, {"error": "bad token"}, extra=h)
+        n = self._len()
+        if n > MAXBODY:
+            return self._send(413, {"error": "too big"}, extra=h)
+        try:
+            body = json.loads(self.rfile.read(n) or b"null")
+        except ValueError:
+            return self._send(400, {"jsonrpc": "2.0", "id": None, "error": {"code": -32700, "message": "parse error"}})
+        try:
+            out = mcp.handle(body)
+        except Exception as e:
+            print("error on /mcp", type(e).__name__, flush=True)
+            out = {"jsonrpc": "2.0", "id": None, "error": {"code": -32603, "message": type(e).__name__}}
+        return self._send(202, b"", extra=h) if out is None else self._send(200, out, extra=h)
+
+    def do_DELETE(self):
+        if urlparse(self.path).path == "/mcp":
+            return self._mcp()
+        self._send(404, {"error": "not found"})
+
     def do_GET(self):
         p = urlparse(self.path).path
+        if p == "/mcp":
+            return self._mcp()
         if p.startswith("/api/moodle/file/"):
             headers = {
                 "Access-Control-Allow-Origin": "*",

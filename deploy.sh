@@ -44,7 +44,7 @@ scp -q server/app_changes.py server/setup_changes.py server/autodeploy.sh "$HOST
 for p in src/packs/*/; do n=$(basename "$p"); [ "$n" = default ] && continue; ssh "$HOST" "mkdir -p ~/sean-os-server/private/packs" && scp -q -r "$p" "$HOST":~/sean-os-server/private/packs/; done
 ssh "$HOST" 'cd ~/sean-os-server && python3 setup_changes.py staging/frontend.tar.gz staging/history.bundle --refresh'
 if [ "${1:-}" = "server" ]; then
-  scp -q server/server.py server/caps.py server/ai.py server/aiconf.py server/host.py server/updates.py server/providers.json server/ai_messages.py server/pull_jobs.py server/agent.py server/moodle.py server/moodle_setup.py server/MOODLE.md server/ingest.py server/INGEST.md "$HOST":~/sean-os-server/
+  scp -q server/server.py server/caps.py server/ai.py server/aiconf.py server/host.py server/updates.py server/providers.json server/ai_messages.py server/pull_jobs.py server/agent.py server/moodle.py server/moodle_setup.py server/MOODLE.md server/ingest.py server/INGEST.md server/mcp.py "$HOST":~/sean-os-server/
   ssh "$HOST" 'systemctl --user restart sos-sync && sleep 1 && systemctl --user is-active sos-sync'
 fi
 # the release channel self-updating servers read (<server>/releases/latest.json)

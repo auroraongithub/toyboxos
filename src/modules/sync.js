@@ -63,6 +63,59 @@ const pairOther = async () => {
     toast(e.message);
   }
 };
+/* MCP (server/mcp.py): the copied setup carries this device's sync URL + token, so pasting it is the whole setup.
+   The token is shown masked; only the clipboard gets the real one. */
+const MCP_APPS = [
+  ["claude", "Claude Code", "Run in a terminal:", (u, t) => `claude mcp add --transport http -s user toybox ${u} --header "Authorization: Bearer ${t}"`],
+  ["codex", "Codex", "Add to ~/.codex/config.toml:", (u, t) => `[mcp_servers.toybox]
+url = "${u}"
+http_headers = { Authorization = "Bearer ${t}" }`],
+  [
+    "desktop",
+    "Claude app",
+    "Settings > Developer > Edit Config, add inside mcpServers (needs Node.js):",
+    (u, t) => `"toybox": {
+  "command": "npx",
+  "args": ["-y", "mcp-remote", "${u}", "--header", "Authorization:\${TOYBOX_AUTH}"],
+  "env": { "TOYBOX_AUTH": "Bearer ${t}" }
+}`,
+  ],
+  ["other", "Other", "Any MCP client with HTTP (Streamable HTTP) support:", (u, t) => `URL     ${u}
+Header  Authorization: Bearer ${t}`],
+];
+const MASK = "••••••••";
+function AgentSetup() {
+  const cfg = syncConfig(),
+    u = cfg.url.replace(/\/+$/, "") + "/mcp";
+  const [app, setApp] = useState(() => ls.get("os-mcp-app", "claude")),
+    [ok, setOk] = useState(null);
+  useEffect(() => {
+    fetch(u, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + cfg.token, "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+    })
+      .then(r => r.json())
+      .then(j => setOk(j.result ? j.result.tools.length : 0), () => setOk(0));
+  }, []);
+  const pick = k => (ls.set("os-mcp-app", k), setApp(k));
+  const [, , how, make] = MCP_APPS.find(a => a[0] === app) || MCP_APPS[0];
+  const copy = () =>
+    navigator.clipboard.writeText(make(u, cfg.token)).then(
+      () => toast("Copied. It holds your sync token: keep it to yourself."),
+      () => toast("Couldn't copy"),
+    );
+  return html`<div class="mcpc">
+    <p>Lets Claude, Codex and other AI apps read and edit your notes, tasks, calendar, reminders and money, on any computer.</p>
+    ${ok === 0 ? html`<p class="late">This server doesn't have it yet. Update the server first (Sync > Server > Install now).</p>` : null}
+    <div class="mcpb"><${Select} opts=${MCP_APPS.map(a => [a[0], a[1]])} value=${app} onChange=${pick}/><span>${how}</span></div>
+    <pre class="selectable">${make(u, MASK)}</pre>
+    <div class="mcpb"><${Btn} go icon="copy" onClick=${copy}>Copy<//>${ok ? html`<span class="dim">Ready · ${ok} tools</span>` : null}</div>
+    <p class="dim">Then restart the app and ask it "what's due this week?"</p>
+  </div>`;
+}
+const agentSheet = () => openSheet({ title: "Connect an AI app", Body: AgentSetup });
+
 function Sync() {
   useCols("config");
   useMods();
@@ -101,6 +154,7 @@ function Sync() {
       <div class="lr"><span class="when" style="min-width:90px">Waiting to send</span><span class="tt">${st.pending}</span></div>
       <div class="lr"><span class="when" style="min-width:90px">App build</span><span class="tt">${BUILD}</span><${Btn} onClick=${() => checkUpdate({ quiet: false })}>Check for updates<//></div>
       <${UpdRow}/>
+      ${cfg.on ? html`<div class="lr"><span class="when" style="min-width:90px">AI apps</span><span class="tt">Claude, Codex and other MCP apps</span><${Btn} onClick=${agentSheet}>Connect…<//></div>` : null}
       <${Host}/>
       ${cfg.on ? html`<${Updates}/>` : null}
       ${cfg.on && featOn("moodle") ? html`<${Moodle}/>` : null}
@@ -371,5 +425,10 @@ export default {
   name: "Sync",
   title: "sync",
   Comp: Sync,
-  cmd: v => (v === "sync" ? [{ icon: "reset", l: "Sync now", r: syncNow }] : []),
+  cmd: v =>
+    v === "sync"
+      ? [{ icon: "reset", l: "Sync now", r: syncNow }]
+      : /^(mcp|claude|codex|agents?)$/.test(v) && syncConfig().on
+        ? [{ icon: "buddy", l: "Connect an AI app (MCP)", r: agentSheet }]
+        : [],
 };
