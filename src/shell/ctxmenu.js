@@ -149,6 +149,7 @@ function winItems(id, bar) {
       [lk ? "applied" : "lock", lk ? "Locked in place" : "Lock in place", () => setLocked(id, !lk)],
       ["theme", "Window look…", () => openWinLook(id)],
     ],
+    id.startsWith("w-") ? [["layout", "Dock back to Notes", () => closeMod(id)]] : [],
     [["close", "Close window", () => closeMod(id), { danger: 1 }]],
   ];
 }

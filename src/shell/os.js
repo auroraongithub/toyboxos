@@ -40,11 +40,14 @@ export function openMod(id, focus) {
   if (isMobile()) setView(id);
   else setTimeout(() => dispatchEvent(new CustomEvent("os-front", { detail: id })), 30);
 }
-export const closeMod = id =>
+/* a tool popped out of Notes ("w-<part>") goes back into its hub when its window closes */
+export const closeMod = id => {
   ls.set(
     "os-open",
     openList().filter(x => x !== id),
   );
+  if (id.startsWith("w-") && !isMobile()) openMod(id.slice(2), true);
+};
 export const toggleMin = id => {
   const m = minList();
   ls.set("os-min", m.includes(id) ? m.filter(x => x !== id) : [...m, id]);
