@@ -3,6 +3,7 @@
    localStorage (data + prefs follow live through storage events) and leaves syncing/alarms to the main window.
    os-torn = ids living in their own window right now; closing one docks it back onto the desk. */
 import { ls } from "../core/pref.js";
+import { toast, warn } from "../core/bus.js";
 
 export const TORN = (/[#&]win=([\w-]+)/.exec(location.hash || "") || [])[1] || "";
 const T = () => window.__TAURI_INTERNALS__;
@@ -42,9 +43,18 @@ export async function tearOff(id, title, b) {
         },
       })
       .then(() => true)
-      .catch(() => false);
-  if (!ok)
+      .catch(e => {
+        warn("tear", e);
+        return false;
+      });
+  /* the desktop app's webview opens nothing for window.open, so an installer without the window permission just says so */ else
     ok = !!(opened[id] = window.open(url, label(id), `popup,width=${w},height=${h},left=${x},top=${y}`));
+  if (!ok)
+    toast(
+      native()
+        ? "Popping windows out needs the newest installer"
+        : "Allow pop-ups for this site to pop windows out",
+    );
   if (ok) ls.set("os-torn", [...new Set([...tornList(), id])]);
   return ok;
 }
